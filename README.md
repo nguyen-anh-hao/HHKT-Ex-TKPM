@@ -18,7 +18,7 @@ Do project được viết đơn giản bằng ngôn ngữ C++ nên có nhiều 
   sudo apt update && sudo apt install g++
   ```
 
-# Biên dịch
+## Biên dịch
 
 Chạy lệnh sau trong terminal/cmd.
 
@@ -27,7 +27,7 @@ g++ QLSV.cpp -o QLSV     # Linux/macOS
 g++ QLSV.cpp -o QLSV.exe # Windows
 ```
 
-# Chạy chương trình
+## Chạy chương trình
 
 ```bash
 ./QLSV   # Linux/macOS
