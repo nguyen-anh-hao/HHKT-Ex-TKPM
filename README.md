@@ -29,7 +29,7 @@ g++ QLSV.cpp -o QLSV.exe # Windows
 
 # Chạy chương trình
 
-```
+```bash
 ./QLSV   # Linux/macOS
 QLSV.exe # Windows
 ```
