@@ -20,12 +20,12 @@ export default function RootLayout({
       <body>
         <AntdRegistry>
           <ConfigProvider
-            theme={{
-              token: {
-                fontSize: 16,
-                controlHeight: 40,
-              },
-            }}
+            // theme={{
+            //   token: {
+            //     fontSize: 16,
+            //     controlHeight: 40,
+            //   },
+            // }}
           >
             <Layout>{children}</Layout>
           </ConfigProvider>

@@ -1,11 +1,37 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Table, Modal, Form, Input, DatePicker, Select, message } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { z } from 'zod'; // Import Zod
 
 const { Option } = Select;
+
+// Định nghĩa schema với Zod
+const studentSchema = z.object({
+  mssv: z.string().min(1, { message: "Mã số sinh viên không được để trống!" }),
+  fullName: z.string().min(1, { message: "Họ tên không được để trống!" }),
+  dob: z.string().min(1, { message: "Ngày sinh không được để trống!" }),
+  gender: z.string().min(1, { message: "Giới tính không được để trống!" }),
+  faculty: z.string().min(1, { message: "Khoa không được để trống!" }),
+  course: z.string().min(1, { message: "Khóa không được để trống!" }),
+  program: z.string().min(1, { message: "Chương trình không được để trống!" }),
+  permanentAddress: z.string().optional(),
+  temporaryAddress: z.string().optional(),
+  mailAddress: z.string().optional(),
+  idCard: z.object({
+    type: z.string(),
+    number: z.string(),
+    issuedDate: z.string(),
+    expiredDate: z.string(),
+    issuedBy: z.string(),
+  }),
+  nationality: z.string().min(1, { message: "Quốc tịch không được để trống!" }),
+  email: z.string().email({ message: "Email không hợp lệ!" }),
+  phone: z.string().min(1, { message: "Số điện thoại không được để trống!" }),
+  status: z.string().min(1, { message: "Tình trạng không được để trống!" }),
+});
 
 const initialData = [
   {
@@ -16,7 +42,11 @@ const initialData = [
     faculty: 'Khoa Luật',
     course: 'Khóa 2020',
     program: 'Cử nhân Luật',
-    address: 'Hà Nội',
+    permanentAddress: '',
+    temporaryAddress: '',
+    mailAddress: '',
+    idCard: { type: 'CMND', number: '123456789', issuedDate: '2018-01-01', expiredDate: '2038-01-01', issuedBy: 'Hà Nội' },
+    nationality: 'Việt Nam',
     email: 'nguyen.a@example.com',
     phone: '0123456789',
     status: 'Đang học',
@@ -29,7 +59,11 @@ const initialData = [
     faculty: 'Khoa Tiếng Anh thương mại',
     course: 'Khóa 2019',
     program: 'Cử nhân Tiếng Anh',
-    address: 'Hồ Chí Minh',
+    permanentAddress: '',
+    temporaryAddress: '',
+    mailAddress: '',
+    idCard: { type: 'CCCD', number: '987654321', issuedDate: '2020-05-15', expiredDate: '2035-05-15', issuedBy: 'Hồ Chí Minh', withChip: true },
+    nationality: 'Việt Nam',
     email: 'tran.b@example.com',
     phone: '0987654321',
     status: 'Đã tốt nghiệp',
@@ -40,14 +74,16 @@ const Home = () => {
   const [students, setStudents] = useState(initialData);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [actionStatus, setActionStatus] = useState<{ type: string, message: string } | null>(null);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const handleAddStudent = () => {
     setIsModalVisible(true);
-    setSelectedStudent(null); // Đặt selectedStudent về null để tạo sinh viên mới
+    setSelectedStudent(null);
   };
 
   const handleEditStudent = (record: any) => {
-    setSelectedStudent(record); // Lấy dữ liệu của sinh viên cần sửa
+    setSelectedStudent(record);
     setIsModalVisible(true);
   };
 
@@ -62,22 +98,57 @@ const Home = () => {
 
   const handleSubmit = (values: any) => {
     try {
+      // Sử dụng Zod để xác thực dữ liệu
+      const parsedData = studentSchema.parse(values);
+
+      // Nếu xác thực thành công, thực hiện hành động
       if (selectedStudent) {
         // Cập nhật sinh viên
         const updatedStudents = students.map(student =>
-          student.mssv === selectedStudent.mssv ? { ...student, ...values } : student
+          student.mssv === selectedStudent.mssv ? { ...student, ...parsedData } : student
         );
         setStudents(updatedStudents);
+        setActionStatus({ type: 'success', message: 'Thông tin sinh viên đã được lưu!' });
       } else {
+        // Kiểm tra trùng MSSV
+        if (students.some(student => student.mssv === parsedData.mssv)) {
+          setActionStatus({ type: 'error', message: 'MSSV này đã tồn tại!' });
+          return;
+        }
         // Thêm sinh viên mới
-        setStudents([...students, values]);
+        setStudents([
+          ...students,
+          {
+            ...parsedData,
+            permanentAddress: parsedData.permanentAddress || '',
+            temporaryAddress: parsedData.temporaryAddress || '',
+            mailAddress: parsedData.mailAddress || '',
+          },
+        ]);
+        setActionStatus({ type: 'success', message: 'Thông tin sinh viên đã được lưu!' });
       }
-      message.success("Thông tin sinh viên đã được lưu!");
+
       handleModalCancel();
     } catch (error) {
-      message.error("Dữ liệu không hợp lệ!");
+      if (error instanceof z.ZodError) {
+        // Lỗi xác thực
+        setActionStatus({ type: 'error', message: error.errors[0].message });
+      } else {
+        setActionStatus({ type: 'error', message: 'Dữ liệu không hợp lệ!' });
+      }
     }
   };
+
+  // Dùng useEffect để trigger thông báo sau khi actionStatus thay đổi
+  useEffect(() => {
+    if (actionStatus) {
+      if (actionStatus.type === 'success') {
+        messageApi.success(actionStatus.message);
+      } else if (actionStatus.type === 'error') {
+        messageApi.error(actionStatus.message);
+      }
+    }
+  }, [actionStatus]);
 
   const columns = [
     { title: 'MSSV', dataIndex: 'mssv' },
@@ -90,16 +161,12 @@ const Home = () => {
     { title: 'Giới Tính', dataIndex: 'gender' },
     { title: 'Khoa', dataIndex: 'faculty' },
     { title: 'Khóa', dataIndex: 'course' },
-    { title: 'Chương Trình', dataIndex: 'program' },
-    { title: 'Địa Chỉ', dataIndex: 'address' },
-    { title: 'Email', dataIndex: 'email' },
-    { title: 'Số Điện Thoại', dataIndex: 'phone' },
     { title: 'Tình Trạng', dataIndex: 'status' },
     {
       title: 'Hành động',
       render: (_: any, record: any) => (
         <>
-          <Button icon={<EditOutlined />} onClick={() => handleEditStudent(record)}>Sửa</Button>
+          <Button style={{ marginRight: 8 }} icon={<EditOutlined />} onClick={() => handleEditStudent(record)}>Sửa</Button>
           <Button icon={<DeleteOutlined />} danger onClick={() => handleDeleteStudent(record.mssv)}>Xóa</Button>
         </>
       ),
@@ -109,11 +176,15 @@ const Home = () => {
   return (
     <div>
       <h1>Quản lý sinh viên</h1>
-      <Button style={{marginBottom: 16}} type="primary" icon={<PlusOutlined />} onClick={handleAddStudent}>Thêm Sinh Viên</Button>
+      <Button style={{ marginBottom: 16 }} type="primary" icon={<PlusOutlined />} onClick={handleAddStudent}>Thêm Sinh Viên</Button>
       <Table columns={columns} dataSource={students} rowKey="mssv" />
+
+      {/* Render the context holder for message */}
+      {contextHolder}
 
       <Modal
         title={selectedStudent ? "Sửa Sinh Viên" : "Thêm Sinh Viên"}
+        key={selectedStudent ? selectedStudent.mssv : 'new'}
         open={isModalVisible}
         onCancel={handleModalCancel}
         footer={null}
@@ -121,7 +192,7 @@ const Home = () => {
         <Form
           initialValues={selectedStudent ? {
             ...selectedStudent,
-            dob: moment(selectedStudent.dob), 
+            dob: moment(selectedStudent.dob),
           } : {}}
           onFinish={handleSubmit}
           layout="vertical"
@@ -155,7 +226,23 @@ const Home = () => {
           <Form.Item name="program" label="Chương Trình">
             <Input />
           </Form.Item>
-          <Form.Item name="address" label="Địa Chỉ">
+          <Form.Item name="permanentAddress" label="Địa Chỉ Thường Trú">
+            <Input />
+          </Form.Item>
+          <Form.Item name="temporaryAddress" label="Địa Chỉ Tạm Trú">
+            <Input />
+          </Form.Item>
+          <Form.Item name="mailAddress" label="Địa Chỉ Nhận Thư">
+            <Input />
+          </Form.Item>
+          <Form.Item name="idCard" label="Giấy Tờ Chứng Minh Nhân Thân">
+            <Select>
+              <Option value="CMND">Chứng minh nhân dân (CMND)</Option>
+              <Option value="CCCD">Căn cước công dân (CCCD)</Option>
+              <Option value="passport">Hộ chiếu (Passport)</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="nationality" label="Quốc Tịch">
             <Input />
           </Form.Item>
           <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: 'Vui lòng nhập email hợp lệ!' }]}>
