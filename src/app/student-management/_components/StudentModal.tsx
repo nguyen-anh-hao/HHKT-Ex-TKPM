@@ -2,28 +2,52 @@
 import { Modal, Form, Input, DatePicker, Select, Button } from "antd";
 import moment from "moment";
 
+import { useState, useEffect } from "react";
+
 const { Option } = Select;
 
 const StudentModal = ({ visible, onCancel, onSubmit, student }: any) => {
-    const [form] = Form.useForm();
+    const [studentForm] = Form.useForm();
+    const [isEdit, setIsEdit] = useState(null as boolean | null);
+
+    useEffect(() => {
+        if (isEdit === null) return;
+
+        if (student) {
+            setIsEdit(true);
+            if (studentForm)
+                studentForm.setFieldsValue({ ...student, dob: moment(student.dob) });
+        } else {
+            setIsEdit(false);
+            if (studentForm)
+                studentForm.setFieldsValue({
+                    mssv: "",
+                    fullName: "",
+                    dob: "",
+                    gender: "",
+                    faculty: "",
+                });
+        }
+    }, [student]);
 
     return (
         <Modal
-            title={student ? "Sửa sinh viên" : "Thêm sinh viên"}
+            title={isEdit ? "Sửa sinh viên" : "Thêm sinh viên"}
             open={visible}
             onCancel={onCancel}
             footer={null}
             key={student ? student.mssv : "new"}
         >
             <Form
+                form={studentForm}
                 initialValues={student ? { ...student, dob: moment(student.dob) } : {}}
                 onFinish={(values) => {
                     onSubmit(values);
-                    if (student == null)
-                        form.resetFields();
+                    if (!isEdit) {
+                        studentForm.resetFields();
+                    }
                 }}
                 layout="vertical"
-                form={form}
             >
                 <Form.Item name="mssv" label="Mã số sinh viên" rules={[{ required: true, message: "Vui lòng nhập MSSV!" }]}>
                     <Input disabled={!!student} />

@@ -1,6 +1,6 @@
 'use client'
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, ApartmentOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, ApartmentOutlined, HomeOutlined } from '@ant-design/icons';
 import { Button, Menu, theme, Layout as AntdLayout, Typography } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
@@ -20,18 +20,20 @@ export default function Layout({
         if (e.key === '1') {
             router.push('/');
         } else if (e.key === '2') {
+            router.push('/student-management');
+        } else if (e.key === '3') {
             router.push('/reference-data-management');
         }
     };
 
     const getKeyFromUrl = (url: string) => {
-        if (url === '/') {
-            return '1';
-        } else if (url === '/reference-data-management') {
+        if (url === '/student-management') {
             return '2';
+        } else if (url === '/reference-data-management') {
+            return '3';
         }
         return '1';
-    };
+    };  
 
     return (
         <AntdLayout style={{ height: '100vh' }}>
@@ -46,11 +48,16 @@ export default function Layout({
                     items={[
                         {
                             key: '1',
+                            icon: <HomeOutlined />,
+                            label: 'Trang chủ',
+                        },
+                        {
+                            key: '2',
                             icon: <UserOutlined />,
                             label: 'Quản lý sinh viên',
                         },
                         {
-                            key: '2',
+                            key: '3',
                             icon: <ApartmentOutlined />,
                             label: 'Quản lý danh mục',
                         }
