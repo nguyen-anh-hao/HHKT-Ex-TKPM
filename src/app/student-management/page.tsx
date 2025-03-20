@@ -7,7 +7,6 @@ import StudentTable from "./_components/StudentTable";
 import StudentModal from "./_components/StudentModal";
 import { addStudent, updateStudent, deleteStudent } from "./_components/StudentActions";
 import { Student } from "./interface/Student";
-import { message } from "antd";
 
 const Home = () => {
     const [students, setStudents] = useState<Student[]>([
@@ -93,6 +92,3 @@ const Home = () => {
 };
 
 export default Home;
-
-// **Tìm kiếm sinh viên**: Tìm kiếm sinh viên theo họ tên hoặc MSSV.
-// tanstack
