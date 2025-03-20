@@ -1,6 +1,6 @@
 'use client'
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, ApartmentOutlined, HomeOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, ApartmentOutlined, HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Menu, theme, Layout as AntdLayout, Typography } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
@@ -24,6 +24,9 @@ export default function Layout({
         } else if (e.key === '3') {
             router.push('/reference-data-management');
         }
+        else if (e.key === '4') {
+            router.push('/inputoutput-data-management');
+        }
     };
 
     const getKeyFromUrl = (url: string) => {
@@ -38,7 +41,7 @@ export default function Layout({
     return (
         <AntdLayout style={{ height: '100vh' }}>
             <Sider width={250} trigger={null} collapsible collapsed={collapsed} style={{ background: '#FFFFFF' }}>
-                <Typography.Title level={3} style={{ textAlign: 'center', height: '80px', lineHeight: '80px', margin: 0 }}>
+                <Typography.Title level={4} style={{ textAlign: 'center', height: '80px', lineHeight: '80px', margin: 0 }}>
                     <TeamOutlined />
                 </Typography.Title>
                 <Menu
@@ -60,6 +63,11 @@ export default function Layout({
                             key: '3',
                             icon: <ApartmentOutlined />,
                             label: 'Quản lý danh mục',
+                        },
+                        {
+                            key: '4',
+                            icon: <SwapOutlined />,
+                            label: 'Nhập xuất dữ liệu',
                         }
                     ]}
                 />
