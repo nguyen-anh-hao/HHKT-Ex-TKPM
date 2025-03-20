@@ -6,7 +6,8 @@ import { Student } from "../interface/Student";
 import moment from "moment";
 import { useState, useEffect } from "react";
 
-const { TabPane } = Tabs;
+import useReferenceDataStore from "../../store/referenceDataStore";
+
 const { Option } = Select;
 
 interface StudentModalProps {
@@ -20,6 +21,10 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
     const [studentForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean | null>(null);
     const [documentType, setDocumentType] = useState<string | null>(student?.documentType || null);
+
+    const { facultyOptions } = useReferenceDataStore() as { facultyOptions: { value: string; label: string }[] };
+    const { programOptions } = useReferenceDataStore() as { programOptions: { value: string; label: string }[] };
+    const { studentStatusOptions } = useReferenceDataStore() as { studentStatusOptions: { value: string; label: string }[] };
 
     useEffect(() => {
         if (student) {
@@ -72,11 +77,10 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     <Row gutter={16}>
                         <Col span={6}>
                             <Form.Item label="Khoa" name="faculty" rules={[{ required: true, message: 'Khoa là bắt buộc!' }]}>
-                                <Select placeholder="Chọn khoa">
-                                    <Option value="Khoa Luật">Khoa Luật</Option>
-                                    <Option value="Khoa Tiếng Anh thương mại">Khoa Tiếng Anh thương mại</Option>
-                                    <Option value="Khoa Tiếng Nhật">Khoa Tiếng Nhật</Option>
-                                    <Option value="Khoa Tiếng Pháp">Khoa Tiếng Pháp</Option>
+                                <Select>
+                                    {facultyOptions.map((faculty: any) => (
+                                        <Option key={faculty.value} value={faculty.value}>{faculty.label}</Option>
+                                    ))}
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -87,16 +91,19 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                         </Col>
                         <Col span={6}>
                             <Form.Item label="Chương trình" name="program" rules={[{ required: true, message: 'Chương trình là bắt buộc!' }]}>
-                                <Input />
+                                <Select>
+                                    {programOptions.map((program: any) => (
+                                        <Option key={program.value} value={program.value}>{program.label}</Option>
+                                    ))}
+                                </Select>
                             </Form.Item>
                         </Col>
                         <Col span={6}>
                             <Form.Item label="Tình trạng" name="status" rules={[{ required: true, message: 'Tình trạng là bắt buộc!' }]}>
                                 <Select placeholder="Chọn tình trạng">
-                                    <Option value="Đang học">Đang học</Option>
-                                    <Option value="Đã tốt nghiệp">Đã tốt nghiệp</Option>
-                                    <Option value="Đã thôi học">Đã thôi học</Option>
-                                    <Option value="Tạm dừng học">Tạm dừng học</Option>
+                                    {studentStatusOptions.map((studentStatus: any) => (
+                                        <Option key={studentStatus.value} value={studentStatus.value}>{studentStatus.label}</Option>
+                                    ))}
                                 </Select>
                             </Form.Item>
                         </Col>

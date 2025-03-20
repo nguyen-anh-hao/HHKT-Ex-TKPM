@@ -2,24 +2,50 @@
 
 import { useState } from "react";
 import { Button, Input, Space, Typography } from "antd";
+import useReferenceDataStore from "../store/referenceDataStore";
 
 const { Title } = Typography;
 
 const FacultyPage = () => {
-    const [faculties, setFaculties] = useState<string[]>(["Khoa Công nghệ thông tin", "Khoa Luật", "Khoa Tiếng Anh thương mại", "Khoa Tiếng Nhật", "Khoa Tiếng Pháp"]);
-    const [programs, setPrograms] = useState<string[]>(["Cử nhân", "Kỹ sư", "Thạc sĩ", "Tiến sĩ"]);
-    const [statuses, setStatuses] = useState<string[]>(["Đang học", "Đã tốt nghiệp", "Đã thôi học", "Tạm dừng học"]);
+    const { facultyOptions } = useReferenceDataStore() as { facultyOptions: { value: string; label: string }[] };
+    const { programOptions } = useReferenceDataStore() as { programOptions: { value: string; label: string }[] };
+    const { studentStatusOptions } = useReferenceDataStore() as { studentStatusOptions: { value: string; label: string }[] };
+
+    const { addFaculty } = useReferenceDataStore() as { addFaculty: (faculty: string) => void };
+    const { addProgram } = useReferenceDataStore() as { addProgram: (program: string) => void };
+    const { addStudentStatus } = useReferenceDataStore() as { addStudentStatus: (studentStatus: string) => void };
+
+    const { deleteFaculty } = useReferenceDataStore() as { deleteFaculty: (faculty: string) => void };
+    const { deleteProgram } = useReferenceDataStore() as { deleteProgram: (program: string) => void };
+    const { deleteStudentStatus } = useReferenceDataStore() as { deleteStudentStatus: (studentStatus: string) => void };
+
+    const { updateFaculty } = useReferenceDataStore() as { updateFaculty: (oldFaculty: string, newFaculty: string) => void };
+    const { updateProgram } = useReferenceDataStore() as { updateProgram: (oldProgram: string, newProgram: string) => void };
+    const { updateStudentStatus } = useReferenceDataStore() as { updateStudentStatus: (oldStudentStatus: string, newStudentStatus: string) => void };
+
+    const [faculties, setFaculties] = useState<string[]>(facultyOptions.map((option) => option.value));
+    const [programs, setPrograms] = useState<string[]>(programOptions.map((option) => option.value));
+    const [statuses, setStatuses] = useState<string[]>(studentStatusOptions.map((option) => option.value));
 
     const handleAdd = (setState: any) => {
         setState((prev: any) => [...prev, ""]);
+        if (setState === setFaculties) addFaculty("");
+        if (setState === setPrograms) addProgram("");
+        if (setState === setStatuses) addStudentStatus("");
     };
 
     const handleChange = (setState: any, index: number, value: string) => {
         setState((prev: any[]) => prev.map((item, i) => (i === index ? value : item)));
+        if (setState === setFaculties) updateFaculty(faculties[index], value);
+        if (setState === setPrograms) updateProgram(programs[index], value);
+        if (setState === setStatuses) updateStudentStatus(statuses[index], value);
     };
 
     const handleDelete = (setState: any, index: number) => {
         setState((prev: any[]) => prev.filter((_, i) => i !== index));
+        if (setState === setFaculties) deleteFaculty(faculties[index]);
+        if (setState === setPrograms) deleteProgram(programs[index]);
+        if (setState === setStatuses) deleteStudentStatus(statuses[index]);
     };
 
     return (
