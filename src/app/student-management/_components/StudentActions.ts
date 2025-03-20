@@ -1,6 +1,7 @@
 // components/StudentActions.ts
 import { studentSchema } from "./StudentSchema";
 import { message } from "antd";
+import { Student } from "../interface/Student";
 
 export const validateStudent = (values: any) => {
     try {
@@ -13,8 +14,8 @@ export const validateStudent = (values: any) => {
     }
 };
 
-export const addStudent = (students: any[], newStudent: any) => {
-    if (students.some(student => student.mssv === newStudent.mssv)) {
+export const addStudent = (students: Student[], newStudent: Student) => {
+    if (students.some(student => student.studentId === newStudent.studentId)) {
         message.error("MSSV này đã tồn tại!");
         return students;
     }
@@ -22,12 +23,12 @@ export const addStudent = (students: any[], newStudent: any) => {
     return [...students, newStudent];
 };
 
-export const updateStudent = (students: any[], updatedStudent: any) => {
+export const updateStudent = (students: Student[], updatedStudent: Student) => {
     message.success("Cập nhật thông tin sinh viên!");
-    return students.map(student => student.mssv === updatedStudent.mssv ? updatedStudent : student);
+    return students.map(student => student.studentId === updatedStudent.studentId ? updatedStudent : student);
 };
 
-export const deleteStudent = (students: any[], mssv: string) => {
+export const deleteStudent = (students: Student[], mssv: string) => {
     message.success("Xóa sinh viên thành công!");
-    return students.filter(student => student.mssv !== mssv);
+    return students.filter(student => student.studentId !== mssv);
 };

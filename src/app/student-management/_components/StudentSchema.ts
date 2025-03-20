@@ -7,7 +7,7 @@ export const studentSchema = z.object({
     dob: z.string().min(1, { message: "Ngày sinh không được để trống!" }),
     gender: z.string().min(1, { message: "Giới tính không được để trống!" }),
     faculty: z.string().min(1, { message: "Khoa không được để trống!" }),
-    course: z.string().min(1, { message: "Khóa không được để trống!" }),
+    intake: z.string().min(1, { message: "Khóa không được để trống!" }),
     program: z.string().min(1, { message: "Chương trình không được để trống!" }),
     permanentAddress: z.string().optional(),
     temporaryAddress: z.string().optional(),
