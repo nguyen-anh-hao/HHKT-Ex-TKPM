@@ -29,6 +29,14 @@ public class SinhVienServiceImpl implements ISinhVienService {
 
     @Override
     @Transactional
+    public List<SinhVienResponse> addStudents(List<SinhVienRequest> requests) {
+        return requests.stream()
+                .map(this::addStudent)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
     public SinhVienResponse addStudent(SinhVienRequest request) {
         Khoa khoa = khoaRepository.findById(request.getKhoaId()).orElseThrow(() -> new RuntimeException("Khoa not found"));
         ChuongTrinh chuongTrinh = chuongTrinhRepository.findById(request.getChuongTrinhId()).orElseThrow(() -> new RuntimeException("Chuong trinh not found"));

@@ -2,7 +2,6 @@ package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.common.PaginationInfo;
-import org.example.backend.domain.SinhVien;
 import org.example.backend.dto.request.SinhVienRequest;
 import org.example.backend.dto.response.ApiResponse;
 import org.example.backend.dto.response.SinhVienResponse;
