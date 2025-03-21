@@ -2,8 +2,12 @@ package org.example.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.backend.common.Auditable;
 
 import java.util.List;
 
@@ -11,7 +15,10 @@ import java.util.List;
 @Table(name = "tinh_trang_sinh_vien")
 @Getter
 @Setter
-public class TinhTrangSinhVien {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class TinhTrangSinhVien extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
