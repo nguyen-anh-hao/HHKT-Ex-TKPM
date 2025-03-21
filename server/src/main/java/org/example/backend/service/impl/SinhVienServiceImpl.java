@@ -2,14 +2,22 @@ package org.example.backend.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.backend.domain.*;
-import org.example.backend.dto.request.DiaChiRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.example.backend.domain.ChuongTrinh;
+import org.example.backend.domain.DiaChi;
+import org.example.backend.domain.GiayTo;
+import org.example.backend.domain.Khoa;
+import org.example.backend.domain.SinhVien;
+import org.example.backend.domain.TinhTrangSinhVien;
 import org.example.backend.dto.request.SinhVienRequest;
 import org.example.backend.dto.response.SinhVienResponse;
 import org.example.backend.mapper.DiaChiMapper;
 import org.example.backend.mapper.GiayToMapper;
 import org.example.backend.mapper.SinhVienMapper;
-import org.example.backend.repository.*;
+import org.example.backend.repository.IChuongTrinhRepository;
+import org.example.backend.repository.IKhoaRepository;
+import org.example.backend.repository.ISinhVienRepository;
+import org.example.backend.repository.ITinhTrangRepository;
 import org.example.backend.service.ISinhVienService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SinhVienServiceImpl implements ISinhVienService {
 
     private final ISinhVienRepository sinhVienRepository;
@@ -49,12 +58,16 @@ public class SinhVienServiceImpl implements ISinhVienService {
 
         sinhVien = sinhVienRepository.save(sinhVien);
 
+        log.info("SinhVien {} has been created and saved", sinhVien.getMssv());
+
         return SinhVienMapper.toResponseDTO(sinhVien);
     }
 
     @Override
     public SinhVienResponse getStudent(String mssv) {
         SinhVien sinhVien = sinhVienRepository.findByMssv(mssv).orElseThrow(() -> new RuntimeException("Sinh vien not found"));
+
+        log.info("SinhVien {} has been retrieved", sinhVien.getMssv());
 
         return SinhVienMapper.toResponseDTO(sinhVien);
     }
@@ -83,6 +96,8 @@ public class SinhVienServiceImpl implements ISinhVienService {
         sinhVien.setChuongTrinh(chuongTrinh);
         sinhVien.setTinhTrang(tinhTrang);
 
+        log.info("SinhVien {} has been updated all fields except DiaChi and GiayTo", sinhVien.getMssv());
+
         // Update DiaChi (Remove only addresses that are no longer in request)
         List<DiaChi> existingDiaChis = sinhVien.getDiaChis();
         List<DiaChi> updatedDiaChis = request.getDiaChis().stream()
@@ -95,6 +110,8 @@ public class SinhVienServiceImpl implements ISinhVienService {
 
         existingDiaChis.clear();
         existingDiaChis.addAll(updatedDiaChis);
+
+        log.info("DiaChi of SinhVien {} has been updated", sinhVien.getMssv());
 
         // Update GiayTo (Update existing or add new)
         List<GiayTo> existingGiayTos = sinhVien.getGiayTos();
@@ -124,7 +141,11 @@ public class SinhVienServiceImpl implements ISinhVienService {
         existingGiayTos.clear();
         existingGiayTos.addAll(updatedGiayTos);
 
+        log.info("GiayTo of SinhVien {} has been updated", sinhVien.getMssv());
+
         SinhVien updatedSinhVien = sinhVienRepository.save(sinhVien);
+
+        log.info("SinhVien {} has been updated all fields and saved", sinhVien.getMssv());
 
         return SinhVienMapper.toResponseDTO(updatedSinhVien);
     }
@@ -133,6 +154,8 @@ public class SinhVienServiceImpl implements ISinhVienService {
     public void deleteStudent(String mssv) {
         SinhVien sinhVien = sinhVienRepository.findByMssv(mssv).orElseThrow(() -> new RuntimeException("Sinh vien not found"));
         sinhVienRepository.delete(sinhVien);
+
+        log.info("SinhVien {} has been deleted", sinhVien.getMssv());
     }
 
     @Override
