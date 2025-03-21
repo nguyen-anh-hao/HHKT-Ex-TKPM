@@ -4,9 +4,10 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, Apart
 import { Button, Menu, theme, Layout as AntdLayout, Typography } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
-import {useRouter, usePathname} from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export default function Layout({
     children,
@@ -36,66 +37,70 @@ export default function Layout({
             return '3';
         }
         return '1';
-    };  
+    };
+
+    const queryClient = new QueryClient();
 
     return (
-        <AntdLayout style={{ height: '100vh' }}>
-            <Sider width={250} trigger={null} collapsible collapsed={collapsed} style={{ background: '#FFFFFF' }}>
-                <Typography.Title level={4} style={{ textAlign: 'center', height: '80px', lineHeight: '80px', margin: 0 }}>
-                    <TeamOutlined />
-                </Typography.Title>
-                <Menu
-                    mode="inline"
-                    selectedKeys={[getKeyFromUrl(usePathname())]}
-                    onClick={handleMenuClick}
-                    items={[
-                        {
-                            key: '1',
-                            icon: <HomeOutlined />,
-                            label: 'Trang chủ',
-                        },
-                        {
-                            key: '2',
-                            icon: <UserOutlined />,
-                            label: 'Quản lý sinh viên',
-                        },
-                        {
-                            key: '3',
-                            icon: <ApartmentOutlined />,
-                            label: 'Quản lý danh mục',
-                        },
-                        {
-                            key: '4',
-                            icon: <SwapOutlined />,
-                            label: 'Nhập xuất dữ liệu',
-                        }
-                    ]}
-                />
-            </Sider>
-            <AntdLayout className="site-layout">
-                <Header style={{ padding: 0, background: '#FFFFFF' }} >
-                    <Button
-                        type="text"
-                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                        onClick={() => setCollapsed(!collapsed)}
-                        style={{
-                            fontSize: '16px',
-                            width: 64,
-                            height: 64,
-                        }}
+        <QueryClientProvider client={queryClient}>
+            <AntdLayout style={{ height: '100vh' }}>
+                <Sider width={250} trigger={null} collapsible collapsed={collapsed} style={{ background: '#FFFFFF' }}>
+                    <Typography.Title level={4} style={{ textAlign: 'center', height: '80px', lineHeight: '80px', margin: 0 }}>
+                        <TeamOutlined />
+                    </Typography.Title>
+                    <Menu
+                        mode="inline"
+                        selectedKeys={[getKeyFromUrl(usePathname())]}
+                        onClick={handleMenuClick}
+                        items={[
+                            {
+                                key: '1',
+                                icon: <HomeOutlined />,
+                                label: 'Trang chủ',
+                            },
+                            {
+                                key: '2',
+                                icon: <UserOutlined />,
+                                label: 'Quản lý sinh viên',
+                            },
+                            {
+                                key: '3',
+                                icon: <ApartmentOutlined />,
+                                label: 'Quản lý danh mục',
+                            },
+                            {
+                                key: '4',
+                                icon: <SwapOutlined />,
+                                label: 'Nhập xuất dữ liệu',
+                            }
+                        ]}
                     />
-                </Header>
-                <Content
-                    className="site-layout-background"
-                    style={{
-                        margin: '24px 16px',
-                        padding: 24,
-                        minHeight: 280,
-                    }}
-                >
-                    {children}
-                </Content>
+                </Sider>
+                <AntdLayout className="site-layout">
+                    <Header style={{ padding: 0, background: '#FFFFFF' }} >
+                        <Button
+                            type="text"
+                            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                            onClick={() => setCollapsed(!collapsed)}
+                            style={{
+                                fontSize: '16px',
+                                width: 64,
+                                height: 64,
+                            }}
+                        />
+                    </Header>
+                    <Content
+                        className="site-layout-background"
+                        style={{
+                            margin: '24px 16px',
+                            padding: 24,
+                            minHeight: 280,
+                        }}
+                    >
+                        {children}
+                    </Content>
+                </AntdLayout>
             </AntdLayout>
-        </AntdLayout>
+        </QueryClientProvider>
     );
 }
