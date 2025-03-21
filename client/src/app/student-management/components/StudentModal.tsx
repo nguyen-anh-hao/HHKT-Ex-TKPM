@@ -1,12 +1,12 @@
 // components/StudentModal.tsx
 import { Tabs, Form, Input, Button, Modal, Select, Row, Col, DatePicker, Checkbox } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
-import { Student } from "../interface/Student";
+import { Student } from "../../../interfaces/student/state.interface";
 
 import moment from "moment";
 import { useState, useEffect } from "react";
 
-import useReferenceDataStore from "../../store/referenceDataStore";
+import useReferenceDataStore from "../../../lib/stores/referenceDataStore";
 
 const { Option } = Select;
 

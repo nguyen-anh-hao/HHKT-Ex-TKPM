@@ -20,26 +20,3 @@ export interface Student {
     hasChip: boolean;
     nationality: string;
 }
-
-export const defaultStudent: Student = {
-    studentId: '',
-    fullName: '',
-    dob: '',
-    gender: '',
-    faculty: '',
-    intake: '',
-    program: '',
-    status: '',
-    permanentAddress: '',
-    temporaryAddress: '',
-    email: '',
-    phone: '',
-    documentType: '',
-    documentNumber: '',
-    issuedDate: '',
-    expiredDate: '',
-    issuedBy: '',
-    issuedCountry: '',
-    hasChip: false,
-    nationality: ''
-};

@@ -9,6 +9,13 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+const menuItems = [
+    { key: '1', icon: <HomeOutlined />, label: 'Trang chủ', route: '/' },
+    { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
+    { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-data-management' },
+    { key: '4', icon: <SwapOutlined />, label: 'Nhập xuất dữ liệu', route: '/inputoutput-data-management' }
+];
+
 export default function Layout({
     children,
 }: Readonly<{
@@ -18,25 +25,15 @@ export default function Layout({
     const router = useRouter();
 
     const handleMenuClick = (e: any) => {
-        if (e.key === '1') {
-            router.push('/');
-        } else if (e.key === '2') {
-            router.push('/student-management');
-        } else if (e.key === '3') {
-            router.push('/reference-data-management');
-        }
-        else if (e.key === '4') {
-            router.push('/inputoutput-data-management');
+        const selectedItem = menuItems.find(item => item.key === e.key);
+        if (selectedItem) {
+            router.push(selectedItem.route);
         }
     };
 
     const getKeyFromUrl = (url: string) => {
-        if (url === '/student-management') {
-            return '2';
-        } else if (url === '/reference-data-management') {
-            return '3';
-        }
-        return '1';
+        const foundItem = menuItems.find(item => item.route === url);
+        return foundItem ? foundItem.key : '1';
     };
 
     const queryClient = new QueryClient();
@@ -52,28 +49,11 @@ export default function Layout({
                         mode="inline"
                         selectedKeys={[getKeyFromUrl(usePathname())]}
                         onClick={handleMenuClick}
-                        items={[
-                            {
-                                key: '1',
-                                icon: <HomeOutlined />,
-                                label: 'Trang chủ',
-                            },
-                            {
-                                key: '2',
-                                icon: <UserOutlined />,
-                                label: 'Quản lý sinh viên',
-                            },
-                            {
-                                key: '3',
-                                icon: <ApartmentOutlined />,
-                                label: 'Quản lý danh mục',
-                            },
-                            {
-                                key: '4',
-                                icon: <SwapOutlined />,
-                                label: 'Nhập xuất dữ liệu',
-                            }
-                        ]}
+                        items={menuItems.map(item => ({
+                            key: item.key,
+                            icon: item.icon,
+                            label: item.label
+                        }))}
                     />
                 </Sider>
                 <AntdLayout className="site-layout">
