@@ -186,5 +186,11 @@
 
 ![image](https://github.com/user-attachments/assets/f71057c1-922a-4055-89bf-bcb3077d0a9b)
 
+Để thêm, xóa, sửa các nhãn mới cho Khoa, Chương trình, Trạng thái, vào mục "Quản lý danh muc"
 
+![image](https://github.com/user-attachments/assets/3e906e30-5837-45fd-929a-11931e88275f)
+
+Để nhập xuất dữ liệu, vào mục "Nhập xuất dữ liệu"
+
+![image](https://github.com/user-attachments/assets/4234a42c-4838-4a5b-95e8-2c29eb700916)
 
