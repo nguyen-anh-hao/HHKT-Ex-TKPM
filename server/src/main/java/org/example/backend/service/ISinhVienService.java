@@ -6,7 +6,11 @@ import org.example.backend.dto.response.SinhVienResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ISinhVienService {
+
+    List<SinhVienResponse> addStudents(List<SinhVienRequest> requests);
 
     SinhVienResponse addStudent(SinhVienRequest request);
 
