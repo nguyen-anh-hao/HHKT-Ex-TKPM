@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import '@ant-design/v5-patch-for-react-19';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider } from "antd";
-import Layout from "./_components/Layout";
+import Layout from "../components/layout/Layout";
 
 export const metadata: Metadata = {
   title: "Create Next App",

@@ -1,7 +1,7 @@
 // components/StudentActions.ts
-import { studentSchema } from "./StudentSchema";
+import { studentSchema } from "../validators/StudentSchema";
 import { message } from "antd";
-import { Student } from "../interface/Student";
+import { Student } from "../../interfaces/student/state.interface";
 
 export const validateStudent = (values: any) => {
     try {

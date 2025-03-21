@@ -1,77 +1,56 @@
-"use client"
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import StudentTable from "./_components/StudentTable";
-import StudentModal from "./_components/StudentModal";
-import { addStudent, updateStudent, deleteStudent } from "./_components/StudentActions";
-import { Student } from "./interface/Student";
+import StudentTable from "./components/StudentTable";
+import StudentModal from "./components/StudentModal";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchStudents, createStudent as apiCreateStudent, updateStudent as apiUpdateStudent, deleteStudent as apiDeleteStudent } from "@/lib/api/studentApi";
+import { convertGetResponseToStudent, convertStudentToPostRequest } from "@/lib/utils/studentConverter";
+import { Student } from "@/interfaces/student/state.interface";
+import { updateStudent as updateStudentState, addStudent as addStudentState, deleteStudent as deleteStudentState } from "@/lib/actions/StudentActions";
 
 const Home = () => {
-    const [students, setStudents] = useState<Student[]>([
-        {
-            studentId: "1",
-            fullName: "Nguyễn Văn A",
-            dob: "1999-01-01",
-            gender: "Nam",
-            faculty: "Khoa Tiếng Anh thương mại",
-            intake: "2021",
-            program: "Đại trà",
-            status: "Đang học",
-            permanentAddress: "Hà Nội",
-            temporaryAddress: "Hà Nội",
-            email: "",
-            phone: "",
-            documentType: "",
-            documentNumber: "",
-            issuedDate: "",
-            expiredDate: "",
-            issuedBy: "",
-            issuedCountry: "",
-            hasChip: false, 
-            nationality: "",
-        },
-        {
-            studentId: "2",
-            fullName: "Nguyễn Thị B",
-            dob: "1989-01-01",
-            gender: "Nữ",
-            faculty: "Khoa Tiếng Pháp",
-            intake: "2019",
-            program: "CLC",
-            status: "Đã tốt nghiệp",
-            permanentAddress: "Hà Tĩnh",
-            temporaryAddress: "Hà Nam",
-            email: "",
-            phone: "",
-            documentType: "",
-            documentNumber: "",
-            issuedDate: "",
-            expiredDate: "",
-            issuedBy: "",
-            issuedCountry: "",
-            hasChip: false, 
-            nationality: "",
-        },
-    ]);
-
+    const [students, setStudents] = useState<Student[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+    const queryClient = useQueryClient();
+
+    const { data: studentData } = useQuery({ queryKey: ["sinh-vien"], queryFn: fetchStudents });
+
+    const { mutate: createStudentAPI } = useMutation({ mutationFn: apiCreateStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["sinh-vien"]}) });
+    const { mutate: updateStudentAPI } = useMutation({ mutationFn: apiUpdateStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["sinh-vien"]}) });
+    const { mutate: deleteStudentAPI } = useMutation({ mutationFn: apiDeleteStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["sinh-vien"]}) });
+
+    useEffect(() => {
+        if (studentData) {
+            const convertedStudents = studentData.data.map(convertGetResponseToStudent);
+            setStudents(convertedStudents);
+        }
+    }, [studentData]);
 
     const handleAddOrUpdateStudent = (values: Student) => {
         if (selectedStudent) {
-            setStudents(updateStudent(students, values));
+            setStudents(updateStudentState(students, values));
+            updateStudentAPI(values);
+        } else {
+            setStudents(addStudentState(students, values));
+            createStudentAPI(values);
         }
-        else {
-            setStudents(addStudent(students, values));
-        }
+    };
+
+    const handleDeleteStudent = (studentId: string) => {
+        setStudents(deleteStudentState(students, studentId));
+        deleteStudentAPI(studentId);
     };
 
     return (
         <div>
             <h1>Quản lý sinh viên</h1>
-            <Button style={{ marginBottom: 16 }} type="primary" icon={<PlusOutlined />} onClick={() => { setSelectedStudent(null); setIsModalVisible(true); }}>Thêm sinh viên</Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => { setSelectedStudent(null); setIsModalVisible(true); }}>
+                Thêm sinh viên
+            </Button>
             <StudentTable
                 students={students}
                 openModal={setIsModalVisible}
@@ -80,10 +59,7 @@ const Home = () => {
             />
             <StudentModal
                 visible={isModalVisible}
-                onCancel={() => {
-                    setIsModalVisible(false);
-                    setSelectedStudent(null);
-                }}
+                onCancel={() => { setIsModalVisible(false); setSelectedStudent(null); }}
                 onSubmit={handleAddOrUpdateStudent}
                 student={selectedStudent || undefined}
             />
@@ -92,3 +68,14 @@ const Home = () => {
 };
 
 export default Home;
+
+// Task:
+// - Call API "Quản lý danh mục"
+// - Match labels "Quản lý danh mục" with "Quản lý sinh viên"
+
+// Bug:
+// - Add new student API
+// - Update student API
+
+// Improvement:
+// - Pagination for student table

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Input, Space, Typography } from "antd";
-import useReferenceDataStore from "../store/referenceDataStore";
+import useReferenceDataStore from "../../lib/stores/referenceDataStore";
 
 const { Title } = Typography;
 
