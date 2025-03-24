@@ -55,7 +55,7 @@ const Home = () => {
                 students={students}
                 openModal={setIsModalVisible}
                 onEdit={setSelectedStudent}
-                onDelete={(studentId: string) => setStudents(deleteStudent(students, studentId))}
+                onDelete={handleDeleteStudent}
             />
             <StudentModal
                 visible={isModalVisible}
