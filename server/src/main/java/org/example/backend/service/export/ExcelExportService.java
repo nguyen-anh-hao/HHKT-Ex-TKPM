@@ -6,9 +6,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.example.backend.dto.response.DiaChiResponse;
-import org.example.backend.dto.response.GiayToResponse;
-import org.example.backend.dto.response.SinhVienResponse;
+import org.example.backend.dto.response.AddressResponse;
+import org.example.backend.dto.response.DocumentResponse;
+import org.example.backend.dto.response.StudentResponse;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +41,9 @@ public class ExcelExportService implements ExportService {
             return out.toByteArray();
         }
 
-        if (data.get(0) instanceof SinhVienResponse) {
-            List<Column<SinhVienResponse>> columns = defaultSinhVienResponseColumns();
-            return exportData((List<SinhVienResponse>) data, columns);
+        if (data.get(0) instanceof StudentResponse) {
+            List<Column<StudentResponse>> columns = defaultStudentResponseColumns();
+            return exportData((List<StudentResponse>) data, columns);
         }
         throw new IllegalArgumentException("Unsupported data type");
     }
@@ -74,42 +74,47 @@ public class ExcelExportService implements ExportService {
         return out.toByteArray();
     }
 
-    private List<Column<SinhVienResponse>> defaultSinhVienResponseColumns() {
+    private List<Column<StudentResponse>> defaultStudentResponseColumns() {
         return List.of(
-                new Column<>("MSSV", SinhVienResponse::getMssv),
-                new Column<>("Họ và tên", SinhVienResponse::getHoTen),
-                new Column<>("Ngày sinh", response -> response.getNgaySinh().toString()),
-                new Column<>("Giới tính", SinhVienResponse::getGioiTinh),
-                new Column<>("Số điện thoại", SinhVienResponse::getSoDienThoai),
-                new Column<>("Email", SinhVienResponse::getEmail),
-                new Column<>("Khoa", SinhVienResponse::getKhoa),
-                new Column<>("Khóa", SinhVienResponse::getKhoaHoc),
-                new Column<>("Chương trình", SinhVienResponse::getChuongTrinh),
-                new Column<>("Tình trạng", SinhVienResponse::getTinhTrang),
-                new Column<>("Địa chỉ thường trú", response -> formatDiaChi(response.getDiaChis(), "Thường Trú")),
-                new Column<>("Địa chỉ tạm trú", response -> formatDiaChi(response.getDiaChis(), "Tạm Trú")),
-                new Column<>("Địa chỉ nhận thư", response -> formatDiaChi(response.getDiaChis(), "Nhận Thư")),
-                new Column<>("CMND", response -> formatGiayTo(response.getGiayTos(), "CMND")),
-                new Column<>("CCCD", response -> formatGiayTo(response.getGiayTos(), "CCCD")),
-                new Column<>("Hộ chiếu", response -> formatGiayTo(response.getGiayTos(), "Hộ Chiếu"))
+                new Column<>("Student ID", StudentResponse::getStudentId),
+                new Column<>("Full Name", StudentResponse::getFullName),
+                new Column<>("DoB", response -> response.getDob().toString()),
+                new Column<>("Gender", StudentResponse::getGender),
+                new Column<>("Phone", StudentResponse::getPhone),
+                new Column<>("Email", StudentResponse::getEmail),
+                new Column<>("Faculty", StudentResponse::getFaculty),
+                new Column<>("Intake", StudentResponse::getIntake),
+                new Column<>("Program", StudentResponse::getProgram),
+                new Column<>("Student Status", StudentResponse::getStudentStatus),
+                new Column<>("Permanent Address", response -> formatAddress(response.getAddresses(), "Permanent")),
+                new Column<>("Temporary Address", response -> formatAddress(response.getAddresses(), "Temporary")),
+                new Column<>("Mailing Address", response -> formatAddress(response.getAddresses(), "Mailing")),
+                new Column<>("ID Card", response -> formatDocument(response.getDocuments(), "ID Card")),
+                new Column<>("Citizen Card", response -> formatDocument(response.getDocuments(), "Citizen Card")),
+                new Column<>("Passport", response -> formatDocument(response.getDocuments(), "Passport"))
         );
     }
 
-    private String formatDiaChi(List<DiaChiResponse> diaChiResponses, String type) {
-        return diaChiResponses.stream()
-                .filter(diaChiResponse -> diaChiResponse.getLoaiDiaChi().equals(type))
-                .map(diaChiResponse -> diaChiResponse.getSoNhaTenDuong() + ", " + diaChiResponse.getPhuongXa() + ", " + diaChiResponse.getQuanHuyen() + ", " + diaChiResponse.getTinhThanhPho() + ", " + diaChiResponse.getQuocGia())
+    private String formatAddress(List<AddressResponse> addressResponses, String type) {
+        return addressResponses.stream()
+                .filter(addressResponse -> addressResponse.getAddressType().equals(type))
+                .map(addressResponse -> addressResponse.getHouseNumberStreetName() + ", "
+                        + addressResponse.getWardCommune() + ", "
+                        + addressResponse.getDistrict() + ", "
+                        + addressResponse.getCityProvince() + ", "
+                        + addressResponse.getCountry())
                 .findFirst()
                 .orElse("");
     }
 
-    private String formatGiayTo(List<GiayToResponse> giayToResponses, String type) {
-        return giayToResponses.stream()
-                .filter(giayToResponse -> giayToResponse.getLoaiGiayTo().equals(type))
-                .map(giayToResponse -> giayToResponse.getSoGiayTo() + ", " + giayToResponse.getNgayCap() + ", " + giayToResponse.getNoiCap())
+    private String formatDocument(List<DocumentResponse> documentResponses, String type) {
+        return documentResponses.stream()
+                .filter(documentResponse -> documentResponse.getDocumentType().equals(type))
+                .map(documentResponse -> documentResponse.getDocumentNumber() + ", "
+                        + documentResponse.getIssuedDate() + ", "
+                        + documentResponse.getIssuedBy())
                 .findFirst()
                 .orElse("");
-
     }
 
     @Override
@@ -120,6 +125,5 @@ public class ExcelExportService implements ExportService {
     @Override
     public MediaType getMediaType() {
         return MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-
     }
 }
