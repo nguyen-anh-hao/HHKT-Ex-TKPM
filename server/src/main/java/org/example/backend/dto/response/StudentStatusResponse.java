@@ -10,10 +10,10 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class KhoaResponse {
+public class StudentStatusResponse {
     private Integer id;
-    private String tenKhoa;
-    private List<SinhVienResponse> sinhViens;
+    private String studentStatusName;
+    private List<StudentResponse> students;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

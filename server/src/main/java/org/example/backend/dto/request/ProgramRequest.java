@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TinhTrangSinhVienRequest {
-    @NotBlank(message = "Tên tình trạng is required")
-    private String tenTinhTrang;
+public class ProgramRequest {
+    @NotBlank(message = "Program name is required")
+    private String programName;
 }
