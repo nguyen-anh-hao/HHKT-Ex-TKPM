@@ -12,21 +12,21 @@ import org.example.backend.common.Auditable;
 import java.util.List;
 
 @Entity
-@Table(name = "chuong_trinh")
+@Table(name = "programs")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChuongTrinh extends Auditable {
+public class Program extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "ten_chuong_trinh", nullable = false)
-    private String tenChuongTrinh;
+    @Column(name = "program_name", nullable = false)
+    private String programName;
 
-    @OneToMany(mappedBy = "chuongTrinh", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<SinhVien> sinhViens;
+    private List<Student> students;
 }
