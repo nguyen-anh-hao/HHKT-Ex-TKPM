@@ -70,6 +70,8 @@ StudentManagement/
     ```sh
    mvn spring-boot:run
     ```
+5. **Access the application**
+   - The server will start at <http://localhost:9000>.
 
 ## API Documentation 🔥
 
