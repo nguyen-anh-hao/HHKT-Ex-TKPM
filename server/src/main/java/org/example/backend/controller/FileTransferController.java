@@ -1,10 +1,11 @@
 package org.example.backend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backend.dto.request.SinhVienRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.example.backend.dto.request.StudentRequest;
 import org.example.backend.dto.response.ApiResponse;
-import org.example.backend.dto.response.SinhVienResponse;
-import org.example.backend.service.ISinhVienService;
+import org.example.backend.dto.response.StudentResponse;
+import org.example.backend.service.IStudentService;
 import org.example.backend.service.Import.ImportService;
 import org.example.backend.service.Import.ImportServiceFactory;
 import org.example.backend.service.export.ExportService;
@@ -21,10 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/file-transfer")
 @RequiredArgsConstructor
+@Slf4j
 public class FileTransferController {
     private final ExportServiceFactory exportServiceFactory;
     private final ImportServiceFactory importServiceFactory;
-    private final ISinhVienService sinhVienService;
+    private final IStudentService studentService;
 
     @GetMapping("/export")
     public ResponseEntity<byte[]> exportData(
@@ -33,6 +35,7 @@ public class FileTransferController {
             Pageable pageable
 
     ) throws IOException {
+        log.info("Exporting data to file: type={}, fileName={}", type, fileName);
         ExportService exportService = exportServiceFactory.getExportService(type);
 
         if (exportService == null) {
@@ -40,11 +43,13 @@ public class FileTransferController {
         }
 
         String exportFileName = (fileName != null && !fileName.trim().isEmpty()) ? fileName.trim() : "data_export";
-        byte[] data = exportService.exportData(sinhVienService.getAllStudent(pageable).getContent());
+        byte[] data = exportService.exportData(studentService.getAllStudents(pageable).getContent());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(exportService.getMediaType());
         headers.setContentDispositionFormData("attachment", exportFileName + "." + type);
+
+        log.info("Successfully exported data to file with data size: {}", data.length);
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -56,6 +61,7 @@ public class FileTransferController {
             @RequestParam String type,
             @RequestParam("file")MultipartFile file
             ) throws IOException {
+        log.info("Importing data from file: type={}, fileName={}", type, file.getOriginalFilename());
 
         ImportService importService = importServiceFactory.getImportService(type);
         if (importService == null) {
@@ -63,15 +69,17 @@ public class FileTransferController {
         }
 
         byte[] data = file.getBytes();
-        List<SinhVienRequest> sinhVienRequests = importService.importData(data, SinhVienRequest.class);
+        List<StudentRequest> studentRequests = importService.importData(data, StudentRequest.class);
 
-        List<SinhVienResponse> sinhVienResponses = sinhVienService.addStudents(sinhVienRequests);
+        List<StudentResponse> studentResponses = studentService.addStudents(studentRequests);
+
+        log.info("Successfully imported data from file with data size: {}", data.length);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.builder()
                         .status(200)
                         .message("Success")
-                        .data(sinhVienResponses)
+                        .data(studentResponses)
                         .build()
                 );
     }

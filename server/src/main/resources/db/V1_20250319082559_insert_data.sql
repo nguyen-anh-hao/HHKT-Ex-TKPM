@@ -1,23 +1,22 @@
-INSERT INTO khoa (ten_khoa) VALUES
-                                ('Khoa Luật'),
-                                ('Khoa Tiếng Anh thương mại'),
-                                ('Khoa Tiếng Nhật'),
-                                ('Khoa Tiếng Pháp');
+INSERT INTO faculties (faculty_name) VALUES
+    ('Khoa Luật'),
+    ('Khoa Tiếng Anh thương mại'),
+    ('Khoa Tiếng Nhật'),
+    ('Khoa Tiếng Pháp');
 
-INSERT INTO tinh_trang_sinh_vien (ten_tinh_trang) VALUES
-                                                      ('Đang học'),
-                                                      ('Đã tốt nghiệp'),
-                                                      ('Đã thôi học'),
-                                                      ('Tạm dừng học');
+INSERT INTO student_statuses (student_status_name) VALUES
+    ('Đang học'),
+    ('Đã tốt nghiệp'),
+    ('Đã thôi học'),
+    ('Tạm dừng học');
 
+INSERT INTO programs (program_name) VALUES
+    ('Đại học chính quy'),
+    ('Liên thông'),
+    ('Vừa học vừa làm');
 
-INSERT INTO chuong_trinh (ten_chuong_trinh) VALUES
-                                                ('Đại học chính quy'),
-                                                ('Liên thông'),
-                                                ('Vừa học vừa làm');
-
--- Dữ liệu bảng sinh_vien
-INSERT INTO sinh_vien (mssv, ho_ten, ngay_sinh, gioi_tinh, khoa_id, khoa_hoc, chuong_trinh_id, email, so_dien_thoai, tinh_trang_id, quoc_tich)
+-- Insert data for students table
+INSERT INTO students (student_id, full_name, dob, gender, faculty_id, intake, program_id, email, phone, student_status_id, nationality)
 VALUES
     ('SV001', 'Nguyễn Văn A', '2002-05-10', 'Nam', 1, 'K20', 1, 'nguyenvana@example.com', '0987654321', 1, 'Việt Nam'),
     ('SV002', 'Trần Thị B', '2001-08-15', 'Nữ', 2, 'K19', 2, 'tranthib@example.com', '0976543210', 2, 'Việt Nam'),
@@ -40,8 +39,8 @@ VALUES
     ('SV019', 'Vũ Thanh T', '2003-01-19', 'Nam', 3, 'K21', 2, 'vuthanht@example.com', '0809876543', 1, 'Việt Nam'),
     ('SV020', 'Lâm Thị U', '2001-06-13', 'Nữ', 1, 'K19', 3, 'lamthiu@example.com', '0798765432', 2, 'Việt Nam');
 
--- Dữ liệu bảng dia_chi
-INSERT INTO dia_chi (mssv, loai_dia_chi, so_nha_ten_duong, phuong_xa, quan_huyen, tinh_thanh_pho, quoc_gia)
+-- Insert data for addresses table
+INSERT INTO addresses (student_id, address_type, house_number_street_name, ward_commune, district, city_province, country)
 VALUES
     ('SV001', 'Thường Trú', '123 Lê Lợi', 'Phường 1', 'Quận 3', 'TP.HCM', 'Việt Nam'),
     ('SV001', 'Tạm Trú', '456 Trần Hưng Đạo', 'Phường 5', 'Quận 1', 'TP.HCM', 'Việt Nam'),
@@ -59,9 +58,8 @@ VALUES
     ('SV013', 'Thường Trú', '707 Điện Biên Phủ', 'Phường 15', 'Quận Bình Thạnh', 'TP.HCM', 'Việt Nam'),
     ('SV014', 'Tạm Trú', '808 Xô Viết Nghệ Tĩnh', 'Phường 16', 'Quận Gò Vấp', 'TP.HCM', 'Việt Nam');
 
-
-INSERT INTO giay_to (mssv, loai_giay_to, so_giay_to, ngay_cap, ngay_het_han, noi_cap, quoc_gia_cap, ghi_chu, co_gan_chip)
+-- Insert data for documents table
+INSERT INTO documents (student_id, document_type, document_number, issued_date, expired_date, issued_by, issued_country, note, has_chip)
 VALUES
     ('SV001', 'CCCD', '123456789012', '2020-10-01', '2030-10-01', 'TP.HCM', 'Việt Nam', NULL, TRUE),
     ('SV002', 'Hộ chiếu', 'B1234567', '2019-06-15', '2029-06-15', 'Hà Nội', 'Việt Nam', 'Dùng để du học', FALSE);
-
