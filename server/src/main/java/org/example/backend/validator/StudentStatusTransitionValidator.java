@@ -33,6 +33,14 @@ public class StudentStatusTransitionValidator implements ConstraintValidator<Val
             return true;
         }
 
-        return studentStatusRulesConfig.isValidTransition(currentStatus, newStatus);
+        boolean isValid = studentStatusRulesConfig.isValidTransition(currentStatus, newStatus);
+        if (!isValid) {
+            // Disable the default message and add a custom one
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Transition from " + currentStatus + " to " + newStatus + " is not allowed.")
+                    .addConstraintViolation();
+        }
+
+        return isValid;
     }
 }

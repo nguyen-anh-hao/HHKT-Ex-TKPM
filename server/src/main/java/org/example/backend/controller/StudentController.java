@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -19,6 +20,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class StudentController {
 
     private final IStudentService studentService;
@@ -70,7 +72,7 @@ public class StudentController {
     }
 
     @PatchMapping("/{studentId}")
-    public ApiResponse updateStudent(@PathVariable String studentId, @RequestBody @Valid StudentUpdateRequest request) {
+    public ApiResponse updateStudent(@PathVariable String studentId, @Valid @RequestBody StudentUpdateRequest request) {
         log.info("Received request to update student with studentId: {}", studentId);
 
         StudentResponse student = studentService.updateStudent(studentId, request);
