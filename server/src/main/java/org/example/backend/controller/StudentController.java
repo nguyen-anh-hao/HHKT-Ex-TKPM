@@ -1,7 +1,9 @@
 package org.example.backend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -63,7 +65,21 @@ public class StudentController {
 
     @GetMapping("/{studentId}")
     @Operation(summary = "Get student by studentId", description = "Get student details by studentId")
-    public APIResponse getStudent(@PathVariable String studentId) {
+    @ApiResponses(value = {
+            @ApiResponse (responseCode = "200", description = "Student retrieved successfully",
+            content =  @Content(mediaType = "application/json",
+            schema =  @Schema(implementation = StudentResponse.class))),
+            @ApiResponse (responseCode = "404", description = "Student not found",
+            content =  @Content(mediaType = "application/json")),
+            @ApiResponse (responseCode = "500", description = "Internal server error",
+            content =  @Content(mediaType = "application/json"))
+    })
+    public APIResponse getStudent(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Student ID to retrieve", required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class))
+            )
+            @PathVariable String studentId) {
         log.info("Received request to get student with studentId: {}", studentId);
 
         StudentResponse student = studentService.getStudent(studentId);
@@ -78,7 +94,20 @@ public class StudentController {
     }
 
     @GetMapping("")
-    public APIResponse getAllStudents(@PageableDefault(size = 3, page = 0) Pageable pageable) {
+    @Operation(summary = "Get all students", description = "Get all students in the system")
+    @ApiResponses(value = {
+            @ApiResponse (responseCode = "200", description = "Students retrieved successfully",
+            content =  @Content(mediaType = "application/json",
+            schema =  @Schema(implementation = StudentResponse.class))),
+            @ApiResponse (responseCode = "500", description = "Internal server error",
+            content =  @Content(mediaType = "application/json"))
+    })
+    public APIResponse getAllStudents(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Page number and size",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pageable.class))
+            )
+            @PageableDefault(size = 3, page = 0) Pageable pageable) {
         log.info("Received request to get all students");
 
         Page<StudentResponse> studentPage = studentService.getAllStudents(pageable);
@@ -94,7 +123,25 @@ public class StudentController {
     }
 
     @PatchMapping("/{studentId}")
-    public APIResponse updateStudent(@PathVariable String studentId, @Valid @RequestBody StudentUpdateRequest request) {
+    @Operation(summary = "Update student", description = "Update student details")
+    @ApiResponses(value = {
+            @ApiResponse (responseCode = "200", description = "Student updated successfully",
+            content =  @Content(mediaType = "application/json",
+            schema =  @Schema(implementation = StudentResponse.class))),
+            @ApiResponse (responseCode = "404", description = "Student not found",
+            content =  @Content(mediaType = "application/json")),
+            @ApiResponse (responseCode = "500", description = "Internal server error",
+            content =  @Content(mediaType = "application/json"))
+    })
+    public APIResponse updateStudent(
+            @Parameter(description = "ID of the student to update", required = true,
+                    example = "SV021")
+            @PathVariable String studentId,
+
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Student details to update", required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentUpdateRequest.class)))
+            @Valid @RequestBody StudentUpdateRequest request) {
         log.info("Received request to update student with studentId: {}", studentId);
 
         StudentResponse student = studentService.updateStudent(studentId, request);
@@ -109,7 +156,19 @@ public class StudentController {
     }
 
     @DeleteMapping("/{studentId}")
-    public APIResponse deleteStudent(@PathVariable String studentId) {
+    @Operation(summary = "Delete student", description = "Delete student by studentId")
+    @ApiResponses(value = {
+            @ApiResponse (responseCode = "200", description = "Student deleted successfully",
+            content =  @Content(mediaType = "application/json")),
+            @ApiResponse (responseCode = "404", description = "Student not found",
+            content =  @Content(mediaType = "application/json")),
+            @ApiResponse (responseCode = "500", description = "Internal server error",
+            content =  @Content(mediaType = "application/json"))
+    })
+    public APIResponse deleteStudent(
+            @Parameter(description = "ID of the student to delete", required = true,
+                    example = "SV021")
+            @PathVariable String studentId) {
         log.info("Received request to delete student with studentId: {}", studentId);
 
         studentService.deleteStudent(studentId);
@@ -123,7 +182,25 @@ public class StudentController {
     }
 
     @GetMapping("/search")
-    public APIResponse searchStudents(@RequestParam String keyword, @PageableDefault(size = 3, page = 0) Pageable pageable) {
+    @Operation(summary = "Search students", description = "Search students by keyword")
+    @ApiResponses(value = {
+            @ApiResponse (responseCode = "200", description = "Students retrieved successfully",
+            content =  @Content(mediaType = "application/json",
+            schema =  @Schema(implementation = StudentResponse.class))),
+            @ApiResponse (responseCode = "500", description = "Internal server error",
+            content =  @Content(mediaType = "application/json"))
+    })
+    public APIResponse searchStudents(
+            @Parameter(description = "Keyword to search", required = true,
+                examples = @ExampleObject(name = "keyword", value = "John")
+            )
+            @RequestParam String keyword,
+            @Parameter(description = "Page number and size",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pageable.class),
+                            examples = @ExampleObject(name = "page", value = "0")
+                    ))
+            @PageableDefault(size = 3, page = 0) Pageable pageable) {
         log.info("Received request to search students with keyword: {}", keyword);
 
         Page<StudentResponse> studentPage = studentService.searchStudent(keyword, pageable);
