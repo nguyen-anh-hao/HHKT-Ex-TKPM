@@ -75,6 +75,9 @@ StudentManagement/
 
 ## API Documentation 🔥
 
+### Access Swagger UI
+- **URL**: <http://localhost:9000/swagger-ui.html>
+
 ### Student Management APIs
 
 | Method | Endpoint | Description |

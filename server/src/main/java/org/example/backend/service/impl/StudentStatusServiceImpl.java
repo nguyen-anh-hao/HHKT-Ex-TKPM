@@ -30,4 +30,30 @@ public class StudentStatusServiceImpl implements IStudentStatusService {
 
         return StudentStatusMapper.toResponseDTO(studentStatus);
     }
+
+    @Override
+    public String getStudentStatusName(Integer studentStatusId) {
+        log.info("Received request to get student status name with studentStatusId: {}", studentStatusId);
+
+        return studentStatusRepository.findById(studentStatusId)
+                .orElseThrow(
+                        () -> {
+                            log.error("Student status not found");
+                            return new RuntimeException("Student status not found");
+                        })
+                .getStudentStatusName();
+    }
+
+    @Override
+    public StudentStatus getStudentStatusById(Integer studentStatusId) {
+        log.info("Received request to get student status with studentStatusId: {}", studentStatusId);
+
+        return studentStatusRepository.findById(studentStatusId)
+                .orElseThrow(
+                        () -> {
+                            log.error("Student status not found");
+                            return new RuntimeException("Student status not found");
+                        });
+    }
+
 }

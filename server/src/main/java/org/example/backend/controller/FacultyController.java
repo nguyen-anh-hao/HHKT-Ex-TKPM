@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dto.request.FacultyRequest;
-import org.example.backend.dto.response.ApiResponse;
+import org.example.backend.dto.response.APIResponse;
 import org.example.backend.dto.response.FacultyResponse;
 import org.example.backend.service.IFacultyService;
 import org.springframework.http.HttpStatus;
@@ -21,14 +21,14 @@ public class FacultyController {
     private final IFacultyService facultyService;
 
     @PostMapping("")
-    public ApiResponse addFaculty(@RequestBody @Valid FacultyRequest request) {
+    public APIResponse addFaculty(@RequestBody @Valid FacultyRequest request) {
         log.info("Received request to add faculty: {}", request.getFacultyName());
 
         FacultyResponse faculty = facultyService.addFaculty(request);
 
         log.info("Successfully added faculty: {}", faculty.getFacultyName());
 
-        return ApiResponse.builder()
+        return APIResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("Success")
                 .data(faculty)

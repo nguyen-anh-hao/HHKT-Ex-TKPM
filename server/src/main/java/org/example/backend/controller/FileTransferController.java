@@ -3,7 +3,7 @@ package org.example.backend.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dto.request.StudentRequest;
-import org.example.backend.dto.response.ApiResponse;
+import org.example.backend.dto.response.APIResponse;
 import org.example.backend.dto.response.StudentResponse;
 import org.example.backend.service.IStudentService;
 import org.example.backend.service.Import.ImportService;
@@ -57,7 +57,7 @@ public class FileTransferController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<ApiResponse> importData(
+    public ResponseEntity<APIResponse> importData(
             @RequestParam String type,
             @RequestParam("file")MultipartFile file
             ) throws IOException {
@@ -65,7 +65,7 @@ public class FileTransferController {
 
         ImportService importService = importServiceFactory.getImportService(type);
         if (importService == null) {
-            return ResponseEntity.badRequest().body(ApiResponse.builder().status(400).message("Invalid file type").build());
+            return ResponseEntity.badRequest().body(APIResponse.builder().status(400).message("Invalid file type").build());
         }
 
         byte[] data = file.getBytes();
@@ -76,7 +76,7 @@ public class FileTransferController {
         log.info("Successfully imported data from file with data size: {}", data.length);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.builder()
+                .body(APIResponse.builder()
                         .status(200)
                         .message("Success")
                         .data(studentResponses)
