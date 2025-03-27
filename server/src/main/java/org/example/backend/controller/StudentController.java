@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.common.PaginationInfo;
 import org.example.backend.dto.request.StudentRequest;
+import org.example.backend.dto.request.StudentUpdateRequest;
 import org.example.backend.dto.response.ApiResponse;
 import org.example.backend.dto.response.StudentResponse;
 import org.example.backend.service.IStudentService;
@@ -68,8 +69,8 @@ public class StudentController {
                 .build();
     }
 
-    @PutMapping("/{studentId}")
-    public ApiResponse updateStudent(@PathVariable String studentId, @RequestBody @Valid StudentRequest request) {
+    @PatchMapping("/{studentId}")
+    public ApiResponse updateStudent(@PathVariable String studentId, @RequestBody @Valid StudentUpdateRequest request) {
         log.info("Received request to update student with studentId: {}", studentId);
 
         StudentResponse student = studentService.updateStudent(studentId, request);
