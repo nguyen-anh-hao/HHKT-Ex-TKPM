@@ -10,7 +10,7 @@ import org.example.backend.common.PaginationInfo;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse {
+public class APIResponse {
     private String message;
     private int status;
     private Object data;

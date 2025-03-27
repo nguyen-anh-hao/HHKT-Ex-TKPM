@@ -29,4 +29,12 @@ public class StudentStatus extends Auditable {
     @OneToMany(mappedBy = "studentStatus", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Student> students;
+
+    @OneToMany(mappedBy = "currentStatus", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<StudentStatusRule> currentStatusRules;
+
+    @OneToMany(mappedBy = "allowedTransition", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<StudentStatusRule> allowedTransitionRules;
 }

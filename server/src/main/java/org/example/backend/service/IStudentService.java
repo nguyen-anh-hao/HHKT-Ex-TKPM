@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.dto.request.StudentRequest;
+import org.example.backend.dto.request.StudentUpdateRequest;
 import org.example.backend.dto.response.StudentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ public interface IStudentService {
 
     StudentResponse getStudent(String studentId);
 
-    StudentResponse updateStudent(String studentId, StudentRequest request);
+    StudentResponse updateStudent(String studentId, StudentUpdateRequest request);
 
     Page<StudentResponse> getAllStudents(Pageable pageable);
 

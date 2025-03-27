@@ -1,0 +1,6 @@
+{
+  "Đang học": ["Tạm dừng học", "Đã tốt nghiệp", "Đã thôi học"],
+  "Tạm dừng học": ["Đang học", "Đã thôi học"],
+  "Đã tốt nghiệp": [],
+  "Đã thôi học": []
+}
