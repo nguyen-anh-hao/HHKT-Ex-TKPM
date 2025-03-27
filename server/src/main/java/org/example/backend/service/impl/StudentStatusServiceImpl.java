@@ -44,4 +44,16 @@ public class StudentStatusServiceImpl implements IStudentStatusService {
                 .getStudentStatusName();
     }
 
+    @Override
+    public StudentStatus getStudentStatusById(Integer studentStatusId) {
+        log.info("Received request to get student status with studentStatusId: {}", studentStatusId);
+
+        return studentStatusRepository.findById(studentStatusId)
+                .orElseThrow(
+                        () -> {
+                            log.error("Student status not found");
+                            return new RuntimeException("Student status not found");
+                        });
+    }
+
 }
