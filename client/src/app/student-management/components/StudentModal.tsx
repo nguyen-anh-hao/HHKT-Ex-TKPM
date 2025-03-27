@@ -20,7 +20,7 @@ interface StudentModalProps {
 const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProps) => {
     const [studentForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean | null>(null);
-    const [documentType, setDocumentType] = useState<string | null>(student?.documentType || null);
+    const [documentType, setDocumentType] = useState<string | null>(student?.documents[0]?.documentType || null);
 
     const { facultyOptions } = useReferenceDataStore() as { facultyOptions: { value: string; label: string }[] };
     const { programOptions } = useReferenceDataStore() as { programOptions: { value: string; label: string }[] };
@@ -28,8 +28,20 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
 
     useEffect(() => {
         if (student) {
-            studentForm.setFieldsValue({ ...student, dob: moment(student.dob) });
-            setDocumentType(student.documentType);
+            studentForm.setFieldsValue({ 
+                ...student, 
+                dob: moment(student.dob),
+                permanentAddress: student?.addresses.find((address) => address.addressType === "Thường Trú")?.houseNumberStreetName,
+                temporaryAddress: student?.addresses.find((address) => address.addressType === "Tạm Trú")?.houseNumberStreetName,
+                documentType: student?.documents[0]?.documentType || null,
+                documentNumber: student?.documents[0]?.documentNumber || "",
+                issuedDate: moment(student?.documents[0]?.issuedDate || null),
+                expiredDate: moment(student?.documents[0]?.expiredDate || null),
+                hasChip: student?.documents[0]?.hasChip || false,
+                issuedBy: student?.documents[0]?.issuedBy || "",
+                issuedCountry: student?.documents[0]?.issuedCountry || "",
+            });
+            setDocumentType(student?.documents[0]?.documentType || null);
             setIsEdit(true);
         } else {
             studentForm.resetFields();
@@ -99,7 +111,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item label="Tình trạng" name="status" rules={[{ required: true, message: 'Tình trạng là bắt buộc!' }]}>
+                            <Form.Item label="Tình trạng" name="studentStatus" rules={[{ required: true, message: 'Tình trạng là bắt buộc!' }]}>
                                 <Select placeholder="Chọn tình trạng">
                                     {studentStatusOptions.map((studentStatus: any) => (
                                         <Option key={studentStatus.value} value={studentStatus.value}>{studentStatus.label}</Option>

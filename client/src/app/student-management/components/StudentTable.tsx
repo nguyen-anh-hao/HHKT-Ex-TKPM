@@ -30,7 +30,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
             onFilter: (value: any, record: Student) => record.faculty === value as string,
         },
         { title: "Khóa", dataIndex: "intake" },
-        { title: "Tình trạng", dataIndex: "status" },
+        { title: "Tình trạng", dataIndex: "studentStatus" },
         {
             title: "Hành động",
             render: (_: any, record: Student) => (

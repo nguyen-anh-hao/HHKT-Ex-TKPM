@@ -1,19 +1,19 @@
 export interface StudentGetResponse {
-    mssv: string;
-    hoTen: string;
-    ngaySinh: number[];
-    gioiTinh: string;
-    khoa: string;
-    khoaHoc: string;
-    chuongTrinh: string;
+    studentId: string;
+    fullName: string;
+    dob: string;
+    gender: string;
+    faculty: string;
+    intake: string;
+    program: string;
     email: string;
-    soDienThoai: string;
-    tinhTrang: string;
-    quocTich: string;
-    diaChis: Address[];
-    giayTos: Indentity[];
-    createdAt: number[];
-    updatedAt: number[];
+    phone: string;
+    studentStatus: string;
+    nationality: string;
+    addresses: Address[];
+    documents: Indentity[];
+    createdAt: string;
+    updatedAt: string;
     createdBy: string;
     updatedBy: string;
 }
@@ -35,21 +35,21 @@ export interface StudentPostRequest {
 }
 
 export interface Address {
-    loaiDiaChi: string;
-    soNhaTenDuong: string;
-    phuongXa: string;
-    quanHuyen: string;
-    tinhThanhPho: string;
-    quocGia: string;
+    addressType: string;
+    houseNumberStreetName: string;
+    wardCommune: string;
+    district: string;
+    cityProvince: string;
+    country: string;
 }
 
 export interface Indentity {
-    loaiGiayTo: string;
-    soGiayTo: string;
-    ngayCap: number[];
-    ngayHetHan: number[];
-    noiCap: string;
-    quocGiaCap: string;
-    ghiChu: string;
-    coGanChip: boolean;
+    documentType: string;
+    documentNumber: string;
+    expiredDate: string;
+    hasChip: boolean;
+    issuedBy: string;
+    issuedCountry: string;
+    issuedDate:  string;
+    note: string | null;
 }
