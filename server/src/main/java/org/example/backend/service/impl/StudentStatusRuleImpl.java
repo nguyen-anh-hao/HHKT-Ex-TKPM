@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.backend.domain.StudentStatusRule;
 import org.example.backend.repository.IStudentStatusRuleRepository;
 import org.example.backend.service.IStudentStatusRuleService;
+import org.example.backend.service.IStudentStatusService;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -15,6 +16,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class StudentStatusRuleImpl implements IStudentStatusRuleService {
     private final IStudentStatusRuleRepository studentStatusRuleRepository;
+    private final IStudentStatusService studentStatusService;
 
     @Override
     public Map<String, Set<String>> getStudentStatusRulesMap() {
@@ -23,9 +25,12 @@ public class StudentStatusRuleImpl implements IStudentStatusRuleService {
 
         List<StudentStatusRule> studentStatusRules = studentStatusRuleRepository.findAll();
         for (StudentStatusRule rule: studentStatusRules) {
+            String currentStatusName = studentStatusService.getStudentStatusName(rule.getCurrentStatusId());
+            String allowedTransitionStatusName = studentStatusService.getStudentStatusName(rule.getAllowedTransitionId());
+
             studentStatusRulesMap
-                    .computeIfAbsent(normalize((rule.getCurrentStatus())), k -> new HashSet<>())
-                    .add(normalize(rule.getNewStatus()));
+                    .computeIfAbsent(normalize(currentStatusName), k -> new HashSet<>())
+                    .add(normalize(allowedTransitionStatusName));
         }
 
         log.info("Successfully fetched student status rules from database");

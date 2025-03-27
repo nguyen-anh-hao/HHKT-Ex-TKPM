@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.service.IStudentStatusRuleService;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,8 +18,8 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class StudentStatusRulesConfig {
-    private final Map<String, Set<String>> studentStatusRulesMap;
-    private final
+    private Map<String, Set<String>> studentStatusRulesMap;
+    private final IStudentStatusRuleService studentStatusRuleService;
 //    public StudentStatusRulesConfig() throws IOException {
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/student-status-rules.json");
@@ -31,8 +32,10 @@ public class StudentStatusRulesConfig {
 //        log.info("Successfully loaded student status rules");
 //    }
 
-
-
+    @PostConstruct
+    public void loadStudentRules() {
+        studentStatusRulesMap = studentStatusRuleService.getStudentStatusRulesMap();
+    }
 
     private String normalize(String input) {
         return input == null ? null : Normalizer.normalize(input.trim(), Normalizer.Form.NFC);

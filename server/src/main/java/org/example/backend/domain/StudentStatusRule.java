@@ -18,9 +18,9 @@ public class StudentStatusRule extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "current_status", nullable = false)
-    private String currentStatus;
+    @Column(name = "current_status_id", nullable = false)
+    private Integer currentStatusId;
 
-    @Column(name = "new_status", nullable = false)
-    private String newStatus;
+    @Column(name = "allowed_transition_id", nullable = false)
+    private Integer allowedTransitionId;
 }
