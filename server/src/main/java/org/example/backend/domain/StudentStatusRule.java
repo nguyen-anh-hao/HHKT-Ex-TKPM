@@ -3,7 +3,6 @@ package org.example.backend.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.backend.common.Auditable;
-import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name = "student_status_rules")
@@ -18,9 +17,11 @@ public class StudentStatusRule extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "current_status_id", nullable = false)
-    private Integer currentStatusId;
+    @ManyToOne
+    @JoinColumn(name = "current_status_id", nullable = false)
+    private StudentStatus currentStatus;
 
-    @Column(name = "allowed_transition_id", nullable = false)
-    private Integer allowedTransitionId;
+    @ManyToOne
+    @JoinColumn(name = "allowed_transition_id", nullable = false)
+    private StudentStatus allowedTransition;
 }
