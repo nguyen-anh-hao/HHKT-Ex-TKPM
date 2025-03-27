@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dto.request.ProgramRequest;
-import org.example.backend.dto.response.ApiResponse;
+import org.example.backend.dto.response.APIResponse;
 import org.example.backend.dto.response.ProgramResponse;
 import org.example.backend.service.IProgramService;
 import org.springframework.http.HttpStatus;
@@ -21,13 +21,13 @@ public class ProgramController {
     private final IProgramService programService;
 
     @PostMapping("")
-    public ApiResponse addProgram(@RequestBody @Valid ProgramRequest request) {
+    public APIResponse addProgram(@RequestBody @Valid ProgramRequest request) {
         log.info("Received request to add program: {}", request.getProgramName());
 
         ProgramResponse program = programService.addProgram(request);
 
         log.info("Successfully added program: {}", program.getProgramName());
-        return ApiResponse.builder()
+        return APIResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("Success")
                 .data(program)
