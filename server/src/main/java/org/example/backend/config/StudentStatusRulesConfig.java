@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.service.IStudentStatusRuleService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -61,6 +62,12 @@ public class StudentStatusRulesConfig {
 
         log.info("Transition from {} to {} is {}", normCurrent, normNew, isValid ? "valid" : "invalid");
         return isValid;
+    }
+
+    @Scheduled(fixedRate = 60000) // Refresh every 60 seconds
+    public void refreshRules() {
+        log.info("Refreshing student status rules from database...");
+        loadStudentRules();
     }
 
 }
