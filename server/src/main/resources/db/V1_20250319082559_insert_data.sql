@@ -63,3 +63,17 @@ INSERT INTO documents (student_id, document_type, document_number, issued_date, 
 VALUES
     ('SV001', 'CCCD', '123456789012', '2020-10-01', '2030-10-01', 'TP.HCM', 'Việt Nam', NULL, TRUE),
     ('SV002', 'Hộ chiếu', 'B1234567', '2019-06-15', '2029-06-15', 'Hà Nội', 'Việt Nam', 'Dùng để du học', FALSE);
+
+INSERT INTO student_status_rules (current_status_id, allowed_transition_id) VALUES
+-- "Đang học" can transition to:
+(1, 2),  -- Tạm dừng học
+(1, 3),  -- Đã tốt nghiệp
+(1, 4),  -- Đã thôi học
+
+-- "Tạm dừng học" can transition to:
+(2, 1),  -- Đang học
+(2, 4)  -- Đã thôi học
+
+-- "Đã tốt nghiệp" has no transitions
+
+-- "Đã thôi học" has no transitions;

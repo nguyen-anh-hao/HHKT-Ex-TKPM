@@ -87,3 +87,17 @@ CREATE TABLE documents (
     created_by VARCHAR(100) DEFAULT 'admin',
     updated_by VARCHAR(100) DEFAULT 'admin'
 );
+
+CREATE TABLE student_status_rules (
+                                      id SERIAL PRIMARY KEY,
+                                      current_status_id INT NOT NULL,
+                                      allowed_transition_id INT NOT NULL,
+                                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                      deleted BOOLEAN DEFAULT FALSE,
+                                      created_by VARCHAR(100) DEFAULT 'admin',
+                                      updated_by VARCHAR(100) DEFAULT 'admin',
+                                      CONSTRAINT fk_current_status FOREIGN KEY (current_status_id) REFERENCES student_statuses(id) ON DELETE CASCADE,
+                                      CONSTRAINT fk_allowed_transition FOREIGN KEY (allowed_transition_id) REFERENCES student_statuses(id) ON DELETE CASCADE,
+                                      CONSTRAINT unique_transition UNIQUE (current_status_id, allowed_transition_id)
+);

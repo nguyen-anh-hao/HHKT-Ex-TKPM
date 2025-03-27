@@ -2,6 +2,7 @@ package org.example.backend.config;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -13,20 +14,23 @@ import java.util.Set;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class StudentStatusRulesConfig {
     private final Map<String, Set<String>> studentStatusRulesMap;
+    private final
+//    public StudentStatusRulesConfig() throws IOException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/student-status-rules.json");
+//        if (inputStream == null) {
+//            log.error("student-status-rules.json not found");
+//            throw new RuntimeException("student-status-rules.json not found");
+//        }
+//        log.info("Loading student status rules from student-status-rules.json");
+//        studentStatusRulesMap = objectMapper.readValue(inputStream, new TypeReference<>() {});
+//        log.info("Successfully loaded student status rules");
+//    }
 
-    public StudentStatusRulesConfig() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/student-status-rules.json");
-        if (inputStream == null) {
-            log.error("student-status-rules.json not found");
-            throw new RuntimeException("student-status-rules.json not found");
-        }
-        log.info("Loading student status rules from student-status-rules.json");
-        studentStatusRulesMap = objectMapper.readValue(inputStream, new TypeReference<>() {});
-        log.info("Successfully loaded student status rules");
-    }
+
 
 
     private String normalize(String input) {
