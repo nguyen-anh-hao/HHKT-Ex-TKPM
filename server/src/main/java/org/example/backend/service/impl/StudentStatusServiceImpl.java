@@ -76,7 +76,13 @@ public class StudentStatusServiceImpl implements IStudentStatusService {
 
     @Override
     public void deleteStudentStatus(Integer studentStatusId) {
-        studentStatusRepository.deleteById(studentStatusId);
+        StudentStatus studentStatus = studentStatusRepository.findById(studentStatusId)
+                .orElseThrow(() -> {
+                    log.error("Student status not found");
+                    return new RuntimeException("Student status not found");
+                });
+
+        studentStatusRepository.delete(studentStatus);
 
         log.info("Student status deleted successfully");
     }
