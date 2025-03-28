@@ -23,6 +23,10 @@ logging:
     org.springframework: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.validator: DEBUG
+    org.springframework.validation: DEBUG
+    org.example.backend.validator: DEBUG
+
 
 cors:
     allowed-origins: "http://localhost:3000"
