@@ -1,6 +1,6 @@
 'use client'
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, ApartmentOutlined, HomeOutlined, SwapOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined, ApartmentOutlined, HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Menu, theme, Layout as AntdLayout, Typography } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
@@ -13,7 +13,8 @@ const menuItems = [
     { key: '1', icon: <HomeOutlined />, label: 'Trang chủ', route: '/' },
     { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
     { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-data-management' },
-    { key: '4', icon: <SwapOutlined />, label: 'Nhập xuất dữ liệu', route: '/inputoutput-data-management' }
+    { key: '4', icon: <SwapOutlined />, label: 'Nhập xuất dữ liệu', route: '/inputoutput-data-management' },
+    { key: '5', icon: <SettingOutlined />, label: 'Cấu hình', route: '/configuration' },
 ];
 
 export default function Layout({
