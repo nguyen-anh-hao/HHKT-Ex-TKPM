@@ -40,6 +40,8 @@ public class FacultyServiceImpl implements IFacultyService {
     public List<FacultyResponse> getAllFaculties() {
         List<Faculty> faculties = facultyRepository.findAll();
 
+        log.info("Retrieved all faculties from database");
+
         return faculties.stream()
                 .map(FacultyMapper::mapToResponse)
                 .collect(Collectors.toList());
@@ -48,7 +50,12 @@ public class FacultyServiceImpl implements IFacultyService {
     @Override
     public FacultyResponse getFacultyById(Integer id) {
         Faculty faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+                .orElseThrow(() -> {
+                    log.error("Faculty not found");
+                    return new RuntimeException("Faculty not found");
+                });
+
+        log.info("Retrieved faculty from database");
 
         return FacultyMapper.mapToResponse(faculty);
     }
@@ -57,11 +64,16 @@ public class FacultyServiceImpl implements IFacultyService {
     @Transactional
     public FacultyResponse updateFaculty(Integer id, FacultyRequest request) {
         Faculty faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+                .orElseThrow(() -> {
+                    log.error("Faculty not found");
+                    return new RuntimeException("Faculty not found");
+                });
 
         faculty.setFacultyName(request.getFacultyName());
 
         faculty = facultyRepository.save(faculty);
+
+        log.info("Faculty updated successfully");
 
         return FacultyMapper.mapToResponse(faculty);
     }
@@ -69,9 +81,14 @@ public class FacultyServiceImpl implements IFacultyService {
     @Override
     @Transactional
     public void deleteFaculty(Integer id) {
-        Faculty faculty = facultyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+       Faculty faculty = facultyRepository.findById(id)
+               .orElseThrow(() -> {
+                   log.error("Faculty not found");
+                   return new RuntimeException("Faculty not found");
+               });
 
         facultyRepository.delete(faculty);
+
+        log.info("Faculty deleted successfully");
     }
 }
