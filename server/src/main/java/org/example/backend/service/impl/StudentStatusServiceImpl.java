@@ -10,6 +10,9 @@ import org.example.backend.repository.IStudentStatusRepository;
 import org.example.backend.service.IStudentStatusService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,28 +35,49 @@ public class StudentStatusServiceImpl implements IStudentStatusService {
     }
 
     @Override
-    public String getStudentStatusName(Integer studentStatusId) {
-        log.info("Received request to get student status name with studentStatusId: {}", studentStatusId);
+    public List<StudentStatusResponse> getAllStudentStatuses() {
+        List<StudentStatus> studentStatuses = studentStatusRepository.findAll();
 
-        return studentStatusRepository.findById(studentStatusId)
-                .orElseThrow(
-                        () -> {
-                            log.error("Student status not found");
-                            return new RuntimeException("Student status not found");
-                        })
-                .getStudentStatusName();
+        log.info("Retrieved all student statuses from database");
+
+        return studentStatuses.stream()
+                .map(StudentStatusMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public StudentStatus getStudentStatusById(Integer studentStatusId) {
-        log.info("Received request to get student status with studentStatusId: {}", studentStatusId);
+    public StudentStatusResponse getStudentStatusById(Integer studentStatusId) {
+        StudentStatus studentStatus = studentStatusRepository.findById(studentStatusId)
+                .orElseThrow(() -> {
+                    log.error("Student status not found");
+                    return new RuntimeException("Student status not found");
+                });
 
-        return studentStatusRepository.findById(studentStatusId)
-                .orElseThrow(
-                        () -> {
-                            log.error("Student status not found");
-                            return new RuntimeException("Student status not found");
-                        });
+        log.info("Retrieved student status from database");
+
+        return StudentStatusMapper.toResponseDTO(studentStatus);
     }
 
+    @Override
+    public StudentStatusResponse updateStudentStatus(Integer studentStatusId, StudentStatusRequest request) {
+        StudentStatus studentStatus = studentStatusRepository.findById(studentStatusId)
+                .orElseThrow(() -> {
+                    log.error("Student status not found");
+                    return new RuntimeException("Student status not found");
+                });
+
+        studentStatus.setStudentStatusName(request.getStudentStatusName());
+        studentStatus = studentStatusRepository.save(studentStatus);
+
+        log.info("Student status updated successfully");
+
+        return StudentStatusMapper.toResponseDTO(studentStatus);
+    }
+
+    @Override
+    public void deleteStudentStatus(Integer studentStatusId) {
+        studentStatusRepository.deleteById(studentStatusId);
+
+        log.info("Student status deleted successfully");
+    }
 }
