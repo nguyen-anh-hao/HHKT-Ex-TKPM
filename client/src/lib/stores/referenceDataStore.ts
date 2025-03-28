@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { createReferenceData, deleteReferenceData, updateReferenceData, fetchReferenceData } from '../api/referenceDataApi';
 
 // Định nghĩa kiểu dữ liệu cho store
 type Option = { value: string; label: string };
@@ -20,78 +21,143 @@ type ReferenceDataStore = {
     updateFaculty: (oldFaculty: string, newFaculty: string) => void;
     updateProgram: (oldProgram: string, newProgram: string) => void;
     updateStudentStatus: (oldStudentStatus: string, newStudentStatus: string) => void;
+
+    fetchReferenceData: () => Promise<void>;
 };
 
 // Khởi tạo Zustand store
 const useReferenceDataStore = create<ReferenceDataStore>((set) => ({
-    facultyOptions: [
-        { value: "Khoa Tiếng Pháp", label: "Khoa Tiếng Pháp" },
-        { value: "Khoa Tiếng Anh thương mại", label: "Khoa Tiếng Anh thương mại" },
-        { value: "Khoa Tiếng Nhật", label: "Khoa Tiếng Nhật" },
-        { value: "Khoa Luật", label: "Khoa Luật" },
-    ],
-    programOptions: [
-        { value: "Đại trà", label: "Đại trà" },
-        { value: "Chất lượng cao", label: "Chất lượng cao" },
-        { value: "Cử nhân tài năng", label: "Cử nhân tài năng" },
-    ],
-    studentStatusOptions: [
-        { value: "Đang học", label: "Đang học" },
-        { value: "Đã tốt nghiệp", label: "Đã tốt nghiệp" },
-        { value: "Đã thôi học", label: "Đã thôi học" },
-        { value: "Tạm dừng học", label: "Tạm dừng học" },
-    ],
+    facultyOptions: [],
+    programOptions: [],
+    studentStatusOptions: [],
 
-    // Thêm một faculty mới
-    addFaculty: (faculty: string) => set((state) => ({
-        facultyOptions: [...state.facultyOptions, { value: faculty, label: faculty }]
-    })),
+    fetchReferenceData: async () => {
+        try {
+            const facultyOptions = await fetchReferenceData("faculties");
+            const programOptions = await fetchReferenceData("programs");
+            const studentStatusOptions = await fetchReferenceData("student-statuses");
 
-    // Thêm một program mới
-    addProgram: (program: string) => set((state) => ({
-        programOptions: [...state.programOptions, { value: program, label: program }]
-    })),
+            console.log("Fetched faculties:", facultyOptions);
+            console.log("Fetched programs:", programOptions);
+            console.log("Fetched statuses:", studentStatusOptions);
 
-    // Thêm một student status mới
-    addStudentStatus: (studentStatus: string) => set((state) => ({
-        studentStatusOptions: [...state.studentStatusOptions, { value: studentStatus, label: studentStatus }]
-    })),
+            set({
+                facultyOptions: facultyOptions.map((f: any) => ({ value: f.facultyName, label: f.id })),
+                programOptions: programOptions.map((p: any) => ({ value: p.programName, label: p.id })),
+                studentStatusOptions: studentStatusOptions.map((s: any) => ({ value: s.studentStatusName, label: s.id })),
+            });
+        } catch (error) {
+            console.error("Failed to fetch reference data:", error);
+        }
+    },
 
-    // Xóa một faculty
-    deleteFaculty: (faculty: string) => set((state) => ({
-        facultyOptions: state.facultyOptions.filter((f) => f.value !== faculty)
-    })),
+    addFaculty: (faculty: string) => {
+        createReferenceData("faculties", { facultyName: faculty }).then((response) => {
+            set((state) => ({
+                facultyOptions: [...state.facultyOptions, { value: faculty, label: response.data.id }],
+            }));
+        }).catch((error) => {
+            console.error("Failed to add faculty:", error);
+        });
+    },
 
-    // Xóa một program
-    deleteProgram: (program: string) => set((state) => ({
-        programOptions: state.programOptions.filter((p) => p.value !== program)
-    })),
+    addProgram: (program: string) => {
+        createReferenceData("programs", { programName: program }).then((response) => {
+            set((state) => ({
+                programOptions: [...state.programOptions, { value: program, label: response.data.id }],
+            }));
+        }).catch((error) => {
+            console.error("Failed to add program:", error);
+        });
+    },
 
-    // Xóa một student status
-    deleteStudentStatus: (studentStatus: string) => set((state) => ({
-        studentStatusOptions: state.studentStatusOptions.filter((s) => s.value !== studentStatus)
-    })),
+    addStudentStatus: (studentStatus: string) => {
+        createReferenceData("student-statuses", { studentStatusName: studentStatus }).then((response) => {
+            set((state) => ({
+                studentStatusOptions: [...state.studentStatusOptions, { value: studentStatus, label: response.data.id }],
+            }));
+        }).catch((error) => {
+            console.error("Failed to add student status:", error);
+        });
+    },
 
-    // Cập nhật faculty
-    updateFaculty: (oldFaculty: string, newFaculty: string) => set((state) => ({
-        facultyOptions: state.facultyOptions.map((f) =>
-            f.value === oldFaculty ? { ...f, value: newFaculty, label: newFaculty } : f
-        )
-    })),
+    deleteFaculty: (faculty: string) => set((state) => {
+        const facultyId = state.facultyOptions.find((f) => f.value === faculty)?.label;
+        if (facultyId) {
+            deleteReferenceData("faculties", facultyId);
+        } else {
+            console.error("Faculty ID not found for deletion.");
+        }
+        return {
+            facultyOptions: state.facultyOptions.filter((f) => f.value !== faculty),
+        };
+    }),
 
-    // Cập nhật program
-    updateProgram: (oldProgram: string, newProgram: string) => set((state) => ({
-        programOptions: state.programOptions.map((p) =>
-            p.value === oldProgram ? { ...p, value: newProgram, label: newProgram } : p
-        )
-    })),
+    deleteProgram: (program: string) => set((state) => {
+        const programId = state.programOptions.find((p) => p.value === program)?.label;
+        if (programId) {
+            deleteReferenceData("programs", programId);
+        } else {
+            console.error("Program ID not found for deletion.");
+        }
+        return {
+            programOptions: state.programOptions.filter((p) => p.value !== program),
+        };
+    }),
 
-    // Cập nhật student status
-    updateStudentStatus: (oldStudentStatus: string, newStudentStatus: string) => set((state) => ({
-        studentStatusOptions: state.studentStatusOptions.map((s) =>
-            s.value === oldStudentStatus ? { ...s, value: newStudentStatus, label: newStudentStatus } : s
-        )
-    })),
+    deleteStudentStatus: (studentStatus: string) => set((state) => {
+        const studentStatusId = state.studentStatusOptions.find((s) => s.value === studentStatus)?.label;
+        if (studentStatusId) {
+            deleteReferenceData("student-statuses", studentStatusId);
+        } else {
+            console.error("Student Status ID not found for deletion.");
+        }
+        return {
+            studentStatusOptions: state.studentStatusOptions.filter((s) => s.value !== studentStatus),
+        };
+    }),
+
+    updateFaculty: (oldFaculty: string, newFaculty: string) => set((state) => {
+        const oldFacultyId = state.facultyOptions.find((f) => f.value === oldFaculty)?.label;
+        if (oldFacultyId) {
+            updateReferenceData("faculties", oldFacultyId, { facultyName: newFaculty });
+        } else {
+            console.error("Faculty ID not found for update.");
+        }
+        return {    
+            facultyOptions: state.facultyOptions.map((f) =>
+                f.value === oldFaculty ? { ...f, value: newFaculty, label: f.label } : f
+            )
+        };
+    }),
+
+    updateProgram: (oldProgram: string, newProgram: string) => set((state) => {
+        const oldProgramId = state.programOptions.find((p) => p.value === oldProgram)?.label;
+        if (oldProgramId) {
+            updateReferenceData("programs", oldProgramId, { programName: newProgram });
+        } else {
+            console.error("Program ID not found for update.");
+        }
+        return {
+            programOptions: state.programOptions.map((p) =>
+                p.value === oldProgram ? { ...p, value: newProgram, label: p.label } : p
+            )
+        };
+    }),
+
+    updateStudentStatus: (oldStudentStatus: string, newStudentStatus: string) => set((state) => {
+        const oldStudentStatusId = state.studentStatusOptions.find((s) => s.value === oldStudentStatus)?.label;
+        if (oldStudentStatusId) {
+            updateReferenceData("student-statuses", oldStudentStatusId, { studentStatusName: newStudentStatus });
+        } else {
+            console.error("Student Status ID not found for update.");
+        }
+        return {
+            studentStatusOptions: state.studentStatusOptions.map((s) =>
+                s.value === oldStudentStatus ? { ...s, value: newStudentStatus, label: s.label } : s
+            )
+        };
+    }),
 }));
 
 export default useReferenceDataStore;

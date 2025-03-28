@@ -7,9 +7,10 @@ import StudentTable from "./components/StudentTable";
 import StudentModal from "./components/StudentModal";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStudents, createStudent as apiCreateStudent, updateStudent as apiUpdateStudent, deleteStudent as apiDeleteStudent } from "@/lib/api/studentApi";
-import { convertGetResponseToStudent, convertStudentToPostRequest } from "@/lib/utils/studentConverter";
-import { Student } from "@/interfaces/student/state.interface";
+import { convertGetResponseToStudent } from "@/lib/utils/studentConverter";
+import { Student } from "@/interfaces/student.interface";
 import { updateStudent as updateStudentState, addStudent as addStudentState, deleteStudent as deleteStudentState } from "@/lib/actions/StudentActions";
+import useReferenceDataStore from "@/lib/stores/referenceDataStore";
 
 const Home = () => {
     const [students, setStudents] = useState<Student[]>([]);
@@ -17,11 +18,10 @@ const Home = () => {
     const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
     const queryClient = useQueryClient();
 
-    const { data: studentData } = useQuery({ queryKey: ["sinh-vien"], queryFn: fetchStudents });
-
-    const { mutate: createStudentAPI } = useMutation({ mutationFn: apiCreateStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["sinh-vien"]}) });
-    const { mutate: updateStudentAPI } = useMutation({ mutationFn: apiUpdateStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["sinh-vien"]}) });
-    const { mutate: deleteStudentAPI } = useMutation({ mutationFn: apiDeleteStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["sinh-vien"]}) });
+    const { data: studentData } = useQuery({ queryKey: ["students"], queryFn: fetchStudents });
+    const { mutate: createStudentAPI } = useMutation({ mutationFn: apiCreateStudent, onSuccess: () => queryClient.invalidateQueries({ queryKey: ["students"]}) });
+    const { mutate: updateStudentAPI } = useMutation({ mutationFn: apiUpdateStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["students"]}) });
+    const { mutate: deleteStudentAPI } = useMutation({ mutationFn: apiDeleteStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["students"]}) });
 
     useEffect(() => {
         if (studentData) {
@@ -44,6 +44,18 @@ const Home = () => {
         setStudents(deleteStudentState(students, studentId));
         deleteStudentAPI(studentId);
     };
+
+    const {
+        fetchReferenceData
+    } = useReferenceDataStore();
+
+    // Fetch reference data on component mount
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchReferenceData();
+        };
+        fetchData();
+    }, [fetchReferenceData]);
 
     return (
         <div>
@@ -70,12 +82,16 @@ const Home = () => {
 export default Home;
 
 // Task:
-// - Call API "Quản lý danh mục"
-// - Match labels "Quản lý danh mục" with "Quản lý sinh viên"
+// - Match labels "Quản lý danh mục" with "Quản lý sinh viên" -> Done
+// - Call API "Quản lý danh mục" -> Xóa, Sửa => Done, [Thêm]
+// - Export => Done [Import file]
+
+// - 4 cái bisiness rule -> CHữa cháy được SĐT, Email, MSSV -> Còn cái kiểu tốt nghiệp ko được back lại
 
 // Bug:
-// - Add new student API
 // - Update student API
+// - Add reference API
+// - Import file
 
 // Improvement:
 // - Pagination for student table
