@@ -19,7 +19,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [documentType, setDocumentType] = useState<string | null>(null);
 
-    console.log("student", student);
+    // console.log("student", student);
 
     const { facultyOptions, programOptions, studentStatusOptions } = useReferenceDataStore() as {
         facultyOptions: { value: string; label: string }[];
@@ -45,7 +45,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
     }, [student, studentForm]);
 
     const renderOptions = (options: { value: string; label: string }[]) =>
-        options.map((option) => <Option key={option.value} value={option.value}>{option.label}</Option>);
+        options.map((option) => <Option key={option.value} value={option.value}>{option.value}</Option>);
 
     const tabItems = [
         {
@@ -55,7 +55,21 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                 <Form form={studentForm} layout="vertical">
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="Mã số sinh viên" name="studentId" rules={[{ required: true, message: 'Mã số sinh viên là bắt buộc!' }]}>
+                            <Form.Item 
+                                label="Mã số sinh viên" 
+                                name="studentId" 
+                                rules={[
+                                    { required: true, message: 'Mã số sinh viên là bắt buộc!' },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value || !student || value !== student.studentId) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error('Mã số sinh viên không được trùng!'));
+                                        },
+                                    }),
+                                ]}
+                            >
                                 <Input prefix={<UserOutlined />} disabled={!!student} />
                             </Form.Item>
                         </Col>
@@ -130,12 +144,26 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', message: 'Email không hợp lệ!' }]}>
+                            <Form.Item 
+                                label="Email" 
+                                name="email" 
+                                rules={[
+                                    { 
+                                        required: true, 
+                                        type: 'email', 
+                                        message: 'Email không hợp lệ!' 
+                                    },
+                                    {
+                                        pattern: /^[a-zA-Z0-9._%+-]+@example\.com$/,
+                                        message: 'Email phải có đuôi @example.com!'
+                                    }
+                                ]}
+                            >
                                 <Input prefix={<MailOutlined />} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Số điện thoại" name="phone" rules={[{  required: true, pattern: /^[0-9]{10}$/, message: 'Số điện thoại không hợp lệ!' }]}>
+                            <Form.Item label="Số điện thoại" name="phone" rules={[{ required: true, pattern: /^\+84[0-9]{9}$/, message: 'Số điện thoại không hợp lệ! Số điện thoại phải bắt đầu bằng +84 và có 9 chữ số tiếp theo.' }]}>
                                 <Input prefix={<PhoneOutlined />} />
                             </Form.Item>
                         </Col>

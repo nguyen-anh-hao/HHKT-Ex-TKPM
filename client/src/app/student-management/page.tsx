@@ -10,6 +10,7 @@ import { fetchStudents, createStudent as apiCreateStudent, updateStudent as apiU
 import { convertGetResponseToStudent } from "@/lib/utils/studentConverter";
 import { Student } from "@/interfaces/student.interface";
 import { updateStudent as updateStudentState, addStudent as addStudentState, deleteStudent as deleteStudentState } from "@/lib/actions/StudentActions";
+import useReferenceDataStore from "@/lib/stores/referenceDataStore";
 
 const Home = () => {
     const [students, setStudents] = useState<Student[]>([]);
@@ -44,6 +45,18 @@ const Home = () => {
         deleteStudentAPI(studentId);
     };
 
+    const {
+        fetchReferenceData
+    } = useReferenceDataStore();
+
+    // Fetch reference data on component mount
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchReferenceData();
+        };
+        fetchData();
+    }, [fetchReferenceData]);
+
     return (
         <div>
             <h1>Quản lý sinh viên</h1>
@@ -69,11 +82,13 @@ const Home = () => {
 export default Home;
 
 // Task:
-// - Call API "Quản lý danh mục"
-// - Match labels "Quản lý danh mục" with "Quản lý sinh viên"
+// - Match labels "Quản lý danh mục" with "Quản lý sinh viên" -> Done
+// - Call API "Quản lý danh mục" -> Xóa, Sửa => Done, Thêm
+// - Export Import file
+
+// - 4 cái bisiness rule -> CHữa cháy được SĐT, Email, MSSV -> Còn cái kiểu tốt nghiệp ko được back lại
 
 // Bug:
-// - Add new student API
 // - Update student API
 
 // Improvement:
