@@ -19,6 +19,8 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [documentType, setDocumentType] = useState<string | null>(null);
 
+    console.log("student", student);
+
     const { facultyOptions, programOptions, studentStatusOptions } = useReferenceDataStore() as {
         facultyOptions: { value: string; label: string }[];
         programOptions: { value: string; label: string }[];
@@ -220,7 +222,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     )}
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="Quốc tịch" name="nationality">
+                            <Form.Item label="Quốc tịch" name="nationality" rules={[{ required: true, message: 'Quốc tịch là bắt buộc!' }]}>
                                 <Input />
                             </Form.Item>
                         </Col>

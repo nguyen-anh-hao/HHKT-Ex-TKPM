@@ -6,8 +6,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import StudentTable from "./components/StudentTable";
 import StudentModal from "./components/StudentModal";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchStudents, createStudent as apiCreateStudent, deleteStudent as apiDeleteStudent } from "@/lib/api/studentApi";
-//updateStudent as apiUpdateStudent
+import { fetchStudents, createStudent as apiCreateStudent, updateStudent as apiUpdateStudent, deleteStudent as apiDeleteStudent } from "@/lib/api/studentApi";
 import { convertGetResponseToStudent } from "@/lib/utils/studentConverter";
 import { Student } from "@/interfaces/student.interface";
 import { updateStudent as updateStudentState, addStudent as addStudentState, deleteStudent as deleteStudentState } from "@/lib/actions/StudentActions";
@@ -19,8 +18,8 @@ const Home = () => {
     const queryClient = useQueryClient();
 
     const { data: studentData } = useQuery({ queryKey: ["students"], queryFn: fetchStudents });
-    // const { mutate: createStudentAPI } = useMutation({ mutationFn: apiCreateStudent, onSuccess: () => queryClient.invalidateQueries({ queryKey: ["students"]}) });
-    // const { mutate: updateStudentAPI } = useMutation({ mutationFn: apiUpdateStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["students"]}) });
+    const { mutate: createStudentAPI } = useMutation({ mutationFn: apiCreateStudent, onSuccess: () => queryClient.invalidateQueries({ queryKey: ["students"]}) });
+    const { mutate: updateStudentAPI } = useMutation({ mutationFn: apiUpdateStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["students"]}) });
     const { mutate: deleteStudentAPI } = useMutation({ mutationFn: apiDeleteStudent, onSuccess: () => queryClient.invalidateQueries({queryKey: ["students"]}) });
 
     useEffect(() => {
@@ -33,10 +32,10 @@ const Home = () => {
     const handleAddOrUpdateStudent = (values: Student) => {
         if (selectedStudent) {
             setStudents(updateStudentState(students, values));
-            // updateStudentAPI(values);
+            updateStudentAPI(values);
         } else {
             setStudents(addStudentState(students, values));
-            // createStudentAPI(values);
+            createStudentAPI(values);
         }
     };
 

@@ -10,12 +10,12 @@ export const convertGetResponseToStudent = (response: StudentGetResponse): Stude
     const CMND = response.documents.find((doc: any) => doc.documentType === "CMND");
     const CCCD = response.documents.find((doc: any) => doc.documentType === "CCCD");
     const passport = response.documents.find((doc: any) => doc.documentType === "Hộ chiếu");
-    const permanentAddressString = permanentAddress ? `${permanentAddress.houseNumberStreetName}, ${permanentAddress.wardCommune}, ${permanentAddress.district}, ${permanentAddress.cityProvince}, ${permanentAddress.country}` : "";
-    const temporaryAddressString = temporaryAddress ? `${temporaryAddress.houseNumberStreetName}, ${temporaryAddress.wardCommune}, ${temporaryAddress.district}, ${temporaryAddress.cityProvince}, ${temporaryAddress.country}` : "";
+    const permanentAddressString = permanentAddress?.houseNumberStreetName ? `${permanentAddress.houseNumberStreetName}, ${permanentAddress.wardCommune}, ${permanentAddress.district}, ${permanentAddress.cityProvince}, ${permanentAddress.country}` : "";
+    const temporaryAddressString = temporaryAddress?.houseNumberStreetName ? `${temporaryAddress.houseNumberStreetName}, ${temporaryAddress.wardCommune}, ${temporaryAddress.district}, ${temporaryAddress.cityProvince}, ${temporaryAddress.country}` : "";
 
     return {
         ...response,
-        permenantAddress: permanentAddressString,
+        permanentAddress: permanentAddressString,
         temporaryAddress: temporaryAddressString,
         documentType: CMND ? "CMND" : CCCD ? "CCCD" : passport ? "Hộ chiếu" : "",
         documentNumber: CMND ? CMND.documentNumber : CCCD ? CCCD.documentNumber : passport ? passport.documentNumber : "",
@@ -29,13 +29,13 @@ export const convertGetResponseToStudent = (response: StudentGetResponse): Stude
 };
 
 export const convertStudentToPostRequest = (request: Student): StudentPostRequest => {
-    const permanentAddress: Address | null = request.permenantAddress !== '' ? {
+    const permanentAddress: Address | null = request.permanentAddress !== '' ? {
         addressType: "Thường Trú",
-        houseNumberStreetName: request.permenantAddress?.split(", ")[0] || "",
-        wardCommune: request.permenantAddress?.split(", ")[1] || "",
-        district: request.permenantAddress?.split(", ")[2] || "",
-        cityProvince: request.permenantAddress?.split(", ")[3] || "",
-        country: request.permenantAddress?.split(", ")[4] || "",
+        houseNumberStreetName: request.permanentAddress?.split(", ")[0] || "",
+        wardCommune: request.permanentAddress?.split(", ")[1] || "",
+        district: request.permanentAddress?.split(", ")[2] || "",
+        cityProvince: request.permanentAddress?.split(", ")[3] || "",
+        country: request.permanentAddress?.split(", ")[4] || "",
     } : null;
 
     const temporaryAddress: Address | null = request.temporaryAddress !== '' ? {
@@ -47,18 +47,18 @@ export const convertStudentToPostRequest = (request: Student): StudentPostReques
         country: request.temporaryAddress?.split(", ")[4] || "",
     } : null;
 
-    const addresses: Address[] = [permanentAddress, temporaryAddress].filter((address): address is Address => address !== null && address.houseNumberStreetName !== '');
+    const addresses: Address[] = [permanentAddress, temporaryAddress].filter((address): address is Address => address !== null && address !== undefined);
 
     const documents: Identity[] = request.documentType ? [
         {
-            documentType: request.documentType,
-            documentNumber: request.documentNumber,
-            issuedDate: request.issuedDate,
-            expiredDate: request.expiredDate,
-            issuedBy: request.issuedBy,
-            issuedCountry: request.issuedCountry,
-            hasChip: request.hasChip,
-            note: request.note,
+            documentType: request?.documentType || "",
+            documentNumber: request?.documentNumber || "",
+            issuedDate: moment(request.issuedDate)?.format("YYYY-MM-DD") || "",
+            expiredDate: moment(request.expiredDate)?.format("YYYY-MM-DD") || "",
+            issuedBy: request?.issuedBy || "",
+            issuedCountry: request?.issuedCountry || "",
+            hasChip: request?.hasChip || false,
+            note: request?.note || "",
         },
     ] : [];
 
@@ -82,54 +82,3 @@ export const convertStudentToPostRequest = (request: Student): StudentPostReques
 export const convertStudentToPutRequest = (request: Student): StudentPutRequest => {
     return convertStudentToPostRequest(request) as StudentPutRequest;
 };
-
-// const convertStudentToPostRequest = (student: Student): StudentPostRequest => {
-//     return {
-//         mssv: student.studentId,
-//         hoTen: student.fullName,
-//         ngaySinh: moment(student.dob, "YYYY-MM-DD").toArray().slice(0, 3), // Chuyển thành [YYYY, MM, DD]
-//         gioiTinh: student.gender,
-//         khoaId: 4, // Giả định giá trị, bạn có thể thay đổi dựa trên logic thực tế
-//         khoaHoc: student.intake,
-//         chuongTrinhId: 2, // Giả định
-//         email: student.email,
-//         soDienThoai: student.phone,
-//         tinhTrangId: 2, // Giả định
-//         quocTich: student.nationality,
-//         diaChis: [
-//             {
-//                 loaiDiaChi: "Thường trú",
-//                 soNhaTenDuong: student.permanentAddress.split(", ")[0] || "",
-//                 phuongXa: student.permanentAddress.split(", ")[1] || "",
-//                 quanHuyen: student.permanentAddress.split(", ")[2] || "",
-//                 tinhThanhPho: student.permanentAddress.split(", ")[3] || "",
-//                 quocGia: student.permanentAddress.split(", ")[4] || "",
-//             },
-//             {
-//                 loaiDiaChi: "Tạm trú",
-//                 soNhaTenDuong: student.temporaryAddress.split(", ")[0] || "",
-//                 phuongXa: student.temporaryAddress.split(", ")[1] || "",
-//                 quanHuyen: student.temporaryAddress.split(", ")[2] || "",
-//                 tinhThanhPho: student.temporaryAddress.split(", ")[3] || "",
-//                 quocGia: student.temporaryAddress.split(", ")[4] || "",
-//             },
-//         ],
-//         giayTos: [
-//             {
-//                 loaiGiayTo: student.documentType,
-//                 soGiayTo: student.documentNumber,
-//                 ngayCap: moment(student.issuedDate, "YYYY-MM-DD").toArray().slice(0, 3),
-//                 ngayHetHan: moment(student.expiredDate, "YYYY-MM-DD").toArray().slice(0, 3),
-//                 noiCap: student.issuedBy,
-//                 quocGiaCap: student.issuedCountry,
-//                 ghiChu: "",
-//                 coGanChip: student.hasChip,
-//             },
-//         ],
-//     };
-// };
-
-// export {
-//     convertGetResponseToStudent,
-//     convertStudentToPostRequest,
-// };

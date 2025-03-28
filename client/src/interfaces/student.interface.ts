@@ -25,6 +25,6 @@ import { StudentGetResponse } from "./api.interface";
 import { Identity } from "./identify.interface";
 
 export interface Student extends StudentGetResponse, Identity {
-    permenantAddress: string;
+    permanentAddress: string;
     temporaryAddress: string;
 }
