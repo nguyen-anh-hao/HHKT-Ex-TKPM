@@ -6,8 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.validator.EmailDomain;
-import org.example.backend.validator.PhoneNumb
+import org.example.backend.validator.PhoneNumber;
 import jakarta.validation.constraints.Pattern;
+import org.example.backend.validator.PhoneNumber;
 
 
 import java.time.LocalDate;
@@ -38,6 +39,9 @@ public class StudentRequest {
 
     @NotBlank(message = "Phone number is required")
     @PhoneNumber
+    @Pattern(regexp = "^\\+\\d{1,3}\\d{9}$", message = "Phone number should be valid. " +
+            "The phone number starts with + followed by 1 to 3 digits for the country code, " +
+            "and then exactly 9 digits for the phone number")
     private String phone;
 
     @NotBlank(message = "Nationality is required")
