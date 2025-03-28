@@ -3,10 +3,9 @@ package org.example.backend.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.backend.validator.EmailDomain;
-import org.example.backend.validator.PhoneNumber;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class StudentRequest {
-    @NotBlank(message = "Student id is required")
+    @NotNull(message = "Student id is required")
     private String studentId;
 
     @NotBlank(message = "Full name is required")
