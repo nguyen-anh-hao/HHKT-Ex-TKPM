@@ -18,6 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @ValidStudentStatusTransition
+@PhoneNumber(message = "Invalid phone number format for the country")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StudentUpdateRequest {
     @NotNull(message = "Student id is required")
@@ -35,10 +36,8 @@ public class StudentUpdateRequest {
     @EmailDomain
     private String email;
 
-    @Pattern(regexp = "^\\+\\d{1,3}\\d{9}$", message = "Phone number should be valid. " +
-            "The phone number starts with + followed by 1 to 3 digits for the country code, " +
-            "and then exactly 9 digits for the phone number")
-    @PhoneNumber
+    private String phoneCountry;
+
     private String phone;
 
     private String nationality;

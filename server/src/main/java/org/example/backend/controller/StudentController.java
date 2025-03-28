@@ -49,7 +49,7 @@ public class StudentController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Student details to add", required = true,
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StudentRequest.class)))
-            @RequestBody @Valid StudentRequest request) {
+         @Valid  @RequestBody StudentRequest request) {
         log.info("Received request to add student: {}", request.getFullName());
 
         StudentResponse student = studentService.addStudent(request);
