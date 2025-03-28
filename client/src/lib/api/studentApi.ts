@@ -30,7 +30,7 @@ export const createStudent = async (values: Student) => {
 export const updateStudent = async (values: Student) => {
     const requestData = cleanData(convertStudentToPutRequest(values));
     try {
-        const { data } = await axios.put(`${BASE_URL}/students/${values.studentId}`, requestData);
+        const { data } = await axios.patch(`${BASE_URL}/students/${values.studentId}`, requestData);
         return data;
     } catch (error) {
         console.error("Error updating student:", error);

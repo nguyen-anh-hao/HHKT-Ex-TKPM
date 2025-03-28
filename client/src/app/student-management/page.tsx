@@ -83,13 +83,15 @@ export default Home;
 
 // Task:
 // - Match labels "Quản lý danh mục" with "Quản lý sinh viên" -> Done
-// - Call API "Quản lý danh mục" -> Xóa, Sửa => Done, Thêm
-// - Export Import file
+// - Call API "Quản lý danh mục" -> Xóa, Sửa => Done, [Thêm]
+// - Export => Done [Import file]
 
 // - 4 cái bisiness rule -> CHữa cháy được SĐT, Email, MSSV -> Còn cái kiểu tốt nghiệp ko được back lại
 
 // Bug:
 // - Update student API
+// - Add reference API
+// - Import file
 
 // Improvement:
 // - Pagination for student table
