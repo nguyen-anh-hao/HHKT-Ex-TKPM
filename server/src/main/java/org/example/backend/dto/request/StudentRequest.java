@@ -6,7 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.validator.EmailDomain;
-import org.example.backend.validator.PhoneNumber;
+import org.example.backend.validator.PhoneNumb
+import jakarta.validation.constraints.Pattern;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 public class StudentRequest {
-    @NotBlank(message = "Student id is required")
+    @NotNull(message = "Student id is required")
     private String studentId;
 
     @NotBlank(message = "Full name is required")
