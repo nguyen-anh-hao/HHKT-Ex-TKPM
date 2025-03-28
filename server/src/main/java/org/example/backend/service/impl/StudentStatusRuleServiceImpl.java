@@ -7,20 +7,24 @@ import org.example.backend.domain.StudentStatusRule;
 import org.example.backend.dto.request.StudentStatusRuleRequest;
 import org.example.backend.dto.response.StudentStatusRuleResponse;
 import org.example.backend.mapper.StudentStatusRuleMapper;
+import org.example.backend.repository.IStudentStatusRepository;
 import org.example.backend.repository.IStudentStatusRuleRepository;
 import org.example.backend.service.IStudentStatusRuleService;
-import org.example.backend.service.IStudentStatusService;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class StudentStatusRuleServiceImpl implements IStudentStatusRuleService {
     private final IStudentStatusRuleRepository studentStatusRuleRepository;
-    private final IStudentStatusService studentStatusService;
+    private final IStudentStatusRepository studentStatusRepository;
 
     @Override
     public Map<String, Set<String>> getStudentStatusRulesMap() {
@@ -52,8 +56,8 @@ public class StudentStatusRuleServiceImpl implements IStudentStatusRuleService {
         StudentStatus currentStatus;
         StudentStatus allowedTransition;
         try {
-            currentStatus = studentStatusService.getStudentStatusById(request.getCurrentStatusId());
-            allowedTransition = studentStatusService.getStudentStatusById(request.getAllowedTransitionId());
+            currentStatus = studentStatusRepository.findById(request.getCurrentStatusId()).get();
+            allowedTransition = studentStatusRepository.findById(request.getAllowedTransitionId()).get();
         } catch (Exception e) {
             log.error("Error fetching student statuses", e);
             throw new RuntimeException("Error fetching student statuses", e);
@@ -134,8 +138,8 @@ public class StudentStatusRuleServiceImpl implements IStudentStatusRuleService {
         StudentStatus currentStatus;
         StudentStatus allowedTransition;
         try {
-            currentStatus = studentStatusService.getStudentStatusById(request.getCurrentStatusId());
-            allowedTransition = studentStatusService.getStudentStatusById(request.getAllowedTransitionId());
+            currentStatus = studentStatusRepository.findById(request.getCurrentStatusId()).get();
+            allowedTransition = studentStatusRepository.findById(request.getAllowedTransitionId()).get();
         } catch (Exception e) {
             log.error("Error fetching student statuses", e);
             throw new RuntimeException("Error fetching student statuses", e);
