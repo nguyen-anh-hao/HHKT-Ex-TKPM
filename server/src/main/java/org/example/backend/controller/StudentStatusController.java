@@ -31,4 +31,59 @@ public class StudentStatusController {
                 .data(studentStatus)
                 .build();
     }
+
+    @GetMapping("")
+    public APIResponse getAllStudentStatuses() {
+        log.info("Received request to get all student statuses");
+
+        return APIResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Success")
+                .data(studentStatusService.getAllStudentStatuses())
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public APIResponse getStudentStatusById(@PathVariable Integer id) {
+        log.info("Received request to get student status with id: {}", id);
+
+        StudentStatusResponse studentStatus = studentStatusService.getStudentStatusById(id);
+
+        log.info("Successfully retrieved student status with id: {}", id);
+
+        return APIResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Success")
+                .data(studentStatus)
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public APIResponse updateStudentStatus(@PathVariable Integer id, @RequestBody @Valid StudentStatusRequest request) {
+        log.info("Received request to update student status with id: {}", id);
+
+        StudentStatusResponse studentStatus = studentStatusService.updateStudentStatus(id, request);
+
+        log.info("Successfully updated student status with id: {}", id);
+
+        return APIResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Success")
+                .data(studentStatus)
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public APIResponse deleteStudentStatus(@PathVariable Integer id) {
+        log.info("Received request to delete student status with id: {}", id);
+
+        studentStatusService.deleteStudentStatus(id);
+
+        log.info("Successfully deleted student status with id: {}", id);
+
+        return APIResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Success")
+                .build();
+    }
 }
