@@ -11,6 +11,9 @@ import org.example.backend.repository.IFacultyRepository;
 import org.example.backend.service.IFacultyService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -31,5 +34,44 @@ public class FacultyServiceImpl implements IFacultyService {
         log.info("Faculty saved to database successfully");
 
         return FacultyMapper.mapToResponse(faculty);
+    }
+
+    @Override
+    public List<FacultyResponse> getAllFaculties() {
+        List<Faculty> faculties = facultyRepository.findAll();
+
+        return faculties.stream()
+                .map(FacultyMapper::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public FacultyResponse getFacultyById(Integer id) {
+        Faculty faculty = facultyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+
+        return FacultyMapper.mapToResponse(faculty);
+    }
+
+    @Override
+    @Transactional
+    public FacultyResponse updateFaculty(Integer id, FacultyRequest request) {
+        Faculty faculty = facultyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+
+        faculty.setFacultyName(request.getFacultyName());
+
+        faculty = facultyRepository.save(faculty);
+
+        return FacultyMapper.mapToResponse(faculty);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFaculty(Integer id) {
+        Faculty faculty = facultyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+
+        facultyRepository.delete(faculty);
     }
 }
