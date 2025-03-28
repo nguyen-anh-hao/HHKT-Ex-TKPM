@@ -2,10 +2,10 @@ package org.example.backend.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.backend.validator.ValidStudentStatusTransition;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,13 +13,13 @@ import java.util.List;
 @Getter
 @Setter
 public class StudentRequest {
-    @NotBlank(message = "Student id is required")
+    @NotNull(message = "Student id is required")
     private String studentId;
 
     @NotBlank(message = "Full name is required")
     private String fullName;
 
-    @NotBlank(message = "Date of birth is required")
+    @NotNull(message = "Date of birth is required")
     private LocalDate dob;
 
     @NotBlank(message = "Gender is required")
@@ -39,13 +39,13 @@ public class StudentRequest {
     @NotBlank(message = "Nationality is required")
     private String nationality;
 
-    @NotBlank(message = "Faculty id is required")
+    @NotNull(message = "Faculty id is required")
     private Integer facultyId;
 
-    @NotBlank(message = "Program id is required")
+    @NotNull(message = "Program id is required")
     private Integer programId;
 
-    @NotBlank(message = "Student status id is required")
+    @NotNull(message = "Student status id is required")
     private Integer studentStatusId;
 
     private List<AddressRequest> addresses;

@@ -18,7 +18,7 @@ import java.util.List;
 @ValidStudentStatusTransition
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StudentUpdateRequest {
-    @NotBlank(message = "Student id is required")
+    @NotNull(message = "Student id is required")
     private String studentId;
 
     private String fullName;
