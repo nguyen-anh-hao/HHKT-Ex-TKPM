@@ -3,11 +3,10 @@ package org.example.backend.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.sl.draw.geom.GuideIf;
-import org.example.backend.domain.Program;
 import org.example.backend.domain.Address;
 import org.example.backend.domain.Document;
 import org.example.backend.domain.Faculty;
+import org.example.backend.domain.Program;
 import org.example.backend.domain.Student;
 import org.example.backend.domain.StudentStatus;
 import org.example.backend.dto.request.StudentRequest;
@@ -16,8 +15,8 @@ import org.example.backend.dto.response.StudentResponse;
 import org.example.backend.mapper.AddressMapper;
 import org.example.backend.mapper.DocumentMapper;
 import org.example.backend.mapper.StudentMapper;
-import org.example.backend.repository.IProgramRepository;
 import org.example.backend.repository.IFacultyRepository;
+import org.example.backend.repository.IProgramRepository;
 import org.example.backend.repository.IStudentRepository;
 import org.example.backend.repository.IStudentStatusRepository;
 import org.example.backend.service.IStudentService;
@@ -50,6 +49,11 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     @Transactional
     public StudentResponse addStudent(StudentRequest request) {
+        if (studentRepository.findByStudentId(request.getStudentId()).isPresent()) {
+            log.error("Student id {} already exists", request.getStudentId());
+            throw new RuntimeException("Student id already exists");
+        }
+
         Faculty faculty = facultyRepository.findById(request.getFacultyId()).orElseThrow(() -> new RuntimeException("Faculty not found"));
         Program program = programRepository.findById(request.getProgramId()).orElseThrow(() -> new RuntimeException("Program not found"));
         StudentStatus studentStatus = studentStatusRepository.findById(request.getStudentStatusId()).orElseThrow(() -> new RuntimeException("Student status not found"));
