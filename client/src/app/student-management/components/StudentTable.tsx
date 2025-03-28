@@ -1,6 +1,6 @@
 import { Table, Button, Popconfirm, Input } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Student } from "../../../interfaces/student/state.interface";
+import { Student } from "../../../interfaces/student.interface";
 import moment from "moment";
 import { useState } from "react";
 
@@ -36,7 +36,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
             render: (_: any, record: Student) => (
                 <>
                     <Button
-                        style={{ marginRight: 8 }}
+                        style={{ marginRight: 8, marginBottom: 8 }}
                         icon={<EditOutlined />}
                         onClick={() => {
                             onEdit(record);

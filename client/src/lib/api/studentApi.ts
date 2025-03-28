@@ -1,6 +1,7 @@
 import axios from "axios";
-import { Student } from "../../interfaces/student/state.interface";
-// import { convertStudentToPostRequest } from "../utils/studentConverter";
+import { Student } from "../../interfaces/student.interface";
+import { cleanData } from "../utils/cleanData";
+import { convertStudentToPostRequest, convertStudentToPutRequest } from "../utils/studentConverter";
 
 const BASE_URL = "http://localhost:9000/api";
 
@@ -10,15 +11,18 @@ export const fetchStudents = async () => {
 };
 
 export const createStudent = async (values: Student) => {
-    // const requestData = convertStudentToPostRequest(values);
-    // const { data } = await axios.post(`${BASE_URL}/sinh-vien`, requestData);
-    // return data;
+    const requestData = cleanData(convertStudentToPostRequest(values));
+    console.log("request data", requestData);
+    const { data } = await axios.post(`${BASE_URL}/students`, requestData);
+    return data;
 };
 
 export const updateStudent = async (values: Student) => {
-    // await axios.put(`${BASE_URL}/sinh-vien/${values.studentId}`, values);
+    const requestData = cleanData(convertStudentToPutRequest(values));
+    const { data } = await axios.put(`${BASE_URL}/students/${values.studentId}`, requestData);
+    return data;
 };
 
 export const deleteStudent = async (studentId: string) => {
-    await axios.delete(`${BASE_URL}/sinh-vien/${studentId}`);
+    await axios.delete(`${BASE_URL}/students/${studentId}`);
 };
