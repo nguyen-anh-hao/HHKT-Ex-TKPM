@@ -4,10 +4,10 @@ package org.example.backend.dto.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.validator.EmailDomain;
+import org.example.backend.validator.PhoneNumber;
 import org.example.backend.validator.ValidStudentStatusTransition;
 
 import java.time.LocalDate;
@@ -29,10 +29,8 @@ public class StudentUpdateRequest {
 
     private String intake;
 
-    @Email(message = "Email should be valid")
     private String email;
 
-    @Pattern(regexp = "^(0[0-9]{9})$", message = "Số điện thoại không hợp lệ")
     private String phone;
 
     private String nationality;
