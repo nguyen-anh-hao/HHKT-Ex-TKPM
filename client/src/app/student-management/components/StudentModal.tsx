@@ -62,6 +62,9 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                                     { required: true, message: 'Mã số sinh viên là bắt buộc!' },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
+                                            if (isEdit) {
+                                                return Promise.resolve();
+                                            }
                                             if (!value || !student || value !== student.studentId) {
                                                 return Promise.resolve();
                                             }

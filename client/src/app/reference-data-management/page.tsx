@@ -43,8 +43,8 @@ const FacultyPage = () => {
     }, [facultyOptions, programOptions, studentStatusOptions]);
 
     const handleAdd = (setState: React.Dispatch<React.SetStateAction<string[]>>, addFunction: (value: string) => void) => {
-        setState((prev) => [...prev, ""]);
-        addFunction("");
+        setState((prev) => [...prev, "Chưa có tên"]);
+        addFunction("Chưa có tên");
     };
 
     const handleChange = (

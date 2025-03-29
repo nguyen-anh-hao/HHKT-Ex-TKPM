@@ -29,6 +29,7 @@ export const createStudent = async (values: Student) => {
 
 export const updateStudent = async (values: Student) => {
     const requestData = cleanData(convertStudentToPutRequest(values));
+    console.log("Haha", requestData);
     try {
         const { data } = await axios.patch(`${BASE_URL}/students/${values.studentId}`, requestData);
         return data;
