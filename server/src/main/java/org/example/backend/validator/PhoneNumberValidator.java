@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.domain.PhonePattern;
-import org.example.backend.repository.PhonePatternRepository;
+import org.example.backend.repository.IPhonePatternRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +17,10 @@ import java.util.regex.Pattern;
 @Component
 public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, Object> {
 
-    private final PhonePatternRepository phonePatternRepository;
+    private final IPhonePatternRepository phonePatternRepository;
 
     @Autowired
-    public PhoneNumberValidator(PhonePatternRepository phonePatternRepository) {
+    public PhoneNumberValidator(IPhonePatternRepository phonePatternRepository) {
         this.phonePatternRepository = phonePatternRepository;
     }
 
