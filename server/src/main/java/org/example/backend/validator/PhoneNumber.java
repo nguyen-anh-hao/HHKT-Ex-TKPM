@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PhoneNumber {
-    String message() default "Invalid phone number";
+    String message() default "Invalid phone number format for the country";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

@@ -37,6 +37,7 @@ CREATE TABLE students (
     intake VARCHAR(10) NOT NULL,
     program_id INT REFERENCES programs(id) ON DELETE SET NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    phone_country VARCHAR(2) DEFAULT 'VN',
     phone VARCHAR(15) UNIQUE NOT NULL,
     student_status_id INT REFERENCES student_statuses(id) ON DELETE SET NULL,
     nationality VARCHAR(50) NOT NULL,
@@ -100,4 +101,10 @@ CREATE TABLE student_status_rules (
                                       CONSTRAINT fk_current_status FOREIGN KEY (current_status_id) REFERENCES student_statuses(id) ON DELETE CASCADE,
                                       CONSTRAINT fk_allowed_transition FOREIGN KEY (allowed_transition_id) REFERENCES student_statuses(id) ON DELETE CASCADE,
                                       CONSTRAINT unique_transition UNIQUE (current_status_id, allowed_transition_id)
+);
+
+CREATE TABLE phone_patterns (
+    country_code VARCHAR(2) PRIMARY KEY,
+    regex_pattern TEXT NOT NULL,
+    description VARCHAR(255)
 );
