@@ -7,17 +7,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.validator.EmailDomain;
 import org.example.backend.validator.PhoneNumber;
-import jakarta.validation.constraints.Pattern;
-import org.example.backend.validator.PhoneNumber;
-import org.example.backend.validator.ValidStudentStatusTransition;
-
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
-@PhoneNumber(message = "Invalid phone number format for the country")
+@PhoneNumber
 public class StudentRequest {
     @NotNull(message = "Student id is required")
     private String studentId;
