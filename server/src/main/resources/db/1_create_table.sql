@@ -106,5 +106,20 @@ CREATE TABLE student_status_rules (
 CREATE TABLE phone_patterns (
     country_code VARCHAR(2) PRIMARY KEY,
     regex_pattern TEXT NOT NULL,
-    description VARCHAR(255)
+    description VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(100) DEFAULT 'admin',
+    updated_by VARCHAR(100) DEFAULT 'admin'
+);
+
+CREATE TABLE email_domains (
+    id SERIAL PRIMARY KEY,
+    domain VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(100) DEFAULT 'admin',
+    updated_by VARCHAR(100) DEFAULT 'admin'
 );

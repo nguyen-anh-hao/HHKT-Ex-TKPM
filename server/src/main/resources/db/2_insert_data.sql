@@ -80,7 +80,6 @@ INSERT INTO student_status_rules (current_status_id, allowed_transition_id) VALU
 
 -- Thêm dữ liệu mẫu số điện thoại đơn giản chỉ với format quốc tế
 INSERT INTO phone_patterns (country_code, regex_pattern, description) VALUES
-INSERT INTO phone_patterns (country_code, regex_pattern, description) VALUES
 ('VN', '^\+84[0-9]{9}$', 'Vietnam: +84xxxxxxxxx'),
 ('US', '^\+1[2-9][0-9]{9}$', 'USA: +1xxxxxxxxxx'),
 ('UK', '^\+44[0-9]{10}$', 'UK: +44xxxxxxxxxx'),
@@ -100,3 +99,8 @@ INSERT INTO phone_patterns (country_code, regex_pattern, description) VALUES
 ('PH', '^\+63[9][0-9]{9}$', 'Philippines: +63xxxxxxxxxx'),
 ('ID', '^\+62[1-9][0-9]{10}$', 'Indonesia: +62xxxxxxxxxxx'),
 ('MY', '^\+60[1-9][0-9]{8}$', 'Malaysia: +60xxxxxxxxx');
+
+INSERT INTO email_domains (domain) VALUES
+    ('example.com'),
+    ('student.university.edu.vn')
+ON CONFLICT (domain) DO NOTHING;
