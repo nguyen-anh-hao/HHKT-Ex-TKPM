@@ -1,8 +1,9 @@
 import { Table, Button, Popconfirm, Input } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Student } from "../../../interfaces/student/state.interface";
+import { Student } from "../../../interfaces/student.interface";
 import moment from "moment";
 import { useState } from "react";
+import useReferenceDataStore from "@/lib/stores/referenceDataStore";
 
 const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
     const [searchText, setSearchText] = useState("");
@@ -13,6 +14,10 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
         student.fullName.toLowerCase().includes(searchText.toLowerCase())
     );
 
+    const { facultyOptions } = useReferenceDataStore() as {
+        facultyOptions: { value: string; label: string }[];
+    };
+
     const columns = [
         { title: "MSSV", dataIndex: "studentId" },
         { title: "Họ tên", dataIndex: "fullName" },
@@ -21,22 +26,20 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
         {
             title: "Khoa",
             dataIndex: "faculty",
-            filters: [
-                { text: "Khoa Luật", value: "Khoa Luật" },
-                { text: "Khoa Tiếng Anh thương mại", value: "Khoa Tiếng Anh thương mại" },
-                { text: "Khoa Tiếng Nhật", value: "Khoa Tiếng Nhật" },
-                { text: "Khoa Tiếng Pháp", value: "Khoa Tiếng Pháp" },
-            ],
+            filters: facultyOptions.map((option) => ({
+                text: option.value,
+                value: option.value,
+            })),
             onFilter: (value: any, record: Student) => record.faculty === value as string,
         },
         { title: "Khóa", dataIndex: "intake" },
-        { title: "Tình trạng", dataIndex: "status" },
+        { title: "Tình trạng", dataIndex: "studentStatus" },
         {
             title: "Hành động",
             render: (_: any, record: Student) => (
                 <>
                     <Button
-                        style={{ marginRight: 8 }}
+                        style={{ marginRight: 8, marginBottom: 8 }}
                         icon={<EditOutlined />}
                         onClick={() => {
                             onEdit(record);
@@ -64,13 +67,13 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
         <div>
             {/* Thanh tìm kiếm */}
             <Input.Search
-                placeholder="Tìm kiếm theo MSSV hoặc Họ tên"
+                placeholder="Tìm kiếm theo MSSV hoặc họ tên"
                 allowClear
                 onChange={(e) => setSearchText(e.target.value)}
-                style={{ 
+                style={{
                     marginBottom: 16,
                     width: 300,
-                    float: 'right' 
+                    float: 'right'
                 }}
             />
             {/* Bảng sinh viên */}

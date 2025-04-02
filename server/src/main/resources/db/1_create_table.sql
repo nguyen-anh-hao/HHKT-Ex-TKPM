@@ -37,6 +37,7 @@ CREATE TABLE students (
     intake VARCHAR(10) NOT NULL,
     program_id INT REFERENCES programs(id) ON DELETE SET NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    phone_country VARCHAR(2) DEFAULT 'VN',
     phone VARCHAR(15) UNIQUE NOT NULL,
     student_status_id INT REFERENCES student_statuses(id) ON DELETE SET NULL,
     nationality VARCHAR(50) NOT NULL,
@@ -214,4 +215,26 @@ CREATE TABLE transcripts (
                              deleted BOOLEAN DEFAULT FALSE,
                              created_by VARCHAR(100) DEFAULT 'admin',
                              updated_by VARCHAR(100) DEFAULT 'admin'
+);
+
+
+CREATE TABLE phone_patterns (
+    country_code VARCHAR(2) PRIMARY KEY,
+    regex_pattern TEXT NOT NULL,
+    description VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(100) DEFAULT 'admin',
+    updated_by VARCHAR(100) DEFAULT 'admin'
+);
+
+CREATE TABLE email_domains (
+    id SERIAL PRIMARY KEY,
+    domain VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(100) DEFAULT 'admin',
+    updated_by VARCHAR(100) DEFAULT 'admin'
 );

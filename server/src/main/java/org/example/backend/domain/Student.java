@@ -45,6 +45,9 @@ public class Student extends Auditable {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @Column(name = "phone_country", nullable = false)
+    private String phoneCountry;
+
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 

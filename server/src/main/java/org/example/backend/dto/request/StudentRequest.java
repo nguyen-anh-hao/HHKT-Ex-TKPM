@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@PhoneNumber(message = "Invalid phone number format for the country")
+@PhoneNumber
 public class StudentRequest {
     @NotNull(message = "Student id is required")
     private String studentId;

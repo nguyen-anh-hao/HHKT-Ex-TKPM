@@ -40,16 +40,16 @@ const ImportExportPage = () => {
         const csvContent = data.map(row => row.join(",")).join("\n");
         const blob = new Blob([csvContent], { type: "text/csv" });
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "data.csv";
+        link.href = "http://localhost:9000/api/file-transfer/export?type=xlsx&fileName=data&page=0&size=100"
+        // link.download = "data.csv";
         link.click();
     };
 
     const exportJson = () => {
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "data.json";
+        link.href = "http://localhost:9000/api/file-transfer/export?type=json&fileName=data&page=0&size=100";
+        // link.download = "data.json";
         link.click();
     };
 
@@ -61,19 +61,19 @@ const ImportExportPage = () => {
             <Title level={3}>Nhập</Title>
             <div style={{ display: "flex", justifyContent: "center", gap: "20px", marginBottom: "20px" }}>
                 <Upload beforeUpload={handleCsvUpload} showUploadList={false}>
-                    <Button icon={<UploadOutlined />}>Chọn file CSV</Button>
+                    <Button icon={<UploadOutlined />}>Chọn file XLSX</Button>
                 </Upload>
                 <Upload beforeUpload={handleJsonUpload} showUploadList={false}>
                     <Button icon={<UploadOutlined />}>Chọn file JSON</Button>
                 </Upload>
             </div>
-            <p>{csvFile ? `Đã chọn: ${csvFile.name}` : "Chưa chọn file CSV."}</p>
+            <p>{csvFile ? `Đã chọn: ${csvFile.name}` : "Chưa chọn file XLSX."}</p>
             <p>{jsonFile ? `Đã chọn: ${jsonFile.name}` : "Chưa chọn file JSON."}</p>
 
             {}
             <Title level={3}>Xuất</Title>
             <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
-                <Button icon={<DownloadOutlined />} onClick={exportCsv}>Tải về CSV</Button>
+                <Button icon={<DownloadOutlined />} onClick={exportCsv}>Tải về XLSX</Button>
                 <Button icon={<DownloadOutlined />} onClick={exportJson}>Tải về JSON</Button>
             </div>
         </div>
