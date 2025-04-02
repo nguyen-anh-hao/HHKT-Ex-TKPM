@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EmailDomainService implements IEmailDomainService {
+public class EmailDomainServiceImpl implements IEmailDomainService {
     private final IEmailDomainRepository emailDomainRepository;
 
     @Override

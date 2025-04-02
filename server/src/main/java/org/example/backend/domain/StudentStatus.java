@@ -37,4 +37,9 @@ public class StudentStatus extends Auditable {
     @OneToMany(mappedBy = "allowedTransition", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<StudentStatusRule> allowedTransitionRules;
+
+    public StudentStatus(Integer id, String studentStatusName) {
+        this.id = id;
+        this.studentStatusName = studentStatusName;
+    }
 }
