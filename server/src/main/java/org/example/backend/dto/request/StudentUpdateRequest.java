@@ -3,9 +3,7 @@ package org.example.backend.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.backend.validator.EmailDomain;
@@ -18,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ValidStudentStatusTransition
-@PhoneNumber(message = "Invalid phone number format for the country")
+@PhoneNumber
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StudentUpdateRequest {
     @NotNull(message = "Student id is required")

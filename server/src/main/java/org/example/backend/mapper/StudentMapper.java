@@ -20,6 +20,7 @@ public class StudentMapper {
                 .gender(studentRequest.getGender())
                 .intake(studentRequest.getIntake())
                 .email(studentRequest.getEmail())
+                .phoneCountry(studentRequest.getPhoneCountry())
                 .phone(studentRequest.getPhone())
                 .nationality(studentRequest.getNationality())
                 .build();
@@ -57,6 +58,7 @@ public class StudentMapper {
                 .intake(student.getIntake())
                 .program(student.getProgram().getProgramName())
                 .email(student.getEmail())
+                .phoneCountry(student.getPhoneCountry())
                 .phone(student.getPhone())
                 .studentStatus(student.getStudentStatus().getStudentStatusName())
                 .nationality(student.getNationality())

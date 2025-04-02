@@ -21,6 +21,7 @@ public class StudentResponse {
     private String intake;
     private String program;
     private String email;
+    private String phoneCountry;
     private String phone;
     private String studentStatus;
     private String nationality;
