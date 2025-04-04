@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,7 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(FacultyController.class)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -42,7 +42,7 @@ public class FacultyControllerTest {
         when(facultyService.getAllFaculties()).thenReturn(faculties);
 
         mockMvc.perform(get("/api/faculties"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].facultyName").value("Computer Science"))
                 .andExpect(jsonPath("$.data[1].facultyName").value("Mathematics"))
@@ -57,7 +57,7 @@ public class FacultyControllerTest {
         when(facultyService.getFacultyById(1)).thenReturn(faculty);
 
         mockMvc.perform(get("/api/faculties/1"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.facultyName").value("Computer Science"));
     }
@@ -71,7 +71,7 @@ public class FacultyControllerTest {
         mockMvc.perform(post("/api/faculties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"facultyName\": \"Computer Science\"}"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.facultyName").value("Computer Science"));
     }
@@ -85,7 +85,7 @@ public class FacultyControllerTest {
         mockMvc.perform(put("/api/faculties/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"facultyName\": \"Updated Computer Science\"}"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.facultyName").value("Updated Computer Science"));
     }
@@ -93,6 +93,6 @@ public class FacultyControllerTest {
     @Test
     public void shouldDeleteFaculty() throws Exception {
         mockMvc.perform(delete("/api/faculties/1"))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()));
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -16,12 +17,11 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(EmailDomainController.class)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -42,7 +42,7 @@ public class EmailDomainControllerTest {
         when(service.getAllDomains()).thenReturn(emailDomains);
 
         mockMvc.perform(get("/api/email-domains"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].domain").value("example.com"))
                 .andExpect(jsonPath("$.data[1].domain").value("example.org"))
@@ -57,7 +57,7 @@ public class EmailDomainControllerTest {
         when(service.getDomainById(1)).thenReturn(emailDomain);
 
         mockMvc.perform(get("/api/email-domains/1"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.domain").value("example.com"));
     }
@@ -71,7 +71,7 @@ public class EmailDomainControllerTest {
         mockMvc.perform(post("/api/email-domains")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"domain\": \"example.com\"}"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.domain").value("example.com"));
     }
@@ -85,7 +85,7 @@ public class EmailDomainControllerTest {
         mockMvc.perform(put("/api/email-domains/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"domain\": \"example.com\"}"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.domain").value("example.com"));
     }
@@ -93,6 +93,6 @@ public class EmailDomainControllerTest {
     @Test
     public void shouldDeleteEmailDomain() throws Exception {
         mockMvc.perform(delete("/api/email-domains/1"))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()));
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,7 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProgramController.class)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -42,7 +42,7 @@ public class ProgramControllerTest {
         when(programService.getAllPrograms()).thenReturn(programs);
 
         mockMvc.perform(get("/api/programs"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].programName").value("Computer Science"))
                 .andExpect(jsonPath("$.data[1].programName").value("Information Technology"))
@@ -57,7 +57,7 @@ public class ProgramControllerTest {
         when(programService.getProgramById(1)).thenReturn(program);
 
         mockMvc.perform(get("/api/programs/1"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.programName").value("Computer Science"));
     }
@@ -71,7 +71,7 @@ public class ProgramControllerTest {
         mockMvc.perform(post("/api/programs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"programName\": \"Computer Science\"}"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.programName").value("Computer Science"));
     }
@@ -85,7 +85,7 @@ public class ProgramControllerTest {
         mockMvc.perform(put("/api/programs/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"programName\": \"Updated Computer Science\"}"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.programName").value("Updated Computer Science"));
     }
@@ -93,6 +93,6 @@ public class ProgramControllerTest {
     @Test
     public void shouldDeleteProgram() throws Exception {
         mockMvc.perform(delete("/api/programs/1"))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()));
     }
 }

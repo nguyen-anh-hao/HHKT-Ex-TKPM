@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,7 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(StudentStatusController.class)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -42,7 +42,7 @@ public class StudentStatusControllerTest {
         when(studentStatusService.getAllStudentStatuses()).thenReturn(studentStatuses);
 
         mockMvc.perform(get("/api/student-statuses"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].studentStatusName").value("Active"))
                 .andExpect(jsonPath("$.data[1].studentStatusName").value("Inactive"))
@@ -57,7 +57,7 @@ public class StudentStatusControllerTest {
         when(studentStatusService.getStudentStatusById(1)).thenReturn(studentStatus);
 
         mockMvc.perform(get("/api/student-statuses/1"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.studentStatusName").value("Active"));
     }
@@ -71,7 +71,7 @@ public class StudentStatusControllerTest {
         mockMvc.perform(post("/api/student-statuses")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"studentStatusName\": \"Active\"}"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.studentStatusName").value("Active"));
     }
@@ -85,7 +85,7 @@ public class StudentStatusControllerTest {
         mockMvc.perform(put("/api/student-statuses/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"studentStatusName\": \"Updated Active\"}"))
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.studentStatusName").value("Updated Active"));
     }
@@ -93,6 +93,6 @@ public class StudentStatusControllerTest {
     @Test
     public void shouldDeleteStudentStatus() throws Exception {
         mockMvc.perform(delete("/api/student-statuses/1"))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()));
     }
 }
