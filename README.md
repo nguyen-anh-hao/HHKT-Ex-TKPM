@@ -284,3 +284,6 @@ Cấu hình Business Rules
 
 ![image](https://github.com/user-attachments/assets/9474a02b-5edd-441e-8406-f19527e4ecd2)
 
+## Database
+
+![image](https://github.com/user-attachments/assets/35e25919-bb7a-4a10-a0d9-3ab5cb20ad10)
