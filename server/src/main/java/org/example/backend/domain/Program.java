@@ -29,4 +29,9 @@ public class Program extends Auditable {
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Student> students;
+
+    public Program(Integer id, String programName) {
+        this.id = id;
+        this.programName = programName;
+    }
 }
