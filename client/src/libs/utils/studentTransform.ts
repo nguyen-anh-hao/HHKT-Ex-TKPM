@@ -1,10 +1,13 @@
 import moment from "moment";
-import { Student } from "@/interfaces/student.interface";
-import { Address } from "@/interfaces/address.interface";
-import { Identity } from "@/interfaces/identify.interface";
-import { StudentGetResponse, StudentPostRequest, StudentPutRequest } from "@/interfaces/api.interface";
+import { Student } from "@/interfaces/Student";
+import { Address } from "@/interfaces/Address";
+import { Identity } from "@/interfaces/Identify";
+import { StudentResponse } from "@/interfaces/StudentResponse";
+import { CreateStudentRequest } from "@/interfaces/CreateStudentRequest";
+import { UpdateStudentRequest } from "@/interfaces/UpdateStudentRequest";
+import useReferenceStore from "@/libs/stores/referenceStore";
 
-export const convertGetResponseToStudent = (response: StudentGetResponse): Student => {
+export const transformGetResponseToStudent = (response: StudentResponse): Student => {
     const permanentAddress = response.addresses.find((address: Address) => address.addressType === "Thường Trú");
     const temporaryAddress = response.addresses.find((address: Address) => address.addressType === "Tạm Trú");
     const CMND = response.documents.find((doc: any) => doc.documentType === "CMND");
@@ -28,7 +31,7 @@ export const convertGetResponseToStudent = (response: StudentGetResponse): Stude
     };
 };
 
-export const convertStudentToPostRequest = (request: Student): StudentPostRequest => {
+export const transformStudentToPostRequest = (request: Student): Partial<CreateStudentRequest> => {
     const permanentAddress: Address | null = request.permanentAddress !== '' ? {
         addressType: "Thường Trú",
         houseNumberStreetName: request.permanentAddress?.split(", ")[0] || "",
@@ -62,23 +65,44 @@ export const convertStudentToPostRequest = (request: Student): StudentPostReques
         },
     ] : [];
 
+    // const faculty = faculties.find((faculty : any) => faculty.facultyName === request.faculty);
+    // const program = programs.find((program: any) => program.programName === request.program);
+    // const studentStatus = studentStatuses.find((status: any) => status.studentStatusName === request.studentStatus);
+
+    // const facultyId = faculty ? faculty.facultyId : null;
+    // const programId = program ? program.programId : null;
+    // const studentStatusId = studentStatus ? studentStatus.studentStatusId : null;
+
+    const { faculties, programs, studentStatuses } = useReferenceStore.getState();
+    const faculty = faculties.find((faculty: any) => faculty.facultyName === request.faculty);
+    const program = programs.find((program: any) => program.programName === request.program);
+    const studentStatus = studentStatuses.find((status: any) => status.studentStatusName === request.studentStatus);
+
+    console.log("faculties", faculties);
+    console.log("programs", programs);
+    console.log("studentStatuses", studentStatuses);
+
+    const facultyId = faculty ? faculty.id : 1;
+    const programId = program ? program.id : 1;
+    const studentStatusId = studentStatus ? studentStatus.id : 1;
+
     return {
         studentId: request.studentId,
         fullName: request.fullName,
         dob: moment(request.dob).format("YYYY-MM-DD"),
         gender: request.gender,
-        facultyId: 1,
+        facultyId,
         intake: request.intake,
-        programId: 1,
+        programId,
         email: request.email,
         phone: request.phone,
-        studentStatusId: 1,
+        studentStatusId,
         nationality: request.nationality,
         addresses,
         documents,
     }
 }
 
-export const convertStudentToPutRequest = (request: Student): StudentPutRequest => {
-    return convertStudentToPostRequest(request) as StudentPutRequest;
+export const transformStudentToPatchRequest = (request: Student): Partial<UpdateStudentRequest> => {
+    return transformStudentToPostRequest(request) as Partial<UpdateStudentRequest>;
 };

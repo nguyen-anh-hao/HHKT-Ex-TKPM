@@ -1,9 +1,11 @@
+'use client'
+
 import { Tabs, Form, Input, Button, Modal, Select, Row, Col, DatePicker, Checkbox } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
 import moment from "moment";
 import { useState, useEffect } from "react";
-import useReferenceDataStore from "../../../lib/stores/referenceDataStore";
-import { Student } from "../../../interfaces/student.interface";
+import { Student } from "../../../interfaces/Student";
+import { useFaculties, usePrograms, useStudentStatuses } from "@/libs/hooks/useReferences";
 
 const { Option } = Select;
 
@@ -19,13 +21,9 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [documentType, setDocumentType] = useState<string | null>(null);
 
-    // console.log("student", student);
-
-    const { facultyOptions, programOptions, studentStatusOptions } = useReferenceDataStore() as {
-        facultyOptions: { value: string; label: string }[];
-        programOptions: { value: string; label: string }[];
-        studentStatusOptions: { value: string; label: string }[];
-    };
+    const { data: facultyOptions } = useFaculties();
+    const { data: programOptions } = usePrograms();
+    const { data: studentStatusOptions } = useStudentStatuses();
 
     useEffect(() => {
         if (student) {
@@ -44,8 +42,12 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
         }
     }, [student, studentForm]);
 
-    const renderOptions = (options: { value: string; label: string }[]) =>
-        options.map((option) => <Option key={option.value} value={option.value}>{option.value}</Option>);
+    const renderOptions = (options?: { key: number; value: string; label: string }[]) =>
+        options?.map((option) => (
+            <Option key={option.key} value={option.value}>
+                {option.label}
+            </Option>
+        )) ?? null;
 
     const tabItems = [
         {
@@ -55,13 +57,16 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                 <Form form={studentForm} layout="vertical">
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item 
-                                label="Mã số sinh viên" 
-                                name="studentId" 
+                            <Form.Item
+                                label="Mã số sinh viên"
+                                name="studentId"
                                 rules={[
                                     { required: true, message: 'Mã số sinh viên là bắt buộc!' },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
+                                            if (isEdit) {
+                                                return Promise.resolve();
+                                            }
                                             if (!value || !student || value !== student.studentId) {
                                                 return Promise.resolve();
                                             }
@@ -126,7 +131,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                 <Form form={studentForm} layout="vertical">
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item 
+                            <Form.Item
                                 label="Địa chỉ thường trú"
                                 name="permanentAddress"
                             >
@@ -134,8 +139,8 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item 
-                                label="Địa chỉ tạm trú" 
+                            <Form.Item
+                                label="Địa chỉ tạm trú"
                                 name="temporaryAddress"
                             >
                                 <Input prefix={<HomeOutlined />} />
@@ -144,14 +149,14 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item 
-                                label="Email" 
-                                name="email" 
+                            <Form.Item
+                                label="Email"
+                                name="email"
                                 rules={[
-                                    { 
-                                        required: true, 
-                                        type: 'email', 
-                                        message: 'Email không hợp lệ!' 
+                                    {
+                                        required: true,
+                                        type: 'email',
+                                        message: 'Email không hợp lệ!'
                                     },
                                     {
                                         pattern: /^[a-zA-Z0-9._%+-]+@example\.com$/,
@@ -179,7 +184,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="Loại giấy tờ" 
+                                label="Loại giấy tờ"
                                 name="documentType"
                             >
                                 <Select placeholder="Chọn loại giấy tờ" onChange={setDocumentType}>
@@ -190,8 +195,8 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item 
-                                label="Số giấy tờ" 
+                            <Form.Item
+                                label="Số giấy tờ"
                                 name="documentNumber"
                             >
                                 <Input />
@@ -200,15 +205,15 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item 
-                                label="Ngày cấp" 
+                            <Form.Item
+                                label="Ngày cấp"
                                 name="issuedDate"
                             >
                                 <DatePicker style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item 
+                            <Form.Item
                                 label="Nơi cấp"
                                 name="issuedBy"
                             >
@@ -227,8 +232,8 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                         </Col>
                         {documentType === "Passport" && (
                             <Col span={12}>
-                                <Form.Item 
-                                    label="Quốc gia cấp" 
+                                <Form.Item
+                                    label="Quốc gia cấp"
                                     name="issuedCountry"
                                 >
                                     <Input />
@@ -239,8 +244,8 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     {documentType === "CCCD" && (
                         <Row gutter={16}>
                             <Col span={12}>
-                                <Form.Item 
-                                    name="hasChip" 
+                                <Form.Item
+                                    name="hasChip"
                                     valuePropName="checked"
                                 >
                                     <Checkbox>Có gắn chip hay không?</Checkbox>
@@ -288,3 +293,14 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
 };
 
 export default StudentModal
+
+// problem: id, value, label
+// table data will be show as type value
+// but modal will be show as type label and save as type value
+// and when we post data to api, we need to convert it back to id
+// solution: use key? không phải vấn đề của mình, mà vấn đề từ API khi mà trả ra name chứ không phải id
+// giải pháp tạm thời: transform và ràng buộc không được trùng tên trong reference
+
+// reference data
+// import file
+// configuration
