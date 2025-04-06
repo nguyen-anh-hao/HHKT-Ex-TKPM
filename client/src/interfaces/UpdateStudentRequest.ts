@@ -10,6 +10,7 @@ export interface UpdateStudentRequest {
     intake: string;
     programId: number;
     email: string;
+    phoneCountry: string;
     phone: string;
     studentStatusId: number;
     nationality: string;
