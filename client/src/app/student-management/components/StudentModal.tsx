@@ -3,9 +3,9 @@
 import { Tabs, Form, Input, Button, Modal, Select, Row, Col, DatePicker, Checkbox, message } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { Student } from '../../../interfaces/Student';
-import { useFaculties, usePrograms, useStudentStatuses } from '@/libs/hooks/useReferences';
+import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/useReferences';
 
 const { Option } = Select;
 
@@ -26,6 +26,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
     const { data: facultyOptions } = useFaculties();
     const { data: programOptions } = usePrograms();
     const { data: studentStatusOptions } = useStudentStatuses();
+    const { data: emailDomainOptions } = useEmailDomains();
 
     useEffect(() => {
         if (student) {
@@ -226,13 +227,21 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                 rules={[
                                     {
                                         required: true,
-                                        type: 'email',
-                                        message: 'Email không hợp lệ!'
+                                        message: 'Email là bắt buộc!',
                                     },
-                                    {
-                                        pattern: /^[a-zA-Z0-9._%+-]+@example\.com$/,
-                                        message: 'Email phải có đuôi @example.com!'
-                                    }
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value) {
+                                                return Promise.resolve();
+                                            }
+                                            const allowedDomains = emailDomainOptions?.map((option: any) => option.value) || [];
+                                            const emailDomain = value.split('@')[1];
+                                            if (allowedDomains.includes(emailDomain)) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error('Email không hợp lệ! Chỉ chấp nhận các domain được phép.'));
+                                        },
+                                    }),
                                 ]}
                             >
                                 <Input prefix={<MailOutlined />} />

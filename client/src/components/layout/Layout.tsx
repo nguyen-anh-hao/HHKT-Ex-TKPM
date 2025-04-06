@@ -10,11 +10,10 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const menuItems = [
-    { key: '1', icon: <HomeOutlined />, label: 'Trang chủ', route: '/' },
+    // { key: '1', icon: <HomeOutlined />, label: 'Trang chủ', route: '/' },
     { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
     { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-management' },
-    { key: '4', icon: <SwapOutlined />, label: 'Nhập xuất dữ liệu', route: '/inputoutput-data-management' },
-    { key: '5', icon: <SettingOutlined />, label: 'Cấu hình', route: '/configuration' },
+    { key: '4', icon: <SettingOutlined />, label: 'Cấu hình', route: '/configuration' },
 ];
 
 export default function Layout({
@@ -47,7 +46,7 @@ export default function Layout({
                         <TeamOutlined />
                     </Typography.Title>
                     <Menu
-                        mode="inline"
+                        mode='inline'
                         selectedKeys={[getKeyFromUrl(usePathname())]}
                         onClick={handleMenuClick}
                         items={menuItems.map(item => ({
@@ -57,10 +56,10 @@ export default function Layout({
                         }))}
                     />
                 </Sider>
-                <AntdLayout className="site-layout">
+                <AntdLayout className='site-layout'>
                     <Header style={{ padding: 0, background: '#FFFFFF' }} >
                         <Button
-                            type="text"
+                            type='text'
                             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                             onClick={() => setCollapsed(!collapsed)}
                             style={{
@@ -71,7 +70,7 @@ export default function Layout({
                         />
                     </Header>
                     <Content
-                        className="site-layout-background"
+                        className='site-layout-background'
                         style={{
                             margin: '24px 16px',
                             padding: 24,

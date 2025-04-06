@@ -1,12 +1,7 @@
-import { studentSchema } from '../../../libs/validators/studentValidator';
 import { message } from 'antd';
 import { Student } from '../../../interfaces/Student';
 
 export const addStudent = (students: Student[], newStudent: Student) => {
-    if (students.some(student => student.studentId === newStudent.studentId)) {
-        message.error('MSSV này đã tồn tại!');
-        return students;
-    }
     return [...students, newStudent];
 };
 
