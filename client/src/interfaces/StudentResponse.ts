@@ -10,6 +10,7 @@ export interface StudentResponse {
     intake: string;
     program: string;
     email: string;
+    phoneCountry: string;
     phone: string;
     studentStatus: string;
     nationality: string;

@@ -1,10 +1,10 @@
 'use client'
 
-import Home from "./components/Home";
-import { useStudents } from "@/libs/hooks/useStudents";
+import Home from './components/Home';
+import { useStudents } from '@/libs/hooks/useStudents';
 
-// import { fetchStudents } from "@/libs/services/studentService";
-// export const dynamic = "force-dynamic";
+// import { fetchStudents } from '@/libs/services/studentService';
+// export const dynamic = 'force-dynamic';
 
 export default function StudentManagementPage() {
     const { data: students, error, isLoading } = useStudents();
