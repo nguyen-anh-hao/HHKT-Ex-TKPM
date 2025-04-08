@@ -1,6 +1,6 @@
 'use client'
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined, ApartmentOutlined, HomeOutlined, SwapOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined,FileTextOutlined, ApartmentOutlined,BookOutlined, HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Menu, theme, Layout as AntdLayout, Typography } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
@@ -10,10 +10,13 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const menuItems = [
-    // { key: '1', icon: <HomeOutlined />, label: 'Trang chủ', route: '/' },
-    { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
-    { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-management' },
-    { key: '4', icon: <SettingOutlined />, label: 'Cấu hình', route: '/configuration' },
+  // { key: '1', icon: <HomeOutlined />, label: 'Trang chủ', route: '/' },
+  { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
+  { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-management' },
+  { key: '4', icon: <SettingOutlined />, label: 'Cấu hình', route: '/configuration' },
+  { key: '5', icon: <BookOutlined />, label: 'Quản lý khóa học', route: '/course-management' },
+  { key: '6', icon: <SwapOutlined />, label: 'Đăng ký học phần', route: '/enroll-class' },
+  { key: '7', icon: <FileTextOutlined />, label: 'Xuất bảng điểm', route: '/transcript' },
 ];
 
 export default function Layout({
