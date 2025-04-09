@@ -2,6 +2,8 @@ package org.example.backend.service;
 
 import org.example.backend.dto.request.StudentStatusRuleRequest;
 import org.example.backend.dto.response.StudentStatusRuleResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Map;
 import java.util.Set;
@@ -16,4 +18,6 @@ public interface IStudentStatusRuleService {
     void deleteStudentStatusRule(Integer id);
 
     StudentStatusRuleResponse getStudentStatusRuleById(Integer id);
+
+    Page<StudentStatusRuleResponse> getAllStudentStatusRules(Pageable pageable);
 }

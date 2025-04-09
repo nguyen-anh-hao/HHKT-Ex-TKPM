@@ -3,10 +3,14 @@ package org.example.backend.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.common.PaginationInfo;
 import org.example.backend.dto.request.StudentStatusRuleRequest;
 import org.example.backend.dto.response.APIResponse;
 import org.example.backend.dto.response.StudentStatusRuleResponse;
 import org.example.backend.service.IStudentStatusRuleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +20,39 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class StudentStatusRuleController {
     private final IStudentStatusRuleService studentStatusRuleService;
+
+    @GetMapping("/{id}")
+    public APIResponse getStudentStatusRuleById(@PathVariable Integer id) {
+        log.info("Fetching student status rule by ID: {}", id);
+        StudentStatusRuleResponse studentStatusRule = studentStatusRuleService.getStudentStatusRuleById(id);
+
+        if (studentStatusRule == null) {
+            return APIResponse.builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .message("Student status rule not found")
+                    .build();
+        }
+
+        return APIResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Success")
+                .data(studentStatusRule)
+                .build();
+    }
+
+    @GetMapping("")
+    public APIResponse getAllStudentStatusRules(@PageableDefault(size = 3, page = 0) Pageable pageable) {
+        log.info("Fetching all student status rules");
+
+        Page<StudentStatusRuleResponse> studentStatusRules = studentStatusRuleService.getAllStudentStatusRules(pageable);
+
+        return APIResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Success")
+                .data(studentStatusRules.getContent())
+                .paginationInfo(new PaginationInfo(studentStatusRules))
+                .build();
+    }
 
     @PostMapping("")
     public APIResponse addStudentStatusRule(@RequestBody @Valid StudentStatusRuleRequest request) {
