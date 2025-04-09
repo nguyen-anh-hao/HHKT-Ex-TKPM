@@ -1,0 +1,107 @@
+[
+  {
+    "studentId": "SV022",
+    "fullName": "Nguyễn Văn Anh",
+    "dob": "2002-05-10",
+    "gender": "Male",
+    "facultyId": 4,
+    "intake": "K20",
+    "programId": 2,
+    "email": "nguyenvananh@example.com",
+    "phone": "0987924321",
+    "studentStatusId": 2,
+    "nationality": "Vietnam",
+    "phoneCountry": "VN",
+    "addresses": [
+      {
+        "addressType": "Permanent",
+        "houseNumberStreetName": "123 Lê Lợi",
+        "wardCommune": "Phường 1",
+        "district": "Quận 3",
+        "cityProvince": "TP.HCM",
+        "country": "Vietnam"
+      },
+      {
+        "addressType": "Temporary",
+        "houseNumberStreetName": "456 Trần Hưng Đạo",
+        "wardCommune": "Phường 5",
+        "district": "Quận 1",
+        "cityProvince": "TP.HCM",
+        "country": "Vietnam"
+      }
+    ],
+    "documents": [
+      {
+        "documentType": "Citizen ID",
+        "documentNumber": "123456201012",
+        "issuedDate": "2020-10-01",
+        "expiredDate": "2030-10-01",
+        "issuedBy": "TP.HCM",
+        "issuedCountry": "Vietnam",
+        "note": null,
+        "hasChip": true
+      }
+    ]
+  },
+  {
+    "studentId": "SV023",
+    "fullName": "Trần Thị Be Ba",
+    "dob": "2001-08-15",
+    "gender": "Female",
+    "facultyId": 1,
+    "intake": "K19",
+    "programId": 2,
+    "email": "tranthibeba@example.com",
+    "phone": "0976938210",
+    "studentStatusId": 1,
+    "nationality": "Vietnam",
+    "phoneCountry": "VN",
+    "addresses": [
+      {
+        "addressType": "Permanent",
+        "houseNumberStreetName": "789 Nguyễn Huệ",
+        "wardCommune": "Phường 2",
+        "district": "Quận 4",
+        "cityProvince": "TP.HCM",
+        "country": "Vietnam"
+      }
+    ],
+    "documents": [
+      {
+        "documentType": "Passport",
+        "documentNumber": "B1232927",
+        "issuedDate": "2019-06-15",
+        "expiredDate": "2029-06-15",
+        "issuedBy": "Hà Nội",
+        "issuedCountry": "Vietnam",
+        "note": "For studying abroad",
+        "hasChip": false
+      }
+    ]
+  },
+  {
+    "studentId": "SV024",
+    "fullName": "Lê Hoàng Nam",
+    "dob": "2003-03-22",
+    "gender": "Male",
+    "facultyId": 3,
+    "intake": "K21",
+    "programId": 2,
+    "email": "lehoangnam@example.com",
+    "phone": "0928432109",
+    "studentStatusId": 2,
+    "nationality": "Vietnam",
+    "phoneCountry": "VN",
+    "addresses": [
+      {
+        "addressType": "Permanent",
+        "houseNumberStreetName": "234 Hai Bà Trưng",
+        "wardCommune": "Phường 6",
+        "district": "Quận 1",
+        "cityProvince": "TP.HCM",
+        "country": "Vietnam"
+      }
+    ],
+    "documents": []
+  }
+]
