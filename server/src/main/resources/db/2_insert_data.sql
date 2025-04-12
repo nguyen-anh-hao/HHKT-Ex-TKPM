@@ -136,50 +136,31 @@ VALUES
     ('CS110-01', 10, 1, 10, 50, 'Wed 09:00-12:00', 'Room J1001');
 
 
-INSERT INTO class_registrations (student_id, class_id, status)
+INSERT INTO class_registrations (student_id, class_id, status, grade)
 VALUES
-    ('SV001', 1, 'REGISTERED'),
-    ('SV002', 2, 'REGISTERED'),
-    ('SV003', 3, 'REGISTERED'),
-    ('SV004', 4, 'REGISTERED'),
-    ('SV005', 5, 'REGISTERED'),
-    ('SV006', 6, 'CANCELLED'),
-    ('SV007', 7, 'CANCELLED'),
-    ('SV008', 8, 'REGISTERED'),
-    ('SV009', 9, 'REGISTERED'),
-    ('SV010', 10, 'REGISTERED');
-
-
-
-INSERT INTO transcripts (class_registration_id, grade)
-VALUES
-    (1, 8.5),
-    (2, 9.2),
-    (3, 7.8),
-    (4, 6.5),
-    (5, 8.0),
-    (6, 9.5),
-    (7, 5.5),
-    (8, 7.0),
-    (9, 6.8),
-    (10, 9.0);
+    ('SV001', 1, 'REGISTERED', NULL),
+    ('SV002', 2, 'REGISTERED', NULL),
+    ('SV003', 3, 'REGISTERED', NULL),
+    ('SV004', 4, 'CANCELLED', NULL),
+    ('SV005', 5, 'CANCELLED', NULL),
+    ('SV006', 6, 'CANCELLED', NULL),
+    ('SV007', 7, 'COMPLETED', 9.5),
+    ('SV008', 8, 'COMPLETED', 8.0),
+    ('SV009', 9, 'COMPLETED', 7.5),
+    ('SV010', 10, 'COMPLETED', 6.0);
 
 INSERT INTO class_registration_history (class_registration_id, action, reason)
 VALUES
-    ( 1, 'REGISTERED', NULL),
-    ( 2, 'REGISTERED', NULL),
-    ( 3, 'REGISTERED', NULL),
-    ( 4, 'REGISTERED',  NULL),
-    ( 5, 'REGISTERED', NULL),
-    ( 6, 'CANCELLED', 'Personal reason'),
-    ( 7, 'CANCELLED', 'Medical reason'),
-    ( 8, 'REGISTERED', NULL),
-    ( 9, 'REGISTERED', NULL),
-    (10, 'REGISTERED', NULL);
-
-
-
-
+    (1, 'REGISTERED', 'Đăng ký học phần'),
+    (2, 'REGISTERED', 'Đăng ký học phần'),
+    (3, 'REGISTERED', 'Đăng ký học phần'),
+    (4, 'CANCELLED', 'Hủy đăng ký học phần'),
+    (5, 'CANCELLED', 'Hủy đăng ký học phần'),
+    (6, 'CANCELLED', 'Hủy đăng ký học phần'),
+    (7, 'COMPLETED', 'Hoàn thành học phần'),
+    (8, 'COMPLETED', 'Hoàn thành học phần'),
+    (9, 'COMPLETED', 'Hoàn thành học phần'),
+    (10, 'COMPLETED', 'Hoàn thành học phần');
 
 -- Thêm dữ liệu mẫu số điện thoại đơn giản chỉ với format quốc tế
 INSERT INTO phone_patterns (country_code, regex_pattern, description) VALUES
