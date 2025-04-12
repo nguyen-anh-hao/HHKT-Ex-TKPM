@@ -72,11 +72,114 @@ INSERT INTO student_status_rules (current_status_id, allowed_transition_id) VALU
 
 -- "Tạm dừng học" can transition to:
 (2, 1),  -- Đang học
-(2, 4)  -- Đã thôi học
+(2, 4);  -- Đã thôi học
 
 -- "Đã tốt nghiệp" has no transitions
 
 -- "Đã thôi học" has no transitions;
+
+INSERT INTO courses (course_code, course_name, credits, faculty_id, description, prerequisite_course_id, is_active, created_by, updated_by)
+VALUES
+    ('CS101', 'Introduction to Programming', 3, 1, 'Basic programming concepts', NULL, TRUE, 'admin', 'admin'),
+    ('CS102', 'Data Structures', 3, 1, 'Study of data structures', 1, TRUE, 'admin', 'admin'),
+    ('CS103', 'Algorithms', 3, 1, 'Fundamentals of algorithms', 2, TRUE, 'admin', 'admin'),
+    ('CS104', 'Database Systems', 3, 2, 'Database design and SQL', NULL, TRUE, 'admin', 'admin'),
+    ('CS105', 'Computer Networks', 3, 3, 'Network protocols and security', NULL, TRUE, 'admin', 'admin'),
+    ('CS106', 'Operating Systems', 3, 1, 'Processes, threads, and memory management', NULL, TRUE, 'admin', 'admin'),
+    ('CS107', 'Software Engineering', 3, 2, 'Software development lifecycle', NULL, TRUE, 'admin', 'admin'),
+    ('CS108', 'Artificial Intelligence', 3, 3, 'Machine learning and AI concepts', 3, TRUE, 'admin', 'admin'),
+    ('CS109', 'Cyber Security', 3, 3, 'Cyber threats and security measures', NULL, TRUE, 'admin', 'admin'),
+    ('CS110', 'Cloud Computing', 3, 1, 'Introduction to cloud services', 4, TRUE, 'admin', 'admin');
+
+INSERT INTO semesters (academic_year, semester, start_date, end_date, last_cancel_date)
+VALUES
+    ('2023-2024', 1, '2023-09-01', '2023-12-31', '2023-10-15'), -- Fall
+    ('2023-2024', 2, '2024-01-10', '2024-04-30', '2024-02-28'), -- Spring
+    ('2023-2024', 3, '2024-06-01', '2024-07-31', '2024-06-20'), -- Summer
+
+    ('2024-2025', 1, '2024-09-05', '2024-12-25', '2024-10-20'), -- Fall
+    ('2024-2025', 2, '2025-01-08', '2025-04-28', '2025-02-25'), -- Spring
+    ('2024-2025', 3, '2025-06-05', '2025-07-30', '2025-06-18'), -- Summer
+
+    ('2025-2026', 1, '2025-09-03', '2025-12-20', '2025-10-10'), -- Fall
+    ('2025-2026', 2, '2026-01-12', '2026-04-25', '2026-02-22'), -- Spring
+    ('2025-2026', 3, '2026-06-07', '2026-08-01', '2026-06-22'), -- Summer
+
+    ('2026-2027', 1, '2026-09-04', '2026-12-22', '2026-10-12'); -- Fall
+
+
+INSERT INTO lecturers (full_name, email, phone, faculty_id)
+VALUES
+    ('Dr. John Doe', 'johndoe@university.edu', '1234567890', 1),
+    ('Dr. Jane Smith', 'janesmith@university.edu', '2345678901', 1),
+    ('Prof. Alice Brown', 'alicebrown@university.edu', '3456789012', 2),
+    ('Dr. Bob Johnson', 'bobjohnson@university.edu', '4567890123', 2),
+    ('Dr. Carol White', 'carolwhite@university.edu', '5678901234', 3),
+    ('Dr. David Green', 'davidgreen@university.edu', '6789012345', 3),
+    ('Prof. Eva Black', 'evablack@university.edu', '7890123456', 1),
+    ('Dr. Frank Wilson', 'frankwilson@university.edu', '8901234567', 2),
+    ('Dr. Grace Adams', 'graceadams@university.edu', '9012345678', 3),
+    ('Dr. Henry Clark', 'henryclark@university.edu', '0123456789', 1);
+
+
+INSERT INTO classes (class_code, course_id, semester_id, lecturer_id, max_students, schedule, room)
+VALUES
+    ('CS101-01', 1, 1, 1, 50, 'Mon-Wed 10:00-12:00', 'Room A101'),
+    ('CS102-01', 2, 1, 2, 40, 'Tue-Thu 14:00-16:00', 'Room B201'),
+    ('CS103-01', 3, 2, 3, 45, 'Mon-Wed 08:00-10:00', 'Room C301'),
+    ('CS104-01', 4, 2, 4, 35, 'Fri 09:00-12:00', 'Room D401'),
+    ('CS105-01', 5, 3, 5, 60, 'Tue-Thu 10:00-12:00', 'Room E501'),
+    ('CS106-01', 6, 3, 6, 30, 'Wed 14:00-17:00', 'Room F601'),
+    ('CS107-01', 7, 1, 7, 50, 'Thu 09:00-12:00', 'Room G701'),
+    ('CS108-01', 8, 2, 8, 40, 'Mon 14:00-17:00', 'Room H801'),
+    ('CS109-01', 9, 3, 9, 55, 'Fri 08:00-11:00', 'Room I901'),
+    ('CS110-01', 10, 1, 10, 50, 'Wed 09:00-12:00', 'Room J1001');
+
+
+INSERT INTO class_registrations (student_id, class_id, status)
+VALUES
+    ('SV001', 1, 'REGISTERED'),
+    ('SV002', 2, 'REGISTERED'),
+    ('SV003', 3, 'REGISTERED'),
+    ('SV004', 4, 'REGISTERED'),
+    ('SV005', 5, 'REGISTERED'),
+    ('SV006', 6, 'CANCELLED'),
+    ('SV007', 7, 'CANCELLED'),
+    ('SV008', 8, 'REGISTERED'),
+    ('SV009', 9, 'REGISTERED'),
+    ('SV010', 10, 'REGISTERED');
+
+
+
+INSERT INTO transcripts (class_registration_id, grade)
+VALUES
+    (1, 8.5),
+    (2, 9.2),
+    (3, 7.8),
+    (4, 6.5),
+    (5, 8.0),
+    (6, 9.5),
+    (7, 5.5),
+    (8, 7.0),
+    (9, 6.8),
+    (10, 9.0);
+
+INSERT INTO class_registration_history (class_registration_id, action, reason)
+VALUES
+    ( 1, 'REGISTERED', NULL),
+    ( 2, 'REGISTERED', NULL),
+    ( 3, 'REGISTERED', NULL),
+    ( 4, 'REGISTERED',  NULL),
+    ( 5, 'REGISTERED', NULL),
+    ( 6, 'CANCELLED', 'Personal reason'),
+    ( 7, 'CANCELLED', 'Medical reason'),
+    ( 8, 'REGISTERED', NULL),
+    ( 9, 'REGISTERED', NULL),
+    (10, 'REGISTERED', NULL);
+
+
+
+
 
 -- Thêm dữ liệu mẫu số điện thoại đơn giản chỉ với format quốc tế
 INSERT INTO phone_patterns (country_code, regex_pattern, description) VALUES
