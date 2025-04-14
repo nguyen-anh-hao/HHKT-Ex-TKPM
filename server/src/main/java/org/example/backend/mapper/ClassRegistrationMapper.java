@@ -11,8 +11,6 @@ public class ClassRegistrationMapper {
         return ClassRegistrationResponse.builder()
                 .id(classRegistration.getId())
                 .status(classRegistration.getStatus())
-                .registrationDate(classRegistration.getRegistrationDate())
-                .cancellationDate(classRegistration.getCancellationDate() != null ? classRegistration.getCancellationDate() : null)
                 .studentId(classRegistration.getStudent().getStudentId())
                 .studentName(classRegistration.getStudent().getFullName())
                 .classId(classRegistration.getAClass().getId())
@@ -27,8 +25,6 @@ public class ClassRegistrationMapper {
     public static ClassRegistration mapFromClassRegistrationRequestToDomain(ClassRegistrationRequest classRegistrationRequest) {
         return ClassRegistration.builder()
                 .status(classRegistrationRequest.getStatus())
-                .registrationDate(classRegistrationRequest.getRegistrationDate())
-                .cancellationDate(classRegistrationRequest.getCancellationDate())
                 .build();
     }
 }

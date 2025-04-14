@@ -3,6 +3,7 @@ package org.example.backend.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.common.RegistrationStatus;
 
 import java.time.LocalDateTime;
 
@@ -11,15 +12,15 @@ import java.time.LocalDateTime;
 @Builder
 public class ClassRegistrationResponse {
     private Integer id;
-    private String status;
-    private LocalDateTime registrationDate;
-    private LocalDateTime cancellationDate;
+    private RegistrationStatus status;
 
     private String studentId;
     private String studentName;
 
     private Integer classId;
     private String classCode;
+
+    private Double grade;
 
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;

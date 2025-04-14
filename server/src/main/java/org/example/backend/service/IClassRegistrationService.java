@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.dto.request.ClassRegistrationRequest;
+import org.example.backend.dto.request.ClassRegistrationUpdateRequest;
 import org.example.backend.dto.response.ClassRegistrationResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,4 +12,6 @@ public interface IClassRegistrationService {
     ClassRegistrationResponse getClassRegistrationById(Integer id);
 
     ClassRegistrationResponse addClassRegistration(ClassRegistrationRequest classRegistrationRequest);
+
+    ClassRegistrationResponse updateClassRegistration(Integer id, ClassRegistrationUpdateRequest classRegistrationUpdateRequest);
 }

@@ -1,10 +1,24 @@
 package org.example.backend.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.backend.common.Auditable;
+import org.example.backend.common.RegistrationStatus;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -20,13 +34,11 @@ public class ClassRegistration extends Auditable {
     private Integer id;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private RegistrationStatus status;
 
-    @Column(name = "registration_date", nullable = false)
-    private LocalDateTime registrationDate;
-
-    @Column(name = "cancellation_date")
-    private LocalDateTime cancellationDate;
+    @Column(name = "grade")
+    private Double grade;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
@@ -35,9 +47,6 @@ public class ClassRegistration extends Auditable {
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Class aClass;
-
-    @OneToOne(mappedBy = "classRegistration")
-    private Transcript transcript;
 
     @OneToMany(mappedBy = "classRegistration")
     private List<ClassRegistrationHistory> classRegistrationHistories;

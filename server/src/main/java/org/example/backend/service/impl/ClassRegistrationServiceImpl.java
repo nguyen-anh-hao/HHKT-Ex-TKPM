@@ -3,13 +3,13 @@ package org.example.backend.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.common.RegistrationStatus;
 import org.example.backend.domain.Class;
 import org.example.backend.domain.ClassRegistration;
-import org.example.backend.domain.ClassRegistrationHistory;
 import org.example.backend.domain.Student;
 import org.example.backend.dto.request.ClassRegistrationHistoryRequest;
 import org.example.backend.dto.request.ClassRegistrationRequest;
-import org.example.backend.dto.response.ClassRegistrationHistoryResponse;
+import org.example.backend.dto.request.ClassRegistrationUpdateRequest;
 import org.example.backend.dto.response.ClassRegistrationResponse;
 import org.example.backend.mapper.ClassRegistrationHistoryMapper;
 import org.example.backend.mapper.ClassRegistrationMapper;
@@ -21,6 +21,9 @@ import org.example.backend.service.IClassRegistrationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -99,10 +102,49 @@ public class ClassRegistrationServiceImpl implements IClassRegistrationService {
         // Add the registration history
         log.info("Add class registration history");
         ClassRegistrationHistoryRequest classRegistrationHistoryRequest = ClassRegistrationHistoryMapper.mapFromClassRegistrationDomainToClassRegistrationHistoryRequest(classRegistration);
+        classRegistrationHistoryRequest.setReason("Class registration created");
 
         classRegistrationHistoryService.addClassRegistrationHistory(classRegistrationHistoryRequest);
         log.info("class registration history added successfully");
 
+        return ClassRegistrationMapper.mapFromDomainToClassRegistrationResponse(classRegistration);
+    }
+
+    @Override
+    @Transactional
+    public ClassRegistrationResponse updateClassRegistration(Integer id, ClassRegistrationUpdateRequest classRegistrationUpdateRequest) {
+        log.info("update class registration with id: {} and request: {}", id, classRegistrationUpdateRequest);
+        Optional<ClassRegistration> classRegistrationOptional = classRegistrationRepository.findById(id);
+
+        if (classRegistrationOptional.isEmpty()) {
+            log.error("Class registration not found");
+            throw new RuntimeException("Class registration not found");
+        }
+
+        ClassRegistration classRegistration = classRegistrationOptional.get();
+
+        if (classRegistrationUpdateRequest.getStatus().equals(RegistrationStatus.CANCELLED)) {
+            LocalDate lastCancelDate = classRegistration.getAClass().getSemester().getLastCancelDate();
+
+            if (lastCancelDate != null && LocalDate.now().isAfter(lastCancelDate)) {
+                log.error("Cannot cancel class registration after last cancel date");
+                throw new RuntimeException("Cannot cancel class registration after last cancel date");
+            }
+        }
+
+        classRegistration.setStatus(classRegistrationUpdateRequest.getStatus());
+        classRegistration.setGrade(classRegistrationUpdateRequest.getGrade() != null ? classRegistrationUpdateRequest.getGrade() : classRegistration.getGrade());
+
+        classRegistration = classRegistrationRepository.save(classRegistration);
+        log.info("class registration updated successfully");
+
+        log.info("Add class registration history");
+        ClassRegistrationHistoryRequest classRegistrationHistoryRequest = ClassRegistrationHistoryMapper.mapFromClassRegistrationDomainToClassRegistrationHistoryRequest(classRegistration);
+        classRegistrationHistoryRequest.setReason("Class registration updated to " + classRegistrationUpdateRequest.getStatus());
+
+        classRegistrationHistoryService.addClassRegistrationHistory(classRegistrationHistoryRequest);
+
+        log.info("class registration history added successfully");
         return ClassRegistrationMapper.mapFromDomainToClassRegistrationResponse(classRegistration);
     }
 }

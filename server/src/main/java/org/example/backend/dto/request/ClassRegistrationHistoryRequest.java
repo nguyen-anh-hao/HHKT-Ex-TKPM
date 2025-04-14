@@ -6,14 +6,14 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.backend.common.RegistrationStatus;
 
 @Getter
 @Setter
 @Builder
 public class ClassRegistrationHistoryRequest {
     @NotBlank(message = "Action is required")
-    @Pattern(regexp = "^(REGISTERED|CANCELLED)$", message = "Action must be either REGISTERED or CANCELLED")
-    private String action;
+    private RegistrationStatus action;
 
     private String reason;
 
