@@ -66,9 +66,10 @@ public class PhoneNumberValidatorTest {
                 countryCode.equals("VN") ? VN_PHONE_PATTERN : US_PHONE_PATTERN, "Country Name");
         when(phonePatternRepository.findById(countryCode)).thenReturn(Optional.of(phonePattern));
 
-        StudentRequest request = new StudentRequest();
-        request.setPhone(phoneNumber);
-        request.setPhoneCountry(countryCode);
+        StudentRequest request = StudentRequest.builder()
+                .phone(phoneNumber)
+                .phoneCountry(countryCode)
+                .build();
 
         ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
 
@@ -84,9 +85,10 @@ public class PhoneNumberValidatorTest {
                 countryCode.equals("VN") ? VN_PHONE_PATTERN : US_PHONE_PATTERN, "Country Name");
         when(phonePatternRepository.findById(countryCode)).thenReturn(Optional.of(phonePattern));
 
-        StudentRequest request = new StudentRequest();
-        request.setPhone(phoneNumber);
-        request.setPhoneCountry(countryCode);
+        StudentRequest request = StudentRequest.builder()
+                .phone(phoneNumber)
+                .phoneCountry(countryCode)
+                .build();
 
         ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
         ConstraintValidatorContext.ConstraintViolationBuilder builder =
@@ -113,9 +115,10 @@ public class PhoneNumberValidatorTest {
             lenient().when(phonePatternRepository.findById(anyString())).thenReturn(Optional.empty());
         }
 
-        StudentRequest request = new StudentRequest();
-        request.setPhone(phoneNumber);
-        request.setPhoneCountry(countryCode);
+        StudentRequest request = StudentRequest.builder()
+                .phone(phoneNumber)
+                .phoneCountry(countryCode)
+                .build();
 
         ConstraintValidatorContext context = mock(ConstraintValidatorContext.class);
 
