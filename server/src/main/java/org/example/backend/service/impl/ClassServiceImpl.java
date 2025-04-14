@@ -15,7 +15,6 @@ import org.example.backend.repository.ICourseRepository;
 import org.example.backend.repository.ILecturerRepository;
 import org.example.backend.repository.ISemesterRepository;
 import org.example.backend.service.IClassService;
-import org.example.backend.service.ICourseService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

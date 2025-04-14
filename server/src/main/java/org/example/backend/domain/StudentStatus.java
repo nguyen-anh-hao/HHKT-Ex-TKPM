@@ -42,4 +42,8 @@ public class StudentStatus extends Auditable {
         this.id = id;
         this.studentStatusName = studentStatusName;
     }
+
+    public StudentStatus(String studentStatusName) {
+        this.studentStatusName = studentStatusName;
+    }
 }

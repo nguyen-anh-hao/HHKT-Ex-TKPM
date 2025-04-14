@@ -177,7 +177,7 @@ public class StudentController {
 
         return APIResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("Success")
+                .message("Successfully deleted student with ID: " + studentId)
                 .build();
     }
 
