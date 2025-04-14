@@ -5,9 +5,9 @@ import org.example.backend.dto.response.EmailDomainResponse;
 import org.example.backend.service.impl.EmailDomainServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,9 +22,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EmailDomainController.class)
-@MockBean(JpaMetamodelMappingContext.class)
+@AutoConfigureDataJpa
 public class EmailDomainControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -94,5 +95,29 @@ public class EmailDomainControllerTest {
     public void shouldDeleteEmailDomain() throws Exception {
         mockMvc.perform(delete("/api/email-domains/1"))
                 .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()));
+    }
+
+    @Test
+    public void shouldRejectDomainWithoutTLD() throws Exception {
+        mockMvc.perform(post("/api/email-domains")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"domain\": \"example\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldRejectDomainStartingWithHyphen() throws Exception {
+        mockMvc.perform(post("/api/email-domains")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"domain\": \"-example.com\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldRejectBlankDomain() throws Exception {
+        mockMvc.perform(post("/api/email-domains")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"domain\": \"\"}"))
+                .andExpect(status().isBadRequest());
     }
 }
