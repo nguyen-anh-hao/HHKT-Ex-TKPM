@@ -17,13 +17,13 @@ import org.example.backend.dto.request.StudentUpdateRequest;
 import org.example.backend.dto.response.APIResponse;
 import org.example.backend.dto.response.StudentResponse;
 import org.example.backend.service.IStudentService;
+import org.example.backend.service.export.TranscriptPdfExportService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentController {
 
     private final IStudentService studentService;
+    private final TranscriptPdfExportService transcriptPdfExportService;
 
     @PostMapping("")
     @Operation(summary = "Add a new student", description = "Add a new student to the system")
@@ -248,9 +249,9 @@ public class StudentController {
         log.info("Successfully retrieved transcript for student with studentId: {}", studentId);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentType(transcriptPdfExportService.getMediaType());
         headers.setContentDisposition(ContentDisposition.builder("inline")
-                .filename("transcript_" + studentId + ".pdf")
+                .filename("transcript_" + studentId + "." + transcriptPdfExportService.getFileExtension())
                 .build());
 
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
