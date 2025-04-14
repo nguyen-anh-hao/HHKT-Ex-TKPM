@@ -28,8 +28,8 @@ const ConfigurationPage: React.FC = () => {
         return Promise.reject(new Error('Số điện thoại không hợp lệ.'));
     };
 
-    const handleSubmit = (values: any) => {
-        const { email, phone, statusFrom, statusTo }: { email: string; phone: string; statusFrom: keyof typeof studentStatusRules; statusTo: string } = values;
+    const handleSubmit = (value: any) => {
+        const { email, phone, statusFrom, statusTo }: { email: string; phone: string; statusFrom: keyof typeof studentStatusRules; statusTo: string } = value;
         if (
             studentStatusRules[statusFrom] &&
             studentStatusRules[statusFrom].includes(statusTo)
@@ -43,19 +43,19 @@ const ConfigurationPage: React.FC = () => {
     return (
         <div style={{ maxWidth: 600, margin: '0 auto', padding: 20 }}>
             <h2>Cấu hình Business Rules</h2>
-            <Form layout="vertical" onFinish={handleSubmit}>
+            <Form layout='vertical' onFinish={handleSubmit}>
                 <Form.Item
-                    label="Cấu hình đuôi email"
-                    name="email"
+                    label='Cấu hình đuôi email'
+                    name='email'
                 >
-                    <Input placeholder="Nhập cấu hình đuôi email cho phép" />
+                    <Input placeholder='Nhập cấu hình đuôi email cho phép' />
                 </Form.Item>
                 <Form.Item
-                    label="Tình trạng sinh viên (Từ)"
-                    name="statusFrom"
+                    label='Tình trạng sinh viên (Từ)'
+                    name='statusFrom'
                     rules={[{ required: true, message: 'Vui lòng chọn tình trạng hiện tại.' }]}
                 >
-                    <Select placeholder="Chọn tình trạng hiện tại">
+                    <Select placeholder='Chọn tình trạng hiện tại'>
                         {Object.keys(studentStatusRules).map((status) => (
                             <Option key={status} value={status}>
                                 {status}
@@ -64,22 +64,22 @@ const ConfigurationPage: React.FC = () => {
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    label="Tình trạng sinh viên (Đến)"
-                    name="statusTo"
+                    label='Tình trạng sinh viên (Đến)'
+                    name='statusTo'
                     rules={[{ required: true, message: 'Vui lòng chọn tình trạng mới.' }]}
                 >
-                    <Select placeholder="Chọn tình trạng mới">
-                        {Object.values(studentStatusRules)
+                    {/* <Select placeholder='Chọn tình trạng mới'>
+                        {Object.value(studentStatusRules)
                             .flat()
                             .map((status) => (
                                 <Option key={status} value={status}>
                                     {status}
                                 </Option>
                             ))}
-                    </Select>
+                    </Select> */}
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button type='primary' htmlType='submit'>
                         Xác nhận
                     </Button>
                 </Form.Item>

@@ -182,9 +182,8 @@ CREATE TABLE class_registrations (
                                      id SERIAL PRIMARY KEY,
                                      student_id VARCHAR(20) REFERENCES students(student_id) ON DELETE CASCADE,
                                      class_id INT REFERENCES classes(id) ON DELETE CASCADE,
-                                     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                     status VARCHAR(20) CHECK (status IN ('REGISTERED', 'CANCELLED')) DEFAULT 'REGISTERED',
-                                     cancellation_date TIMESTAMP,
+                                     status VARCHAR(20) CHECK (status IN ('REGISTERED', 'CANCELLED', 'COMPLETED')) DEFAULT 'REGISTERED',
+                                     grade DOUBLE PRECISION CHECK (grade >= 0 AND grade <= 10),
                                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                      deleted BOOLEAN DEFAULT FALSE,
@@ -196,7 +195,7 @@ CREATE TABLE class_registrations (
 CREATE TABLE class_registration_history (
                                             id SERIAL PRIMARY KEY,
                                             class_registration_id INT NOT NULL REFERENCES class_registrations(id) ON DELETE CASCADE,
-                                            action VARCHAR(20) CHECK (action IN ('REGISTERED', 'CANCELLED')) NOT NULL,
+                                            action VARCHAR(20) CHECK (action IN ('REGISTERED', 'CANCELLED', 'COMPLETED')) NOT NULL,
                                             reason TEXT,  -- Optional: Store reason for cancellation
                                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -204,19 +203,6 @@ CREATE TABLE class_registration_history (
                                             created_by VARCHAR(100) DEFAULT 'admin',
                                             updated_by VARCHAR(100) DEFAULT 'admin'
 );
-
-
-CREATE TABLE transcripts (
-                             id SERIAL PRIMARY KEY,
-                             class_registration_id INT UNIQUE REFERENCES class_registrations(id) ON DELETE CASCADE,
-                             grade DECIMAL(3,2) CHECK (grade >= 0.0 AND grade <= 10.0),
-                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                             deleted BOOLEAN DEFAULT FALSE,
-                             created_by VARCHAR(100) DEFAULT 'admin',
-                             updated_by VARCHAR(100) DEFAULT 'admin'
-);
-
 
 CREATE TABLE phone_patterns (
     country_code VARCHAR(2) PRIMARY KEY,

@@ -3,6 +3,7 @@ package org.example.backend.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.backend.common.Auditable;
+import org.example.backend.common.RegistrationStatus;
 
 @Entity
 @Table(name = "class_registration_history")
@@ -17,7 +18,8 @@ public class ClassRegistrationHistory extends Auditable {
     private Integer id;
 
     @Column(name = "action", nullable = false)
-    private String action;
+    @Enumerated(EnumType.STRING)
+    private RegistrationStatus action;
 
     @Column(name = "reason")
     private String reason;

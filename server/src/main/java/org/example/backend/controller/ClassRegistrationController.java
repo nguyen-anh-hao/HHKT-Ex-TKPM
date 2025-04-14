@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.common.PaginationInfo;
 import org.example.backend.dto.request.ClassRegistrationRequest;
+import org.example.backend.dto.request.ClassRegistrationUpdateRequest;
 import org.example.backend.dto.response.APIResponse;
 import org.example.backend.dto.response.ClassRegistrationResponse;
 import org.example.backend.service.IClassRegistrationService;
@@ -64,6 +65,22 @@ public class ClassRegistrationController {
         return APIResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("Data created")
+                .data(classRegistrationResponse)
+                .build();
+    }
+
+    @PatchMapping("/{id}")
+    public APIResponse updateClassRegistration(@PathVariable Integer id,
+                                               @RequestBody @Valid ClassRegistrationUpdateRequest classRegistrationUpdateRequest) {
+
+        log.info("update class registration with id: {} and request: {}", id, classRegistrationUpdateRequest);
+
+        ClassRegistrationResponse classRegistrationResponse = classRegistrationService.
+                updateClassRegistration(id, classRegistrationUpdateRequest);
+
+        return APIResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Data updated")
                 .data(classRegistrationResponse)
                 .build();
     }

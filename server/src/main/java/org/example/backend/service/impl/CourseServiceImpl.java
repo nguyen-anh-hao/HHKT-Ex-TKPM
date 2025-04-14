@@ -3,7 +3,7 @@ package org.example.backend.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
+import org.example.backend.common.RegistrationStatus;
 import org.example.backend.domain.Class;
 import org.example.backend.domain.Course;
 import org.example.backend.domain.Faculty;
@@ -16,7 +16,6 @@ import org.example.backend.repository.IClassRepository;
 import org.example.backend.repository.ICourseRepository;
 import org.example.backend.repository.IFacultyRepository;
 import org.example.backend.service.ICourseService;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -114,7 +113,7 @@ public class CourseServiceImpl implements ICourseService {
 
                 log.info("Checking if students are already registered in active classes of the course: {}", courseId);
                 boolean studentsRegistered = classRegistrationRepository.existsActiveRegistrationsByClassIds(
-                        classes.get().stream().map(Class::getId).toList()
+                        classes.get().stream().map(Class::getId).toList(), RegistrationStatus.REGISTERED
                 );
 
                 if (studentsRegistered) {

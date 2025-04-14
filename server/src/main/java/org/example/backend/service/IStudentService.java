@@ -23,4 +23,6 @@ public interface IStudentService {
     void deleteStudent(String studentId);
 
     Page<StudentResponse> searchStudent(String keyword, Pageable pageable);
+
+    byte[] getStudentTranscript(String studentId);
 }

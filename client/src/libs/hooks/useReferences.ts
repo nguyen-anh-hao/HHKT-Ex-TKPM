@@ -48,3 +48,18 @@ export const useStudentStatuses = () => {
 
     return { data, error, isLoading };
 }
+
+export const useEmailDomains = () => {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['email-domains'],
+        queryFn: async () => {
+            const data = await fetchReference('email-domains');
+            return data.map((option: any) => ({
+                key: option.id,
+                value: option.domain,
+            }));
+        },
+    });
+
+    return { data, error, isLoading };
+}
