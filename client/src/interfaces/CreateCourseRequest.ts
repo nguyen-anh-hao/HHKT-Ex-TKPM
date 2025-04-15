@@ -2,7 +2,7 @@ export interface CreateCourseRequest {
   courseCode: string;
   courseName: string;
   credits: number;
-  facultyId?: number | null;
+  facultyId: number;
   description?: string | null;
   prerequisiteCourseId?: number | null;
   isActive: boolean;

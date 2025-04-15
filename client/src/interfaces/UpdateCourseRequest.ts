@@ -1,4 +1,5 @@
 export interface UpdateCourseRequest {
+  courseId: number;
   courseCode?: string;
   courseName?: string;
   credits?: number;
