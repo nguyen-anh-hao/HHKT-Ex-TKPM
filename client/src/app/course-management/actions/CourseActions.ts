@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { Course } from '../../../interfaces/CourseResponse';
+import { Course } from '../../../interfaces/Course';
 
 export const addCourse = (courses: Course[], newCourse: Course): Course[] => {
   return [...courses, newCourse];
