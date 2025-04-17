@@ -1,9 +1,9 @@
-export interface Course {
+export interface CourseResponse {
   courseId: number; 
   courseCode: string; 
   courseName: string; 
   credits: number; 
-  facultyId?: number | null; 
+  facultyId: number; 
   description?: string | null;
   prerequisiteCourseId?: number | null; 
   isActive: boolean; 
@@ -13,4 +13,3 @@ export interface Course {
   createdBy: string; 
   updatedBy: string; 
 }
-

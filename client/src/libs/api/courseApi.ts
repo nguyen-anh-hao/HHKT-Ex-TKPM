@@ -1,4 +1,4 @@
-import { Course } from '@/interfaces/CourseResponse';
+import { Course } from '@/interfaces/Course';
 import { CreateCourseRequest } from '@/interfaces/CreateCourseRequest';
 import { UpdateCourseRequest } from '@/interfaces/UpdateCourseRequest';
 import api from './api';
@@ -12,7 +12,7 @@ export const getCourses = async () => {
     }
 };
 
-export const postCourse = async (course: Partial<CreateCourseRequest>) => {
+export const postCourse = async (course: CreateCourseRequest) => { // do phải POST toàn bộ dữ liệu (trừ description?, prerequisiteCourseId?) nên không dùng Paritial nha
     try {
         const response = await api.post(`/courses`, course);
         return response.data;

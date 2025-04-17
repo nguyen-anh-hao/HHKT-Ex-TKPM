@@ -2,7 +2,7 @@
 
 import { Form, Input, Modal, Button, Select, message, Switch, Spin } from 'antd';
 import { useEffect, useState } from 'react';
-import { Course } from '../../../interfaces/CourseResponse';
+import { Course } from '../../../interfaces/Course';
 import { useFaculties } from '@/libs/hooks/useReferences';
 
 const { Option } = Select;
@@ -42,7 +42,7 @@ const renderOptions = (options?: { key: number; value: string; label: string }[]
       courseForm.setFieldsValue(course);
       setIsEdit(true);
     } else {
-      courseForm.resetFields();
+      // courseForm.resetFields();
       setIsEdit(false);
     }
   }, [course, courseForm]);
@@ -124,7 +124,7 @@ const renderOptions = (options?: { key: number; value: string; label: string }[]
         <Form.Item label="Học phần tiên quyết" name="prerequisiteCourseId">
           <Select placeholder="Chọn học phần tiên quyết" allowClear>
             {allCourses
-              .filter((c) => !course || c.courseId !== course.courseId)
+              .filter((c) => c.courseId && (!course || c.courseId !== course.courseId))
               .map((c) => (
                 <Option key={c.courseId} value={c.courseId}>
                   {c.courseCode} - {c.courseName}

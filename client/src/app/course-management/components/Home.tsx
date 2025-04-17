@@ -5,7 +5,7 @@ import { Button, message } from 'antd';
 import { PlusOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import CourseTable from './CourseTable';
 import CourseModal from './CourseModal';
-import { Course } from '@/interfaces/CourseResponse';
+import { Course } from '@/interfaces/Course';
 import {
   updateCourse as updateCourseState,
   addCourse as addCourseState,

@@ -3,7 +3,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { SortOrder } from 'antd/es/table/interface';
 import { fetchReference } from '@/libs/services/referenceService';
-import { Course } from '@/interfaces/CourseResponse';
+import { Course } from '@/interfaces/Course';
 interface CourseTableProps {
   courses: Course[];
   onEdit: (course: Course) => void;
@@ -56,8 +56,8 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
         { title: 'Số tín chỉ', dataIndex: 'credits' },
         {
             title: 'Khoa',
-            dataIndex: 'facultyId',
-            render: (facultyId: number) => facultyMap[facultyId] || 'Không xác định',
+            dataIndex: 'faculty',
+            // render: (facultyId: number) => facultyMap[facultyId] || 'Không xác định',
         },
         {
             title: 'Học phần tiên quyết',
@@ -123,7 +123,7 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
            <Table
     columns={columns}
     dataSource={filteredCourses}
-    rowKey='id'
+    rowKey='courseCode'
     pagination={{
         pageSize: 10,
         showSizeChanger: false,
