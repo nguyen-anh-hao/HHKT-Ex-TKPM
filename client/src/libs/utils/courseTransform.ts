@@ -19,8 +19,10 @@ export const transformCourseToGetResponse = (response: any) => {
 export const transformCourseToPostRequest = (request: Course): CreateCourseRequest => {
     const { faculties } = useReferenceStore.getState();
     const faculty = faculties.find((faculty: any) => faculty.facultyName === request.faculty);
-    const facultyId = faculty ? faculty.id : 1;
-
+    if (!faculty) {
+        throw new Error(`Faculty not found for name: ${request.faculty}`);
+    }
+    const facultyId = faculty.id;
     return {
         courseCode: request.courseCode,
         courseName: request.courseName,
