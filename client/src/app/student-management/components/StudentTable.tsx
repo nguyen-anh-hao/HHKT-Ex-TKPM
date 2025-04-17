@@ -30,7 +30,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
     }, []);
 
     const columns = [
-        { title: 'MSSV', dataIndex: 'studentId', sorter: (a: Student, b: Student) => a.studentId.localeCompare(b.studentId), defaultSortOrder: 'ascend' as SortOrder, sortDirections: ['ascend', 'descend'] as SortOrder[] },
+        { title: 'MSSV', dataIndex: 'studentId'},
         { title: 'Họ tên', dataIndex: 'fullName' },
         { title: 'Ngày sinh', dataIndex: 'dob', render: (dob: string) => moment(dob).format('YYYY-MM-DD') },
         { title: 'Giới tính', dataIndex: 'gender' },
