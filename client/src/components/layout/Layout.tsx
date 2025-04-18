@@ -10,14 +10,15 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const menuItems = [
-  // { key: '1', icon: <HomeOutlined />, label: 'Trang chủ', route: '/' },
   { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
   { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-management' },
   { key: '4', icon: <SettingOutlined />, label: 'Cấu hình trạng thái SV', route: '/status-rules-configuration' },
   { key: '5', icon: <BookOutlined />, label: 'Quản lý khóa học', route: '/course-management' },
-  { key: '6', icon: <SwapOutlined />, label: 'Đăng ký học phần', route: '/enroll-class' },
-  { key: '7', icon: <FileTextOutlined />, label: 'Bảng điểm sinh viên', route: '/transcript' },
+  { key: '6', icon: <TeamOutlined />, label: 'Quản lý lớp học', route: '/class-management' }, // Changed icon here
+  { key: '7', icon: <SwapOutlined />, label: 'Đăng ký học phần', route: '/enroll-class' },
+  { key: '8', icon: <FileTextOutlined />, label: 'Bảng điểm sinh viên', route: '/transcript' },
 ];
+
 
 export default function Layout({
     children,
