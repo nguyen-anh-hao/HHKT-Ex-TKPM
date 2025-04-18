@@ -1,4 +1,4 @@
-import { RegisterRequest } from '@/interfaces/RegisterResponse';
+import { RegisterRequest } from '@/interfaces/CreateRegisterRequest';
 import { RegisterResponse } from '@/interfaces/RegisterResponse';
 import api from './api';
 

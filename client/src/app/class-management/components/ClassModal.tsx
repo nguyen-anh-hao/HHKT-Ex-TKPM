@@ -108,10 +108,10 @@ const renderOptions = (options?: { key: number; value: string; label: string }[]
             <Option value={3}>Học kỳ 3</Option>
           </Select>
         </Form.Item>
-   <Form.Item label='Giảng viên' name='lecturerId' rules={[{ required: true, message: 'Giảng viên là bắt buộc!' }]}>
+   <Form.Item label='Giảng viên' name='lecturerName' rules={[{ required: true, message: 'Giảng viên là bắt buộc!' }]}>
                                 <Select>{renderOptions(lecturerOptions)} </Select>
                             </Form.Item>
-                            <Form.Item label='Môn học' name='courseId' rules={[{ required: true, message: 'Môn học là bắt buộc!' }]}>
+                            <Form.Item label='Môn học' name='courseName' rules={[{ required: true, message: 'Môn học là bắt buộc!' }]}>
                                 <Select>{renderOptions(courseOptions)}</Select>
                             </Form.Item>
         

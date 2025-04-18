@@ -4,6 +4,7 @@ import { Form, Input, Modal, Button, Select, message, InputNumber } from 'antd';
 import { useEffect, useState } from 'react';
 import { RegisterResponse } from '@/interfaces/RegisterResponse';
 import { Class } from '@/interfaces/ClassResponse';
+import { fetchStudentById } from '@/services/studentService';
 
 const { Option } = Select;
 
@@ -106,14 +107,34 @@ const RegisterModal = ({
           name="studentId"
           rules={[{ required: true, message: 'Mã sinh viên là bắt buộc!' }]}
         >
-          <Input disabled={isEdit} />
+          <Input disabled={isEdit} 
+            onBlur={(e) => {
+              const studentId = e.target.value;
+              if (studentId) {
+                fetchStudentById(studentId)
+                  .then((response : any) => {
+                    if (response) {
+                      form.setFieldsValue({ studentName: response.studentName });
+                    } else {
+                      message.error('Không tìm thấy sinh viên!');
+                      form.setFieldsValue({ studentName: '' });
+                    }
+                  })
+                  .catch(() => {
+                    message.error('Lỗi khi tìm kiếm sinh viên!');
+                  });
+              } else {
+                form.setFieldsValue({ studentName: '' });
+              }
+            }}
+          />
         </Form.Item>
 
-        {isEdit && (
           <Form.Item label="Tên sinh viên" name="studentName">
+        {isEdit && (
             <Input disabled />
+          )}
           </Form.Item>
-        )}
 
         <Form.Item
           label="Mã lớp học"
