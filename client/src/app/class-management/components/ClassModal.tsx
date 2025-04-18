@@ -40,10 +40,9 @@ const ClassModal = ({
 const { data: lecturerOptions } = useLecturers();
 const { data: courseOptions } = useCourses();
 
-
 const renderOptions = (options?: { key: number; value: string; label: string }[]) =>
         options?.map((option) => (
-            <Option key={option.key} value={option.key}>
+            <Option key={option.key} value={option.value}>
                 {option.label}
             </Option>
         )) ?? null;
@@ -53,20 +52,28 @@ const renderOptions = (options?: { key: number; value: string; label: string }[]
       classForm.setFieldsValue(classData);
       setIsEdit(true);
     } else {
-      classForm.resetFields();
+      // classForm.resetFields();
       setIsEdit(false);
     }
   }, [classData, classForm]);
+
+  // useEffect(() => {
+  //   if (classMatch)
+  //     console.log(classMatch);
+  //     classForm.setFieldValue('courseCode', classMatch);
+  // }, [classMatch, classForm]);
 
   const handleSubmit = () => {
     classForm
       .validateFields()
       .then((value) => {
       
-        console.log('value' , value);
+        // console.log('value' , value);
 
         const finalValue = {
           ...value,
+          courseId: courseOptions?.find((course: any) => course.value === value.courseName)?.key,
+          lecturerId: lecturerOptions?.find((lecturer: any) => lecturer.value === value.lecturerName)?.key,
         };
 
         onSubmit(finalValue);
@@ -112,9 +119,20 @@ const renderOptions = (options?: { key: number; value: string; label: string }[]
                                 <Select>{renderOptions(lecturerOptions)} </Select>
                             </Form.Item>
                             <Form.Item label='Môn học' name='courseName' rules={[{ required: true, message: 'Môn học là bắt buộc!' }]}>
-                                <Select>{renderOptions(courseOptions)}</Select>
+                                <Select onChange={(value) => {
+                                  const selectedCourse = courseOptions?.find((course : any) => course.value === value);
+                                  if (selectedCourse) {
+                                        classForm.setFieldsValue({
+                                            courseCode: selectedCourse.code,
+                                        });
+                                    }
+                                }
+                                }>{renderOptions(courseOptions)}</Select>
                             </Form.Item>
         
+        <Form.Item name="courseCode" label="Mã khóa học">
+          <Input disabled />
+        </Form.Item>
        
 
   

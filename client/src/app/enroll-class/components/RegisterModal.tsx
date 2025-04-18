@@ -4,7 +4,7 @@ import { Form, Input, Modal, Button, Select, message, InputNumber } from 'antd';
 import { useEffect, useState } from 'react';
 import { RegisterResponse } from '@/interfaces/RegisterResponse';
 import { Class } from '@/interfaces/ClassResponse';
-import { fetchStudentById } from '@/services/studentService';
+import { fetchStudentById } from '@/libs/services/studentService';
 
 const { Option } = Select;
 
@@ -31,6 +31,7 @@ const RegisterModal = ({
   const [form] = Form.useForm();
   const [isEdit, setIsEdit] = useState(false);
   const [status, setStatus] = useState('REGISTERED');
+  const [student, setStudent] = useState('');
 
   useEffect(() => {
     if (registrationData) {
@@ -38,11 +39,16 @@ const RegisterModal = ({
       setStatus(registrationData.status);
       setIsEdit(true);
     } else {
-      form.resetFields();
+      // form.resetFields();
       setStatus('REGISTERED');
       setIsEdit(false);
     }
   }, [registrationData, form]);
+
+  useEffect(() => {
+    if (student)
+      form.setFieldsValue({ studentName: student });
+  }, [student, form]);
 
  const handleSubmit = () => {
   form
@@ -56,7 +62,7 @@ const RegisterModal = ({
         return;
       }
 
-      console.log('Selected class:', selectedClass);
+      // console.log('Selected class:', selectedClass);
 
      
       const selectedClassIndex = allClasses.findIndex(cls => cls.classCode === value.classCode);
@@ -66,7 +72,7 @@ const RegisterModal = ({
         return;
       }
 
-      console.log('Selected class index:', selectedClassIndex);
+      // console.log('Selected class index:', selectedClassIndex);
 
       const finalValue = {
         ...(registrationData || {}),
@@ -74,7 +80,7 @@ const RegisterModal = ({
         classId: selectedClassIndex + 1,  
       };
 
-      console.log('Submit data:', finalValue);
+      // console.log('Submit data:', finalValue);
 
       onSubmit(finalValue);
 
@@ -114,26 +120,24 @@ const RegisterModal = ({
                 fetchStudentById(studentId)
                   .then((response : any) => {
                     if (response) {
-                      form.setFieldsValue({ studentName: response.studentName });
+                      setStudent(response.fullName);
                     } else {
                       message.error('Không tìm thấy sinh viên!');
-                      form.setFieldsValue({ studentName: '' });
+                      setStudent('');
                     }
                   })
                   .catch(() => {
                     message.error('Lỗi khi tìm kiếm sinh viên!');
                   });
               } else {
-                form.setFieldsValue({ studentName: '' });
+                setStudent('');
               }
             }}
           />
         </Form.Item>
 
           <Form.Item label="Tên sinh viên" name="studentName">
-        {isEdit && (
-            <Input disabled />
-          )}
+         <Input disabled />
           </Form.Item>
 
         <Form.Item

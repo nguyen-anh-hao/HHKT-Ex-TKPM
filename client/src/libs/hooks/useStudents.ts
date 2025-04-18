@@ -5,7 +5,7 @@ export const useStudent = (studentId: string) => {
     const { data, error, isLoading } = useQuery({
         queryKey: ['student', studentId],
         queryFn: () => {
-            console.log('studentId', studentId);
+            // console.log('studentId', studentId);
             return fetchStudentById(studentId);
         },
         enabled: !!studentId, // tránh gọi API khi studentId chưa có

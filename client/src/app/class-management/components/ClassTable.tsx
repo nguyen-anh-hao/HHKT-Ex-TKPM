@@ -78,7 +78,7 @@ const ClassTable = ({ classes, openModal, loading }: ClassTableProps) => {
       <Table
         columns={columns}
         dataSource={filteredClasses}
-        rowKey="classId" 
+        rowKey="classCode" 
         pagination={{
           pageSize: 10,
           showSizeChanger: false,

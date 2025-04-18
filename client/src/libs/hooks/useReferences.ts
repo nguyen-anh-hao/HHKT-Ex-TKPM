@@ -70,7 +70,7 @@ export const useLecturers = () => {
         queryKey: ['lecturers'],
         queryFn: async () => {
             const data = await fetchReference('lecturers');
-            console.log('Raw lecturers:', data);
+            // console.log('Raw lecturers:', data);
             return data
                 
                 .map((option: any) => ({
@@ -80,7 +80,7 @@ export const useLecturers = () => {
                 }));
         },
     });
-    console.log('noRaw lecturers:', data);
+    // console.log('noRaw lecturers:', data);
     return { data, error, isLoading };
 };
 
@@ -90,17 +90,18 @@ export const useCourses = () => {
         queryKey: ['courses'],
         queryFn: async () => {
             const data = await fetchReference('courses');
-            console.log('Raw courses:', data);
+            // console.log('Raw courses:', data);
             return data
 
                 .map((option: any) => ({
                     key: option.courseId,
                     value: option.courseName,
                     label: option.courseName,
+                    code: option.courseCode,
                 }));
         },
     });
 
-    console.log('noRaw courses:', data);
+    // console.log('noRaw courses:', data);
     return { data, error, isLoading };
 };
