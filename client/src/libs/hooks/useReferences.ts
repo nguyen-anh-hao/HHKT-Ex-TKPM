@@ -61,5 +61,46 @@ export const useEmailDomains = () => {
         },
     });
 
+
     return { data, error, isLoading };
 }
+
+export const useLecturers = () => {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['lecturers'],
+        queryFn: async () => {
+            const data = await fetchReference('lecturers');
+            console.log('Raw lecturers:', data);
+            return data
+                
+                .map((option: any) => ({
+                    key: option.id,
+                    value: option.fullName,
+                    label: option.fullName,
+                }));
+        },
+    });
+    console.log('noRaw lecturers:', data);
+    return { data, error, isLoading };
+};
+
+
+export const useCourses = () => {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['courses'],
+        queryFn: async () => {
+            const data = await fetchReference('courses');
+            console.log('Raw courses:', data);
+            return data
+
+                .map((option: any) => ({
+                    key: option.courseId,
+                    value: option.courseName,
+                    label: option.courseName,
+                }));
+        },
+    });
+
+    console.log('noRaw courses:', data);
+    return { data, error, isLoading };
+};

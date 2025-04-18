@@ -15,10 +15,14 @@ export const postReference = async (type: string, value: any) => {
         'programs': 'programName',
         'student-statuses': 'studentStatusName',
         'email-domains': 'domain',
+        'lecturers': 'lecturerName',
+        'courses': 'courseName',
+
     };
-    
-    const payload = payloadMap[type] ? { [payloadMap[type]]: value } : {};
-    
+
+    const key = payloadMap[type];
+    const payload = key ? { [key]: value } : {};
+
     try {
         const response = await api.post(`/${type}`, payload);
         return response.data;
@@ -28,16 +32,17 @@ export const postReference = async (type: string, value: any) => {
 };
 
 export const putReference = async (type: string, id: number, value: any) => {
-    let payload: any = {};
-    if (type === 'faculties') {
-        payload = { facultyName: value };
-    } else if (type === 'programs') {
-        payload = { programName: value };
-    } else if (type === 'student-statuses') {
-        payload = { studentStatusName: value };
-    } else if (type === 'email-domains') {
-        payload = { domain: value };
-    }
+    const payloadMap: Record<string, string> = {
+        'faculties': 'facultyName',
+        'programs': 'programName',
+        'student-statuses': 'studentStatusName',
+        'email-domains': 'domain',
+        'lecturers': 'lecturerName',
+        'courses': 'courseName',
+    };
+
+    const key = payloadMap[type];
+    const payload = key ? { [key]: value } : {};
 
     try {
         const response = await api.put(`/${type}/${id}`, payload);
