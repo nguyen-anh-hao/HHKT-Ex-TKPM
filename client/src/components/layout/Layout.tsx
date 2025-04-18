@@ -16,7 +16,7 @@ const menuItems = [
   { key: '5', icon: <BookOutlined />, label: 'Quản lý khóa học', route: '/course-management' },
   { key: '6', icon: <TeamOutlined />, label: 'Quản lý lớp học', route: '/class-management' }, // Changed icon here
   { key: '7', icon: <SwapOutlined />, label: 'Đăng ký học phần', route: '/enroll-class' },
-  { key: '8', icon: <FileTextOutlined />, label: 'Xuất bảng điểm', route: '/transcript' },
+  { key: '8', icon: <FileTextOutlined />, label: 'Bảng điểm sinh viên', route: '/transcript' },
 ];
 
 
@@ -36,7 +36,7 @@ export default function Layout({
     };
 
     const getKeyFromUrl = (url: string) => {
-        const foundItem = menuItems.find(item => item.route === url);
+        const foundItem = menuItems.find(item => url.startsWith(item.route));
         return foundItem ? foundItem.key : '1';
     };
 

@@ -1,8 +1,18 @@
-import { getStudents, postStudent, patchStudent, deleteStudent } from '@/libs/api/studentApi';
+import { getStudentById, getStudents, postStudent, patchStudent, deleteStudent } from '@/libs/api/studentApi';
 import { Student } from '../../interfaces/Student';
 import { cleanData } from '../utils/cleanData';
 import { transformStudentToPostRequest, transformStudentToPatchRequest, transformGetResponseToStudent } from '../utils/studentTransform';
 import { StudentResponse } from '../../interfaces/StudentResponse';
+
+export const fetchStudentById = async (studentId: string) => {
+    try {
+        const student = await getStudentById(studentId);
+        return transformGetResponseToStudent(student);
+    }
+    catch (error) {
+        throw error;
+    }
+};
 
 export const fetchStudents = async () => {
     try {
