@@ -1,10 +1,10 @@
 export interface UpdateClassRequest {
-  classCode?: string;
-  courseId?: number;
-  semesterId?: number;
-  lecturerId?: number | null;
-  maxStudents?: number;
-  schedule?: string;
-  room?: string;
-  updatedBy?: string; 
+    classCode?: string;
+    courseId?: number;
+    semesterId?: number;
+    lecturerId?: number | null;
+    maxStudents?: number;
+    schedule?: string;
+    room?: string;
+    updatedBy?: string;
 }

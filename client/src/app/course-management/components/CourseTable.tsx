@@ -4,16 +4,16 @@ import { useEffect, useState } from 'react';
 import { SortOrder } from 'antd/es/table/interface';
 import { fetchReference } from '@/libs/services/referenceService';
 import { Course } from '@/interfaces/Course';
+
 interface CourseTableProps {
-  courses: Course[];
-  onEdit: (course: Course) => void;
-  onDelete: (id: number) => void;
-  openModal?: (visible: boolean) => void;
-  loading?: boolean;
+    courses: Course[];
+    onEdit: (course: Course) => void;
+    onDelete: (id: number) => void;
+    openModal?: (visible: boolean) => void;
+    loading?: boolean;
 }
 
 const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTableProps) => {
-
     const [searchText, setSearchText] = useState('');
     const [facultyMap, setFacultyMap] = useState<Record<number, string>>({});
     const [courseCodeMap, setCourseCodeMap] = useState<Record<number, string>>({});
@@ -92,11 +92,11 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
                     </Button>
                     <Popconfirm
                         title='Bạn có chắc chắn muốn xóa học phần này?'
-                        onConfirm={() =>{  console.log('Record khi xóa:', record);onDelete(record.courseId)}}
+                        onConfirm={() => { console.log('Record khi xóa:', record); onDelete(record.courseId) }}
                         okText='Xóa'
                         cancelText='Hủy'
                     >
-                        
+
                         <Button icon={<DeleteOutlined />} danger>
                             Xóa
                         </Button>
@@ -120,16 +120,15 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
                     float: 'right',
                 }}
             />
-           <Table
-    columns={columns}
-    dataSource={filteredCourses}
-    rowKey='courseCode'
-    pagination={{
-        pageSize: 10,
-        showSizeChanger: false,
-    }}
-/>
-
+            <Table
+                columns={columns}
+                dataSource={filteredCourses}
+                rowKey='courseCode'
+                pagination={{
+                    pageSize: 10,
+                    showSizeChanger: false,
+                }}
+            />
         </div>
     );
 };
