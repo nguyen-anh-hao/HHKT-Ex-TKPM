@@ -3,6 +3,7 @@ package org.example.backend.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.backend.common.LanguageInterceptor;
 import org.example.backend.domain.Class;
 import org.example.backend.domain.Course;
 import org.example.backend.domain.Lecturer;
@@ -15,9 +16,15 @@ import org.example.backend.repository.ICourseRepository;
 import org.example.backend.repository.ILecturerRepository;
 import org.example.backend.repository.ISemesterRepository;
 import org.example.backend.service.IClassService;
+import org.example.backend.service.ITranslationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -27,24 +34,102 @@ public class ClassServiceImpl implements IClassService {
     private final ICourseRepository courseRepository;
     private final ILecturerRepository lecturerRepository;
     private final ISemesterRepository semesterRepository;
-
-    @Override
-    public Page<ClassResponse> getAllClasses(Pageable pageable) {
-        log.info("Fetching all classes");
-
-        Page<Class> classes = classRepository.findAll(pageable);
-
-        return classes.map(ClassMapper::mapFromDomainToClassResponse);
-    }
+    private final ITranslationService translationService;
 
     @Override
     public ClassResponse getClassById(Integer classId) {
         log.info("Fetching class by id: {}", classId);
-
         Class classEntity = classRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Class not found"));
 
-        return ClassMapper.mapFromDomainToClassResponse(classEntity);
+        String currentLanguage = LanguageInterceptor.CURRENT_LANGUAGE.get();
+        if ("vi".equals(currentLanguage)) {
+            return ClassMapper.mapFromDomainToClassResponse(classEntity);
+        } else {
+            // Get translation for class
+            Map<String, String> classTranslations = translationService.getTranslation("Class", classId, currentLanguage);
+
+            // Get translation for course
+            Map<String, String> courseTranslations = translationService.getTranslation(
+                    "Course", classEntity.getCourse().getId(), currentLanguage);
+
+            // Get translation for faculty
+            Map<String, String> facultyTranslations = translationService.getTranslation(
+                    "Faculty", classEntity.getCourse().getFaculty().getId(), currentLanguage);
+
+            // Get translation for prerequisite course
+            Map<String, String> prerequisiteCourseTranslations = new HashMap<>();
+            if (classEntity.getCourse().getPrerequisiteCourse() != null) {
+                prerequisiteCourseTranslations = translationService.getTranslation(
+                        "Course", classEntity.getCourse().getPrerequisiteCourse().getId(), currentLanguage);
+            }
+
+            return ClassMapper.mapFromDomainToClassResponseWithTranslation(
+                    classEntity, classTranslations, courseTranslations, facultyTranslations,
+                    prerequisiteCourseTranslations);
+        }
+    }
+
+    @Override
+    public Page<ClassResponse> getAllClasses(Pageable pageable) {
+        log.info("Fetching all classes");
+        Page<Class> classes = classRepository.findAll(pageable);
+
+        String currentLanguage = LanguageInterceptor.CURRENT_LANGUAGE.get();
+        if ("vi".equals(currentLanguage)) {
+            return classes.map(ClassMapper::mapFromDomainToClassResponse);
+        } else {
+            // Get translations for classes
+            List<Integer> classIds = classes.getContent().stream()
+                    .map(Class::getId)
+                    .toList();
+            Map<Integer, Map<String, String>> classTranslations = translationService
+                    .getTranslations("Class", classIds, currentLanguage);
+
+            // Get translations for courses
+            List<Integer> courseIds = classes.getContent().stream()
+                    .map(classEntity -> classEntity.getCourse().getId())
+                    .distinct()
+                    .toList();
+            Map<Integer, Map<String, String>> courseTranslations = translationService
+                    .getTranslations("Course", courseIds, currentLanguage);
+
+            // Get translations for faculties
+            List<Integer> facultyIds = classes.getContent().stream()
+                    .map(classEntity -> classEntity.getCourse().getFaculty().getId())
+                    .distinct()
+                    .toList();
+            Map<Integer, Map<String, String>> facultyTranslations = translationService
+                    .getTranslations("Faculty", facultyIds, currentLanguage);
+
+            // Get translations for prerequisite courses
+            List<Integer> prerequisiteCourseIds = classes.getContent().stream()
+                    .filter(classEntity -> classEntity.getCourse().getPrerequisiteCourse() != null)
+                    .map(classEntity -> classEntity.getCourse().getPrerequisiteCourse().getId())
+                    .distinct()
+                    .toList();
+            Map<Integer, Map<String, String>> prerequisiteCourseTranslations =
+                    prerequisiteCourseIds.isEmpty() ? Collections.emptyMap() :
+                            translationService.getTranslations("Course", prerequisiteCourseIds, currentLanguage);
+
+            // Get translations for semesters
+            List<Integer> semesterIds = classes.getContent().stream()
+                    .map(classEntity -> classEntity.getSemester().getId())
+                    .distinct()
+                    .toList();
+            Map<Integer, Map<String, String>> semesterTranslations = translationService
+                    .getTranslations("Semester", semesterIds, currentLanguage);
+
+            return classes.map(classEntity -> ClassMapper.mapFromDomainToClassResponseWithTranslation(
+                    classEntity,
+                    classTranslations.getOrDefault(classEntity.getId(), Collections.emptyMap()),
+                    courseTranslations.getOrDefault(classEntity.getCourse().getId(), Collections.emptyMap()),
+                    facultyTranslations.getOrDefault(classEntity.getCourse().getFaculty().getId(), Collections.emptyMap()),
+                    classEntity.getCourse().getPrerequisiteCourse() != null ?
+                            prerequisiteCourseTranslations.getOrDefault(classEntity.getCourse().getPrerequisiteCourse().getId(), Collections.emptyMap()) :
+                            Collections.emptyMap()
+            ));
+        }
     }
 
     @Override
