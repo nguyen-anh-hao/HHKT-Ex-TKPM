@@ -6,6 +6,9 @@ import moment from 'moment';
 import { useState, useEffect, use } from 'react';
 import { Student } from '../../../interfaces/Student';
 import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/useReferences';
+// import { Controller, useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { studentSchema, StudentSchema } from '@/libs/validators/studentSchema';
 
 const { Option } = Select;
 
@@ -27,6 +30,11 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
     const { data: programOptions } = usePrograms();
     const { data: studentStatusOptions } = useStudentStatuses();
     const { data: emailDomainOptions } = useEmailDomains();
+
+    // const { control, handleSubmit, formState: { errors } } = useForm<StudentSchema>({
+    //     resolver: zodResolver(studentSchema),
+    //     mode: "onBlur",
+    // });
 
     useEffect(() => {
         if (student) {
@@ -77,7 +85,21 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                         },
                                     }),
                                 ]}
-                            >
+                                >
+                                {/* validateStatus={errors.studentId ? 'error' : ''}
+                                    help={errors.studentId?.message}  
+                                <Controller
+                                    name='studentId'
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            disabled={!!student}
+                                            prefix={<UserOutlined />}
+                                            placeholder='Nhập mã số sinh viên'
+                                        />
+                                    )}
+                                /> */}
                                 <Input prefix={<UserOutlined />} disabled={!!student} />
                             </Form.Item>
                         </Col>

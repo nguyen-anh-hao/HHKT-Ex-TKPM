@@ -48,9 +48,9 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
         {
             title: 'Mã học phần',
             dataIndex: 'courseCode',
-            sorter: (a: Course, b: Course) => a.courseCode.localeCompare(b.courseCode),
-            defaultSortOrder: 'ascend' as SortOrder,
-            sortDirections: ['ascend', 'descend'] as SortOrder[],
+            // sorter: (a: Course, b: Course) => a.courseCode.localeCompare(b.courseCode),
+            // defaultSortOrder: 'ascend' as SortOrder,
+            // sortDirections: ['ascend', 'descend'] as SortOrder[],
         },
         { title: 'Tên học phần', dataIndex: 'courseName' },
         { title: 'Số tín chỉ', dataIndex: 'credits' },

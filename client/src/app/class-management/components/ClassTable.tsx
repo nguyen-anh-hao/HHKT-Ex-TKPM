@@ -45,9 +45,9 @@ const ClassTable = ({ classes, openModal, loading }: ClassTableProps) => {
         {
             title: 'Mã lớp học',
             dataIndex: 'classCode',
-            sorter: (a: Class, b: Class) => a.classCode.localeCompare(b.classCode),
-            defaultSortOrder: 'ascend' as SortOrder,
-            sortDirections: ['ascend', 'descend'] as SortOrder[],
+            // sorter: (a: Class, b: Class) => a.classCode.localeCompare(b.classCode),
+            // defaultSortOrder: 'ascend' as SortOrder,
+            // sortDirections: ['ascend', 'descend'] as SortOrder[],
         },
         { title: 'Mã khóa học', dataIndex: 'courseCode' },
         { title: 'Tên khóa học', dataIndex: 'courseName' },

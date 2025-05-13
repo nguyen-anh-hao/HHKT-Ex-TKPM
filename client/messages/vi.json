@@ -1,0 +1,15 @@
+{
+  "common": {
+    "language": "Ngôn ngữ",
+    "loading": "Đang tải",
+    "error": "Có lỗi xảy ra"
+  },
+  "student-management": {
+    "student-management": "Quản lý sinh viên",
+    "add-student": "Thêm sinh viên",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "input-data": "Nhập dữ liệu",
+    "output-data": "Xuất dữ liệu"
+  }
+}

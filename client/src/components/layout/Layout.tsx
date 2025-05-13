@@ -1,32 +1,38 @@
 'use client'
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined,FileTextOutlined, ApartmentOutlined,BookOutlined, HomeOutlined, SwapOutlined } from '@ant-design/icons';
-import { Button, Menu, theme, Layout as AntdLayout, Typography } from 'antd';
-import { Content, Header } from 'antd/es/layout/layout';
-import Sider from 'antd/es/layout/Sider';
-import {useRouter, usePathname} from 'next/navigation';
-
-import { useState } from 'react';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined, FileTextOutlined, ApartmentOutlined, BookOutlined, SwapOutlined } from '@ant-design/icons';
+import { Button, Menu, Layout as AntdLayout, Typography, Select } from 'antd';
+import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
+import { useTranslations } from 'next-intl';
+
+const { Header, Content, Sider } = AntdLayout;
 
 const menuItems = [
-  { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
-  { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-management' },
-  { key: '4', icon: <SettingOutlined />, label: 'Cấu hình trạng thái SV', route: '/status-rules-configuration' },
-  { key: '5', icon: <BookOutlined />, label: 'Quản lý khóa học', route: '/course-management' },
-  { key: '6', icon: <TeamOutlined />, label: 'Quản lý lớp học', route: '/class-management' }, // Changed icon here
-  { key: '7', icon: <SwapOutlined />, label: 'Đăng ký học phần', route: '/enroll-class' },
-  { key: '8', icon: <FileTextOutlined />, label: 'Bảng điểm sinh viên', route: '/transcript' },
+    { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
+    { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-management' },
+    { key: '4', icon: <SettingOutlined />, label: 'Cấu hình trạng thái SV', route: '/status-rules-configuration' },
+    { key: '5', icon: <BookOutlined />, label: 'Quản lý khóa học', route: '/course-management' },
+    { key: '6', icon: <TeamOutlined />, label: 'Quản lý lớp học', route: '/class-management' },
+    { key: '7', icon: <SwapOutlined />, label: 'Đăng ký học phần', route: '/enroll-class' },
+    { key: '8', icon: <FileTextOutlined />, label: 'Bảng điểm sinh viên', route: '/transcript' },
 ];
 
-
-export default function Layout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
+export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
     const [collapsed, setCollapsed] = useState(false);
+    const [locale, setLocale] = useState<string>('en');
+
     const router = useRouter();
+    const pathname = usePathname();
+    const queryClient = new QueryClient();
+    const t = useTranslations('common');
+
+    useEffect(() => {
+        const savedLocale = Cookies.get('NEXT_LOCALE') || 'en';
+        setLocale(savedLocale);
+    }, []);
 
     const handleMenuClick = (e: any) => {
         const selectedItem = menuItems.find(item => item.key === e.key);
@@ -40,7 +46,11 @@ export default function Layout({
         return foundItem ? foundItem.key : '1';
     };
 
-    const queryClient = new QueryClient();
+    const handleLocaleChange = (value: string) => {
+        Cookies.set('NEXT_LOCALE', value);
+        setLocale(value);
+        router.refresh();
+    };
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -51,7 +61,7 @@ export default function Layout({
                     </Typography.Title>
                     <Menu
                         mode='inline'
-                        selectedKeys={[getKeyFromUrl(usePathname())]}
+                        selectedKeys={[getKeyFromUrl(pathname)]}
                         onClick={handleMenuClick}
                         items={menuItems.map(item => ({
                             key: item.key,
@@ -61,17 +71,26 @@ export default function Layout({
                     />
                 </Sider>
                 <AntdLayout className='site-layout'>
-                    <Header style={{ padding: 0, background: '#FFFFFF' }} >
+                    <Header style={{ padding: 0, background: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Button
                             type='text'
                             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                             onClick={() => setCollapsed(!collapsed)}
-                            style={{
-                                fontSize: '16px',
-                                width: 64,
-                                height: 64,
-                            }}
+                            style={{ fontSize: '16px', width: 64, height: 64 }}
                         />
+                        <div style={{ marginRight: '16px' }}>
+                            <Typography.Text style={{ marginRight: '8px' }}>{t('language')}:</Typography.Text>
+                            <Select
+                                key={locale}
+                                value={locale}
+                                onChange={handleLocaleChange}
+                                style={{ width: 120 }}
+                                options={[
+                                    { value: 'en', label: 'English' },
+                                    { value: 'vi', label: 'Tiếng Việt' },
+                                ]}
+                            />
+                        </div>
                     </Header>
                     <Content
                         className='site-layout-background'

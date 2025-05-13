@@ -5,7 +5,7 @@ import api from './api';
 
 export const getCourses = async () => {
     try {
-        const response = await api.get(`/courses?page=0&size=50`);
+        const response = await api.get(`/courses?page=0&size=50&sort=createdAt`);
         return response.data.data as Course[];
     } catch (error) {
         throw error;

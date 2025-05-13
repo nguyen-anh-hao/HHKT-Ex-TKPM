@@ -71,9 +71,7 @@ export const useLecturers = () => {
         queryFn: async () => {
             const data = await fetchReference('lecturers');
             // console.log('Raw lecturers:', data);
-            return data
-                
-                .map((option: any) => ({
+            return data.map((option: any) => ({
                     key: option.id,
                     value: option.fullName,
                     label: option.fullName,
@@ -91,9 +89,7 @@ export const useCourses = () => {
         queryFn: async () => {
             const data = await fetchReference('courses');
             // console.log('Raw courses:', data);
-            return data
-
-                .map((option: any) => ({
+            return data.map((option: any) => ({
                     key: option.courseId,
                     value: option.courseName,
                     label: option.courseName,

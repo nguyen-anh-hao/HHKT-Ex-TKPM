@@ -11,6 +11,8 @@ import { useCreateStudent, useDeleteStudent, useUpdateStudent } from '@/libs/hoo
 import useReferenceStore from '@/libs/stores/referenceStore';
 import ImportModal from './ImportModal'
 import ExportModal from './ExportModal';
+import { createStudentSchema } from '@/libs/validators/studentSchema';
+import { useTranslations } from 'next-intl';
 
 export default function Home({ initialStudents }: { initialStudents: Student[] }) {
     const [students, setStudents] = useState<Student[]>(initialStudents);
@@ -25,6 +27,8 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
     const { mutate: deleteStudent } = useDeleteStudent();
 
     const fetchReference = useReferenceStore((state) => state.fetchReference);
+    
+    const t = useTranslations('student-management');
     
     useEffect(() => {
         fetchReference();
@@ -41,21 +45,17 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
                         setIsResetModal(true);
                     },
                     onError: (error : any) => {
-                        message.error(`Cập nhật sinh viên thất bại: ${error.response.data.errors.map((error: any) => error.defaultMessage).join(' ') || error.response.data.message}`);
+                        message.error(`Cập nhật sinh viên thất bại: ${error.response.data.errors
+                            ? error.response.data.errors.map((error: any) => error.defaultMessage).join(' ')
+                            : error.response.data.message}`);
                     }
                 }
             );
         } else {
-            if (value.studentId && students.some((student) => student.studentId === value.studentId)) {
-                message.error('Mã số sinh viên đã tồn tại');
-                return;
-            }
-            if (students.some((student) => student.email === value.email)) {
-                message.error('Email đã tồn tại');
-                return;
-            }
-            if (students.some((student) => student.phone === value.phone)) {
-                message.error('Số điện thoại đã tồn tại');
+            const validation = createStudentSchema(students).safeParse(value);
+            if (!validation.success) {
+                const errorMessages = validation.error.errors.map((error) => error.message).join(', ');
+                message.error(`Thêm sinh viên thất bại: ${errorMessages}`);
                 return;
             }
             createStudent(
@@ -90,13 +90,13 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
 
     return (
         <div>
-            <h1>Quản lý sinh viên</h1>
+            <h1>{t('student-management')}</h1>
             <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
                 <Button type='primary' icon={<PlusOutlined />} onClick={() => { setSelectedStudent(null); setIsModalVisible(true); }}>
-                    Thêm sinh viên
+                    {t('add-student')}
                 </Button>
-                <Button onClick={() => setIsImportModalVisible(true)} icon={<UploadOutlined />} >Nhập dữ liệu</Button>
-                <Button onClick={() => setIsExportModalVisible(true)} icon={<DownloadOutlined />}>Xuất dữ liệu</Button>
+                <Button onClick={() => setIsImportModalVisible(true)} icon={<UploadOutlined />}>{t('input-data')}</Button>
+                <Button onClick={() => setIsExportModalVisible(true)} icon={<DownloadOutlined />}>{t('output-data')}</Button>
             </div>
             <StudentTable
                 students={students}
