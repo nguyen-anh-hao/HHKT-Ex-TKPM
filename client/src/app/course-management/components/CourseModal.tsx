@@ -4,6 +4,7 @@ import { Form, Input, Modal, Button, Select, message, Switch, Spin } from 'antd'
 import { useEffect, useState } from 'react';
 import { Course } from '../../../interfaces/Course';
 import { useFaculties } from '@/libs/hooks/useReferences';
+import { useTranslations } from 'next-intl';
 
 const { Option } = Select;
 
@@ -28,8 +29,9 @@ const CourseModal = ({
 }: CourseModalProps) => {
     const [courseForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean>(false);
-
     const { data: facultyOptions } = useFaculties();
+    const t = useTranslations('course-management');
+
     const renderOptions = (options?: { key: number; value: string; label: string }[]) =>
         options?.map((option) => (
             <Option key={option.key} value={option.value}>
@@ -73,13 +75,13 @@ const CourseModal = ({
                 }
             })
             .catch(() => {
-                message.error('Vui lòng kiểm tra lại thông tin!');
+                message.error(t('check-info'));
             });
     };
 
     return (
         <Modal
-            title={isEdit ? 'Sửa học phần' : 'Thêm học phần'}
+            title={isEdit ? t('edit-course') : t('add-course')}
             open={visible}
             onCancel={() => {
                 onCancel();
@@ -90,39 +92,39 @@ const CourseModal = ({
         >
             <Form form={courseForm} layout="vertical">
                 <Form.Item
-                    label="Mã học phần"
+                    label={t('course-code')}
                     name="courseCode"
-                    rules={[{ required: true, message: 'Mã học phần là bắt buộc!' }]}
+                    rules={[{ required: true, message: t('required-course-code') }]}
                 >
                     <Input disabled={isEdit} />
                 </Form.Item>
 
                 <Form.Item
-                    label="Tên học phần"
+                    label={t('course-name')}
                     name="courseName"
-                    rules={[{ required: true, message: 'Tên học phần là bắt buộc!' }]}
+                    rules={[{ required: true, message: t('required-course-name') }]}
                 >
                     <Input />
                 </Form.Item>
 
                 <Form.Item
-                    label="Số tín chỉ"
+                    label={t('credits')}
                     name="credits"
-                    rules={[{ required: true, message: 'Số tín chỉ là bắt buộc!' }]}
+                    rules={[{ required: true, message: t('required-credits') }]}
                 >
                     <Input type="number" min={1} />
                 </Form.Item>
 
-                <Form.Item label='Khoa' name='faculty' rules={[{ required: true, message: 'Khoa là bắt buộc!' }]}>
+                <Form.Item label={t('faculty')} name='faculty' rules={[{ required: true, message: t('required-faculty') }]}>
                     <Select>{renderOptions(facultyOptions)}</Select>
                 </Form.Item>
 
-                <Form.Item label="Mô tả" name="description">
+                <Form.Item label={t('description')} name="description">
                     <Input.TextArea rows={3} />
                 </Form.Item>
 
-                <Form.Item label="Học phần tiên quyết" name="prerequisiteCourseId">
-                    <Select placeholder="Chọn học phần tiên quyết" allowClear>
+                <Form.Item label={t('prerequisite')} name="prerequisiteCourseId">
+                    <Select placeholder={t('select-prerequisite')} allowClear>
                         {allCourses
                             .filter((c) => c.courseId && (!course || c.courseId !== course.courseId))
                             .map((c) => (
@@ -133,13 +135,13 @@ const CourseModal = ({
                     </Select>
                 </Form.Item>
 
-                <Form.Item label="Tình trạng" name="isActive" valuePropName="checked">
-                    <Switch checkedChildren="Hoạt động" unCheckedChildren="Không hoạt động" />
+                <Form.Item label={t('active')} name="isActive" valuePropName="checked">
+                    <Switch checkedChildren={t('active')} unCheckedChildren={t('inactive')} />
                 </Form.Item>
             </Form>
 
             <Button type="primary" onClick={handleSubmit}>
-                Lưu
+                {t('save')}
             </Button>
         </Modal>
     );

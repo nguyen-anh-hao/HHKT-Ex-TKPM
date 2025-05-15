@@ -2,6 +2,7 @@ import { Button, Form, Input, Modal, Select } from 'antd';
 import { useState } from 'react';
 import { downloadFile } from '@/libs/services/fileService';
 import { message } from 'antd';
+import { useTranslations } from 'next-intl';
 
 interface ExportModalProps {
     visible: boolean;
@@ -14,6 +15,7 @@ const ExportModal = ({ visible, onCancel }: ExportModalProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [page, setPage] = useState<number>(0);
     const [size, setSize] = useState<number>(10);
+    const t = useTranslations('student-management');
     
     const handleExport = async () => {
         try {
@@ -23,7 +25,7 @@ const ExportModal = ({ visible, onCancel }: ExportModalProps) => {
             link.href = response;
             link.click();
         } catch (error) {
-            message.error('Xuất tệp tin thất bại');
+            message.error(t('export-error'));
         } finally {
             setIsLoading(false);
         }
@@ -31,14 +33,14 @@ const ExportModal = ({ visible, onCancel }: ExportModalProps) => {
 
     return (
         <Modal
-            title='Xuất dữ liệu sinh viên'
+            title={t('export-title')}
             open={visible}
             onCancel={onCancel}
             footer={null}
         >
             <Form layout='vertical'>
                 <Form.Item style={{ marginTop: 32, marginBottom: 24 }}>
-                    <div style={{ marginLeft: 2, marginBottom: 4 }}>Tên tệp</div>
+                    <div style={{ marginLeft: 2, marginBottom: 4 }}>{t('file-name')}</div>
                     <div style={{ display: 'flex', flexDirection: 'row', gap: 8 }}>
                         <Input
                             value={fileName}
@@ -54,28 +56,27 @@ const ExportModal = ({ visible, onCancel }: ExportModalProps) => {
                             ]}
                         />
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'row', gap: 8, marginTop: 16 }}>
-                        <div style={{ width: '100%' }}>
-                            <div style={{ marginLeft: 2, marginBottom: 4 }}>Xuất từ trang</div>
-                            <Input
-                                type='number'
-                                value={page}
-                                onChange={(e) => setPage(Number(e.target.value))}
-                            />
-                        </div>
-                        <div style={{ width: '100%' }}>
-                            <div style={{ marginLeft: 2, marginBottom: 4 }}>Kích thước</div>
-                            <Input
-                                type='number'
-                                value={size}
-                                onChange={(e) => setSize(Number(e.target.value))}
-                            />
-                        </div>
+                    
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginLeft: 2, marginBottom: 4 }}>{t('export-from-page')}</div>
+                        <Input
+                            type='number'
+                            value={page}
+                            onChange={(e) => setPage(Number(e.target.value))}
+                        />
+                    </div>
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginLeft: 2, marginBottom: 4 }}>{t('size')}</div>
+                        <Input
+                            type='number'
+                            value={size}
+                            onChange={(e) => setSize(Number(e.target.value))}
+                        />
                     </div>
                 </Form.Item>
             </Form>
             <Button type='primary' onClick={handleExport} loading={isLoading}>
-                Xuất tệp tin
+                {t('export-file')}
             </Button>
         </Modal>
     );

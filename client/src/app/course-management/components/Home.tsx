@@ -18,6 +18,7 @@ import {
 } from '@/libs/hooks/useCourseMutation';
 import useReferenceStore from '@/libs/stores/referenceStore';
 import { useFaculties } from '@/libs/hooks/useReferences';
+import { useTranslations } from 'next-intl';
 
 export default function Home({ initialCourses }: { initialCourses: Course[] }) {
     const [courses, setCourses] = useState<Course[]>(initialCourses);
@@ -32,6 +33,7 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
 
     const { data: facultyOptions } = useFaculties();
     const fetchReference = useReferenceStore((state) => state.fetchReference);
+    const t = useTranslations('course-management');
 
     useEffect(() => {
         fetchReference();
@@ -39,64 +41,63 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
 
     const handleAddOrUpdateCourse = (value: Course) => {
         if (selectedCourse) {
-            updateCourse(value, {
-                onSuccess: () => {
-                    message.success('Cập nhật môn học thành công');
-                    setCourses(updateCourseState(courses, value));
-                    setIsResetModal(true);
-                },
-                onError: (error: any) => {
-                    message.error(
-                        `Cập nhật môn học thất bại: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                        error.response?.data?.message
-                        }`
-                    );
+            updateCourse(
+                { ...value, courseId: selectedCourse.courseId },
+                {
+                    onSuccess: () => {
+                        message.success(t('update-success'));
+                        setCourses(updateCourseState(courses, { ...value, courseId: selectedCourse.courseId }));
+                        setIsModalVisible(false);
+                    },
+                    onError: (error: any) => {
+                        message.error(
+                            t('update-error', {
+                                error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                                    error.response?.data?.message
+                            })
+                        );
+                    },
                 }
-            });
+            );
         } else {
-            if (value.courseId && courses.some((course) => course.courseId === value.courseId)) {
-                message.error('Mã môn học đã tồn tại');
-                return;
-            }
-            if (courses.some((course) => course.courseName === value.courseName)) {
-                message.error('Tên môn học đã tồn tại');
-                return;
-            }
             createCourse(value, {
                 onSuccess: () => {
-                    message.success('Thêm môn học thành công');
+                    message.success(t('add-success'));
                     setCourses(addCourseState(courses, value));
+                    setIsModalVisible(false);
                 },
                 onError: (error: any) => {
                     message.error(
-                        `Thêm môn học thất bại: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                        error.response?.data?.message
-                        }`
+                        t('add-error', {
+                            error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                                error.response?.data?.message
+                        })
                     );
-                }
+                },
             });
         }
     };
 
-    const handleDeleteCourse = (courseId: number) => {
-        deleteCourse(courseId, {
+    const handleDeleteCourse = (id: number) => {
+        deleteCourse(id, {
             onSuccess: () => {
-                message.success('Xóa môn học thành công');
-                setCourses(deleteCourseState(courses, courseId));
+                message.success(t('delete-success'));
+                setCourses(deleteCourseState(courses, id));
             },
             onError: (error: any) => {
                 message.error(
-                    `Xóa môn học thất bại: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                    error.response?.data?.message
-                    }`
+                    t('delete-error', {
+                        error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                            error.response?.data?.message
+                    })
                 );
-            }
+            },
         });
     };
 
     return (
         <div>
-            <h1>Quản lý môn học</h1>
+            <h1>{t('course-management')}</h1>
             <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
                 <Button
                     type='primary'
@@ -106,14 +107,17 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
                         setIsModalVisible(true);
                     }}
                 >
-                    Thêm môn học
+                    {t('add-course')}
                 </Button>
             </div>
             <CourseTable
                 courses={courses}
-                openModal={setIsModalVisible}
-                onEdit={setSelectedCourse}
+                onEdit={(course) => {
+                    setSelectedCourse(course);
+                    setIsModalVisible(true);
+                }}
                 onDelete={handleDeleteCourse}
+                openModal={setIsModalVisible}
             />
             <CourseModal
                 visible={isModalVisible}

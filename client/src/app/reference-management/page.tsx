@@ -6,11 +6,13 @@ import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '
 import { useCreateReference, useUpdateReference, useDeleteReference } from '@/libs/hooks/useReferenceMutation';
 import ReferenceList from './components/ReferenceList';
 import { message } from 'antd';
+import { useTranslations } from 'next-intl';
 
 const ReferencePage = () => {
     const { mutate: createReference } = useCreateReference();
     const { mutate: updateReference } = useUpdateReference();
     const { mutate: deleteReference } = useDeleteReference();
+    const t = useTranslations('reference-management');
 
     const facultiesQuery = useFaculties();
     const programsQuery = usePrograms();
@@ -64,10 +66,10 @@ const ReferencePage = () => {
             { id, type },
             {
                 onSuccess: () => {
-                    message.success('Xóa thành công');
+                    message.success(t('delete-success'));
                 },
                 onError: (error: any) => {
-                    message.error(`Lỗi khi xóa: ${error.response.data.message}`);
+                    message.error(t('delete-error', { error: error.response.data.message }));
                 },
             }
         );
@@ -80,14 +82,14 @@ const ReferencePage = () => {
 
     const handleOk = () => {
         if (!newItemValue) {
-            message.error('Vui lòng nhập tên mới');
+            message.error(t('required-item-name'));
             return;
         }
         createReference(
             { type: currentType!, value: newItemValue },
             {
                 onSuccess: (response) => {
-                    message.success('Thêm mới thành công');
+                    message.success(t('add-success'));
                     const newItem = { key: response.id, value: newItemValue };
                     if (currentType === 'faculties') {
                         setFacultyValues([...facultyValues, newItem]);
@@ -102,7 +104,7 @@ const ReferencePage = () => {
                     setIsModalVisible(false);
                 },
                 onError: (error: any) => {
-                    message.error(`Lỗi khi thêm mới: ${error.response.data.message}`);
+                    message.error(t('add-error', { error: error.response.data.message }));
                 },
             }
         );
@@ -123,50 +125,70 @@ const ReferencePage = () => {
         const updatedValues = [...values];
         updatedValues[index].value = newValue;
         setState(updatedValues);
-        updateReference({ type, id: updatedValues[index].key, value: newValue });
+        updateReference(
+            { type, id: updatedValues[index].key, value: newValue },
+            {
+                onSuccess: () => {
+                    message.success(t('update-success'));
+                },
+                onError: (error: any) => {
+                    message.error(t('update-error', { error: error.response.data.message }));
+                },
+            }
+        );
+    };
+
+    const getModalTitle = () => {
+        switch (currentType) {
+            case 'faculties':
+                return t('add-item', { item: t('faculties') });
+            case 'programs':
+                return t('add-item', { item: t('programs') });
+            case 'student-statuses':
+                return t('add-item', { item: t('student-statuses') });
+            case 'email-domains':
+                return t('add-item', { item: t('email-domains') });
+            default:
+                return t('add-item');
+        }
     };
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', padding: '20px', background: '#f8f6f2' }}>
-            {/* Khoa */}
             <ReferenceList
-                title="Khoa"
+                title={t('faculties')}
                 values={facultyValues}
                 onChange={(index, newValue) => handleChange(setFacultyValues, index, newValue, facultyValues, 'faculties')}
                 onDelete={(id) => handleDelete(id, 'faculties')}
                 onAdd={() => handleAdd('faculties')}
             />
 
-            {/* Chương trình */}
             <ReferenceList
-                title="Chương trình"
+                title={t('programs')}
                 values={programValues}
                 onChange={(index, newValue) => handleChange(setProgramValues, index, newValue, programValues, 'programs')}
                 onDelete={(id) => handleDelete(id, 'programs')}
                 onAdd={() => handleAdd('programs')}
             />
 
-            {/* Trạng thái */}
             <ReferenceList
-                title="Trạng thái"
+                title={t('student-statuses')}
                 values={statusValues}
                 onChange={(index, newValue) => handleChange(setStatusValues, index, newValue, statusValues, 'student-statuses')}
                 onDelete={(id) => handleDelete(id, 'student-statuses')}
                 onAdd={() => handleAdd('student-statuses')}
             />
 
-            {/* Email Domain */}
             <ReferenceList
-                title="Email domain"
+                title={t('email-domains')}
                 values={emailDomainValues}
                 onChange={(index, newValue) => handleChange(setEmailDomainValues, index, newValue, emailDomainValues, 'email-domains')}
                 onDelete={(id) => handleDelete(id, 'email-domains')}
                 onAdd={() => handleAdd('email-domains')}
             />
 
-            {/* Modal để thêm item mới */}
             <Modal
-                title={`Thêm ${currentType === 'faculties' ? 'Khoa' : currentType === 'programs' ? 'Chương trình' : currentType === 'student-statuses' ? 'Trạng thái' : 'Email domain'}`}
+                title={getModalTitle()}
                 open={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -174,7 +196,7 @@ const ReferencePage = () => {
                 <Input
                     value={newItemValue}
                     onChange={(e) => setNewItemValue(e.target.value)}
-                    placeholder="Nhập tên mới"
+                    placeholder={t('item-name')}
                 />
             </Modal>
         </div>

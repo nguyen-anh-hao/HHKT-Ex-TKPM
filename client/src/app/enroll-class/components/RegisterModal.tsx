@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { RegisterResponse } from '@/interfaces/RegisterResponse';
 import { Class } from '@/interfaces/ClassResponse';
 import { fetchStudentById } from '@/libs/services/studentService';
+import { useTranslations } from 'next-intl';
 
 const { Option } = Select;
 
@@ -32,6 +33,7 @@ const RegisterModal = ({
     const [isEdit, setIsEdit] = useState(false);
     const [status, setStatus] = useState('REGISTERED');
     const [student, setStudent] = useState('');
+    const t = useTranslations('enroll-class');
 
     useEffect(() => {
         if (registrationData) {
@@ -57,14 +59,14 @@ const RegisterModal = ({
                 const selectedClass = allClasses.find(cls => cls.classCode === value.classCode);
 
                 if (!selectedClass) {
-                    message.error('Không tìm thấy lớp học tương ứng!');
+                    message.error(t('class-not-found'));
                     return;
                 }
 
                 const selectedClassIndex = allClasses.findIndex(cls => cls.classCode === value.classCode);
 
                 if (selectedClassIndex === -1) {
-                    message.error('Không tìm thấy lớp học tương ứng!');
+                    message.error(t('class-not-found'));
                     return;
                 }
 
@@ -82,60 +84,56 @@ const RegisterModal = ({
                 }
             })
             .catch(() => {
-                message.error('Vui lòng kiểm tra lại thông tin!');
+                message.error(t('check-info'));
             });
     };
 
     return (
         <Modal
-            title={isEdit ? 'Cập nhật đăng ký' : 'Thêm đăng ký lớp học'}
+            title={isEdit ? t('edit-enrollment') : t('add-enrollment')}
             open={visible}
             onCancel={() => {
                 onCancel();
                 form.resetFields();
             }}
             footer={null}
-            width={600}
+            width={700}
         >
             <Form form={form} layout="vertical">
                 <Form.Item
-                    label="Mã sinh viên"
+                    label={t('student-id')}
                     name="studentId"
-                    rules={[{ required: true, message: 'Mã sinh viên là bắt buộc!' }]}
+                    rules={[{ required: true, message: t('required-student-id') }]}
                 >
-                    <Input disabled={isEdit}
-                        onBlur={(e) => {
+                    <Input
+                        disabled={isEdit}
+                        onChange={async (e) => {
                             const studentId = e.target.value;
                             if (studentId) {
-                                fetchStudentById(studentId)
-                                    .then((response: any) => {
-                                        if (response) {
-                                            setStudent(response.fullName);
-                                        } else {
-                                            message.error('Không tìm thấy sinh viên!');
-                                            setStudent('');
-                                        }
-                                    })
-                                    .catch(() => {
-                                        message.error('Lỗi khi tìm kiếm sinh viên!');
-                                    });
-                            } else {
-                                setStudent('');
+                                try {
+                                    const studentData = await fetchStudentById(studentId);
+                                    setStudent(studentData.fullName);
+                                } catch (error) {
+                                    console.error('Error fetching student:', error);
+                                }
                             }
                         }}
                     />
                 </Form.Item>
 
-                <Form.Item label="Tên sinh viên" name="studentName">
+                <Form.Item
+                    label={t('student-name')}
+                    name="studentName"
+                >
                     <Input disabled />
                 </Form.Item>
 
                 <Form.Item
-                    label="Mã lớp học"
+                    label={t('class-code')}
                     name="classCode"
-                    rules={[{ required: true, message: 'Mã lớp học là bắt buộc!' }]}
+                    rules={[{ required: true, message: t('required-class-code') }]}
                 >
-                    <Select disabled={isEdit} placeholder="Chọn mã lớp học">
+                    <Select disabled={isEdit} placeholder={t('select-class')}>
                         {allClasses.map((cls) => (
                             <Option key={cls.classCode} value={cls.classCode}>
                                 {cls.classCode} - {cls.courseName}
@@ -145,9 +143,9 @@ const RegisterModal = ({
                 </Form.Item>
 
                 <Form.Item
-                    label="Trạng thái"
+                    label={t('status')}
                     name="status"
-                    rules={[{ required: true, message: 'Trạng thái là bắt buộc!' }]}
+                    rules={[{ required: true, message: t('required-status') }]}
                 >
                     <Select onChange={(value) => setStatus(value)}>
                         <Option value="REGISTERED">REGISTERED</Option>
@@ -158,12 +156,12 @@ const RegisterModal = ({
 
                 {status === 'COMPLETED' && (
                     <Form.Item
-                        label="Điểm"
+                        label={t('grade')}
                         name="grade"
                         rules={[
                             {
                                 required: true,
-                                message: 'Vui lòng nhập điểm!',
+                                message: t('required-grade'),
                             },
                         ]}
                     >
@@ -173,7 +171,7 @@ const RegisterModal = ({
             </Form>
 
             <Button type="primary" onClick={handleSubmit}>
-                Lưu
+                {t('save')}
             </Button>
         </Modal>
     );

@@ -5,6 +5,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { downloadTranscript } from '@/libs/services/transcriptService';
 import { useStudent } from '@/libs/hooks/useStudents';
 import { useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 const { Title } = Typography;
 
@@ -24,6 +25,9 @@ export default function TranscriptPage() {
     const params = useParams();
     const studentId = params.studentId as string;
     const { data: student, error, isLoading } = useStudent(studentId);
+    const t = useTranslations('transcript');
+    const tCommon = useTranslations('common');
+    const tStudent = useTranslations('student-management');
 
     const handleExportPDF = async () => {
         const response = await downloadTranscript(studentId);
@@ -32,23 +36,21 @@ export default function TranscriptPage() {
         link.click();
     }
 
-    if (isLoading) return <p>Đang tải dữ liệu...</p>;
-    if (error) return <p>Đã xảy ra lỗi khi tải thông tin sinh viên.</p>;
-
-    return (
+    if (isLoading) return <p>{tCommon('loading')}</p>;
+    if (error) return <p>{tCommon('error')}</p>;    return (
         <div>
             <Card>
                 <div>
                     <Title level={3} style={{ textAlign: 'center' }}>
-                        BẢNG ĐIỂM SINH VIÊN
+                        {t('title')}
                     </Title>
 
                     <Descriptions bordered column={1} size="middle" style={{ marginBottom: 24 }}>
-                        <Descriptions.Item label="Mã số sinh viên">{student?.studentId}</Descriptions.Item>
-                        <Descriptions.Item label="Họ tên">{student?.fullName}</Descriptions.Item>
-                        <Descriptions.Item label="Ngày sinh">{student?.dob}</Descriptions.Item>
-                        <Descriptions.Item label="Khoa">{student?.faculty}</Descriptions.Item>
-                        <Descriptions.Item label="Khóa">{student?.intake}</Descriptions.Item>
+                        <Descriptions.Item label={tStudent('mssv')}>{student?.studentId}</Descriptions.Item>
+                        <Descriptions.Item label={tStudent('full-name')}>{student?.fullName}</Descriptions.Item>
+                        <Descriptions.Item label={tStudent('dob')}>{student?.dob}</Descriptions.Item>
+                        <Descriptions.Item label={tStudent('faculty')}>{student?.faculty}</Descriptions.Item>
+                        <Descriptions.Item label={tStudent('year')}>{student?.intake}</Descriptions.Item>
                     </Descriptions>
 
                     <Table
@@ -57,10 +59,10 @@ export default function TranscriptPage() {
                         dataSource={mockTranscript}
                         rowKey="id"
                         columns={[
-                            { title: 'Mã môn học', dataIndex: 'id' },
-                            { title: 'Tên môn học', dataIndex: 'name' },
-                            { title: 'Số tín chỉ', dataIndex: 'credits' },
-                            { title: 'Điểm', dataIndex: 'grade' },
+                            { title: t('course-code'), dataIndex: 'id' },
+                            { title: t('course-name'), dataIndex: 'name' },
+                            { title: t('credits'), dataIndex: 'credits' },
+                            { title: t('grade'), dataIndex: 'grade' },
                         ]}
                         summary={() => (
                             <Table.Summary.Row>
@@ -73,11 +75,9 @@ export default function TranscriptPage() {
                             </Table.Summary.Row>
                         )}
                     />
-                </div>
-
-                <div style={{ marginTop: 24, textAlign: 'right' }}>
+                </div>                <div style={{ marginTop: 24, textAlign: 'right' }}>
                     <Button type="primary" icon={<DownloadOutlined />} onClick={handleExportPDF}>
-                        Xuất PDF
+                        {t('export')}
                     </Button>
                 </div>
             </Card>

@@ -9,6 +9,7 @@ import { Class } from '@/interfaces/ClassResponse';
 import { addClass as addClassState } from '../actions/ClassActions';
 import { useCreateClass } from '@/libs/hooks/useClassMutation';
 import useReferenceStore from '@/libs/stores/referenceStore';
+import { useTranslations } from 'next-intl';
 
 export default function Home({ initialClasses }: { initialClasses: Class[] }) {
     const [classes, setClasses] = useState<Class[]>(initialClasses);
@@ -18,6 +19,7 @@ export default function Home({ initialClasses }: { initialClasses: Class[] }) {
 
     const { mutate: createClass } = useCreateClass();
     const fetchReference = useReferenceStore((state) => state.fetchReference);
+    const t = useTranslations('class-management');
 
     useEffect(() => {
         fetchReference();
@@ -26,15 +28,16 @@ export default function Home({ initialClasses }: { initialClasses: Class[] }) {
     const handleAddOrUpdateClass = (value: Class) => {
         createClass(value, {
             onSuccess: () => {
-                message.success('Thêm lớp học thành công');
+                message.success(t('add-success'));
                 setClasses(addClassState(classes, value));
                 setIsModalVisible(false);
             },
             onError: (error: any) => {
                 message.error(
-                    `Thêm lớp học thất bại: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                    error.response?.data?.message
-                    }`
+                    t('add-error', {
+                        error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                            error.response?.data?.message
+                    })
                 );
             },
         });
@@ -42,7 +45,7 @@ export default function Home({ initialClasses }: { initialClasses: Class[] }) {
 
     return (
         <div>
-            <h1>Quản lý lớp học</h1> { }
+            <h1>{t('class-management')}</h1>
             <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
                 <Button
                     type='primary'
@@ -52,17 +55,18 @@ export default function Home({ initialClasses }: { initialClasses: Class[] }) {
                         setIsModalVisible(true);
                     }}
                 >
-                    Thêm lớp học { }
+                    {t('add-class')}
                 </Button>
             </div>
             <ClassTable
                 classes={classes}
-                openModal={setIsModalVisible} onEdit={function (classData: Class): void {
-                    throw new Error('Function not implemented.');
-                }} onDelete={function (id: number): void {
+                openModal={setIsModalVisible}
+                onEdit={function (classData: Class): void {
                     throw new Error('Function not implemented.');
                 }}
-
+                onDelete={function (id: number): void {
+                    throw new Error('Function not implemented.');
+                }}
             />
             <ClassModal
                 visible={isModalVisible}

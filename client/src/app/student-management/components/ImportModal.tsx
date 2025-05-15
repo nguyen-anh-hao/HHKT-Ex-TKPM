@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { useState } from 'react';
 import type { RcFile, UploadRequestOption } from 'rc-upload/lib/interface';
 import { uploadFile } from '@/libs/services/fileService';
+import { useTranslations } from 'next-intl';
 
 const BASE_URL = 'http://localhost:9000/api';
 
@@ -15,6 +16,7 @@ interface ImportModalProps {
 const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
     const [fileName, setFileName] = useState<string>('');
     const [uploading, setUploading] = useState(false);
+    const t = useTranslations('student-management');
 
     const handleUpload = async (options: UploadRequestOption) => {
         const { file, onSuccess, onError } = options;
@@ -26,15 +28,16 @@ const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
             setFileName('');
             const result = await uploadFile(realFile);
             if (result.status !== 200) {
-                message.error(`Tệp ${realFile.name} tải lên thất bại: ${result}`);
+                const errorMessage = result.data?.message || result.statusText || 'Unknown error';
+                message.error(t('import-error', { fileName: realFile.name, error: errorMessage }));
                 return;
             }
-            message.success(`Tệp ${realFile.name} tải lên thành công.`);
+            message.success(t('import-success', { fileName: realFile.name }));
             onSuccess?.(result, new XMLHttpRequest());
             onCancel();
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Đã xảy ra lỗi khi tải lên.';
-            message.error(`Tệp ${realFile.name} tải lên thất bại: ${errorMessage}`);
+            const errorMessage = error.response?.data?.message || t('upload-error');
+            message.error(t('import-error', { fileName: realFile.name, error: errorMessage }));
             onError?.(new Error(errorMessage));
         } finally {
             setUploading(false);
@@ -43,7 +46,7 @@ const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
 
     return (
         <Modal
-            title='Nhập dữ liệu sinh viên'
+            title={t('import-title')}
             open={visible}
             onCancel={onCancel}
             footer={null}
@@ -56,13 +59,13 @@ const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
                         beforeUpload={(file) => {
                             const isValidType = file.type === 'application/json';
                             if (!isValidType) {
-                                message.error('Chỉ cho phép tải lên file .json');
+                                message.error(t('invalid-file-type'));
                             }
                             return isValidType;
                         }}
                     >
                         <Button icon={<UploadOutlined />} loading={uploading}>
-                            Chọn tệp để tải lên
+                            {t('select-file')}
                         </Button>
                     </Upload>
                 </Form.Item>

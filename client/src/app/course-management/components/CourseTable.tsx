@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { SortOrder } from 'antd/es/table/interface';
 import { fetchReference } from '@/libs/services/referenceService';
 import { Course } from '@/interfaces/Course';
+import { useTranslations } from 'next-intl';
 
 interface CourseTableProps {
     courses: Course[];
@@ -17,6 +18,7 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
     const [searchText, setSearchText] = useState('');
     const [facultyMap, setFacultyMap] = useState<Record<number, string>>({});
     const [courseCodeMap, setCourseCodeMap] = useState<Record<number, string>>({});
+    const t = useTranslations('course-management');
 
     useEffect(() => {
         const fetchFacultyOptions = async () => {
@@ -46,16 +48,16 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
 
     const columns = [
         {
-            title: 'Mã học phần',
+            title: t('course-code'),
             dataIndex: 'courseCode',
-            // sorter: (a: Course, b: Course) => a.courseCode.localeCompare(b.courseCode),
-            // defaultSortOrder: 'ascend' as SortOrder,
-            // sortDirections: ['ascend', 'descend'] as SortOrder[],
+            sorter: (a: Course, b: Course) => a.courseCode.localeCompare(b.courseCode),
+            defaultSortOrder: 'ascend' as SortOrder,
+            sortDirections: ['ascend', 'descend'] as SortOrder[],
         },
-        { title: 'Tên học phần', dataIndex: 'courseName' },
-        { title: 'Số tín chỉ', dataIndex: 'credits' },
+        { title: t('course-name'), dataIndex: 'courseName' },
+        { title: t('credits'), dataIndex: 'credits' },
         {
-            title: 'Khoa',
+            title: t('faculty'),
             dataIndex: 'faculty',
             // render: (facultyId: number) => facultyMap[facultyId] || 'Không xác định',
         },
@@ -66,18 +68,21 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
                 courseId && courseCodeMap[courseId] ? courseCodeMap[courseId] : 'Không có',
         },
         {
-            title: 'Mô tả',
+            title: t('description'),
             dataIndex: 'description',
             ellipsis: true,
         },
         {
-            title: 'Tình trạng',
+            title: t('active'),
             dataIndex: 'isActive',
-            render: (active: boolean) =>
-                active ? <Tag color="green">Hoạt động</Tag> : <Tag color="red">Không hoạt động</Tag>,
+            render: (isActive: boolean) => (
+                <Tag color={isActive ? 'green' : 'red'}>
+                    {isActive ? t('active') : t('inactive')}
+                </Tag>
+            ),
         },
         {
-            title: 'Hành động',
+            title: t('actions'),
             render: (_: any, record: Course) => (
                 <>
                     <Button
@@ -85,20 +90,19 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
                         icon={<EditOutlined />}
                         onClick={() => {
                             onEdit(record);
-                            openModal && openModal(true);
+                            openModal?.(true);
                         }}
                     >
-                        Sửa
+                        {t('edit')}
                     </Button>
                     <Popconfirm
-                        title='Bạn có chắc chắn muốn xóa học phần này?'
-                        onConfirm={() => { console.log('Record khi xóa:', record); onDelete(record.courseId) }}
-                        okText='Xóa'
-                        cancelText='Hủy'
+                        title={t('confirm-delete')}
+                        onConfirm={() => onDelete(record.courseId)}
+                        okText={t('delete')}
+                        cancelText={t('cancel')}
                     >
-
                         <Button icon={<DeleteOutlined />} danger>
-                            Xóa
+                            {t('delete')}
                         </Button>
                     </Popconfirm>
                 </>
@@ -109,26 +113,16 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
     return (
         <div>
             <Input.Search
-                placeholder='Tìm kiếm theo mã hoặc tên học phần'
+                placeholder={t('search-placeholder')}
                 allowClear
-                onChange={(e) => {
-                    setSearchText(e.target.value);
-                }}
+                onChange={(e) => setSearchText(e.target.value)}
                 style={{
                     marginBottom: 16,
                     width: 300,
-                    float: 'right',
+                    float: 'right'
                 }}
             />
-            <Table
-                columns={columns}
-                dataSource={filteredCourses}
-                rowKey='courseCode'
-                pagination={{
-                    pageSize: 10,
-                    showSizeChanger: false,
-                }}
-            />
+            <Table columns={columns} dataSource={filteredCourses} rowKey='courseId' loading={loading} />
         </div>
     );
 };

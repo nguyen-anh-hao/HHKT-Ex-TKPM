@@ -2,12 +2,14 @@
 
 import CoursePage from './components/Home';
 import { useCourses } from '@/libs/hooks/useCourseQuery';
+import { useTranslations } from 'next-intl';
 
 export default function CourseManagementPage() {
     const { data: courses, error, isLoading } = useCourses();
+    const t = useTranslations('course-management');
 
-    if (isLoading) return <div>Đang tải dữ liệu khóa học...</div>;
-    if (error) return <div>Lỗi khi tải khóa học</div>;
+    if (isLoading) return <div>{t('loading-courses')}</div>;
+    if (error) return <div>{t('error-loading-courses')}</div>;
 
     return (
         <CoursePage

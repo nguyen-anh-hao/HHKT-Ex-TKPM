@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { SortOrder } from 'antd/es/table/interface';
 import { fetchReference } from '@/libs/services/referenceService';
 import { Class } from '@/interfaces/ClassResponse';
+import { useTranslations } from 'next-intl';
 
 interface ClassTableProps {
     classes: Class[];
@@ -16,6 +17,7 @@ const ClassTable = ({ classes, openModal, loading }: ClassTableProps) => {
     const [searchText, setSearchText] = useState('');
     const [facultyMap, setFacultyMap] = useState<Record<number, string>>({});
     const [courseCodeMap, setCourseCodeMap] = useState<Record<number, string>>({});
+    const t = useTranslations('class-management');
 
     useEffect(() => {
         const fetchFacultyOptions = async () => {
@@ -43,46 +45,33 @@ const ClassTable = ({ classes, openModal, loading }: ClassTableProps) => {
 
     const columns = [
         {
-            title: 'Mã lớp học',
+            title: t('class-code'),
             dataIndex: 'classCode',
-            // sorter: (a: Class, b: Class) => a.classCode.localeCompare(b.classCode),
-            // defaultSortOrder: 'ascend' as SortOrder,
-            // sortDirections: ['ascend', 'descend'] as SortOrder[],
         },
-        { title: 'Mã khóa học', dataIndex: 'courseCode' },
-        { title: 'Tên khóa học', dataIndex: 'courseName' },
-        { title: 'Giảng viên', dataIndex: 'lecturerName' },
-        { title: 'Số học sinh tối đa', dataIndex: 'maxStudents' },
-        { title: 'Lịch học', dataIndex: 'schedule' },
-        { title: 'Phòng', dataIndex: 'room' },
+        { title: t('course-code'), dataIndex: 'courseCode' },
+        { title: t('course-name'), dataIndex: 'courseName' },
+        { title: t('lecturer'), dataIndex: 'lecturerName' },
+        { title: t('max-students'), dataIndex: 'maxStudents' },
+        { title: t('schedule'), dataIndex: 'schedule' },
+        { title: t('room'), dataIndex: 'room' },
     ];
 
     return (
         <div>
             <Input.Search
-                placeholder="Tìm kiếm theo mã lớp học hoặc tên lớp học"
+                placeholder={t('search-placeholder')}
                 allowClear
-                onChange={(e) => {
-                    setSearchText(e.target.value);
-                }}
+                onChange={(e) => setSearchText(e.target.value)}
                 style={{
                     marginBottom: 16,
                     width: 300,
-                    float: 'right',
+                    float: 'right'
                 }}
             />
-            <Table
-                columns={columns}
-                dataSource={filteredClasses}
-                rowKey="classCode"
-                pagination={{
-                    pageSize: 10,
-                    showSizeChanger: false,
-                }}
-                loading={loading}
-            />
+            <Table columns={columns} dataSource={filteredClasses} rowKey='classCode' loading={loading} />
         </div>
     );
 };
 
 export default ClassTable;
+

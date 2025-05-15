@@ -6,6 +6,7 @@ import moment from 'moment';
 import { useState, useEffect, use } from 'react';
 import { Student } from '../../../interfaces/Student';
 import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/useReferences';
+import { useTranslations } from 'next-intl';
 // import { Controller, useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import { studentSchema, StudentSchema } from '@/libs/validators/studentSchema';
@@ -25,6 +26,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
     const [studentForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [documentType, setDocumentType] = useState<string | null>(null);
+    const t = useTranslations('student-management');
 
     const { data: facultyOptions } = useFaculties();
     const { data: programOptions } = usePrograms();
@@ -63,16 +65,16 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
     const tabItems = [
         {
             key: '1',
-            label: 'Thông tin cá nhân và học tập',
+            label: t('personal-info'),
             children: (
                 <Form form={studentForm} layout='vertical'>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label='Mã số sinh viên'
+                                label={t('mssv')}
                                 name='studentId'
                                 rules={[
-                                    { required: true, message: 'Mã số sinh viên là bắt buộc!' },
+                                    { required: true, message: t('required-mssv') },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (isEdit) {
@@ -81,7 +83,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                             if (!value || !student || value !== student.studentId) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error('Mã số sinh viên không được trùng!'));
+                                            return Promise.reject(new Error(t('duplicate-mssv')));
                                         },
                                     }),
                                 ]}
@@ -104,44 +106,44 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label='Họ tên' name='fullName' rules={[{ required: true, message: 'Họ tên là bắt buộc!' }]}>
+                            <Form.Item label={t('full-name')} name='fullName' rules={[{ required: true, message: t('required-fullname') }]}>
                                 <Input />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label='Ngày tháng năm sinh' name='dob' rules={[{ required: true, message: 'Ngày tháng năm sinh là bắt buộc!' }]}>
+                            <Form.Item label={t('dob')} name='dob' rules={[{ required: true, message: t('required-dob') }]}>
                                 <DatePicker style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label='Giới tính' name='gender' rules={[{ required: true, message: 'Giới tính là bắt buộc!' }]}>
-                                <Select placeholder='Chọn giới tính'>
-                                    <Option value='Nam'>Nam</Option>
-                                    <Option value='Nữ'>Nữ</Option>
+                            <Form.Item label={t('gender')} name='gender' rules={[{ required: true, message: t('required-gender') }]}>
+                                <Select placeholder={t('select-gender')}>
+                                    <Option value='Nam'>{t('male')}</Option>
+                                    <Option value='Nữ'>{t('female')}</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={6}>
-                            <Form.Item label='Khoa' name='faculty' rules={[{ required: true, message: 'Khoa là bắt buộc!' }]}>
+                            <Form.Item label={t('faculty')} name='faculty' rules={[{ required: true, message: t('required-faculty') }]}>
                                 <Select>{renderOptions(facultyOptions)}</Select>
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item label='Khóa' name='intake' rules={[{ required: true, message: 'Khóa là bắt buộc!' }]}>
+                            <Form.Item label={t('year')} name='intake' rules={[{ required: true, message: t('required-year') }]}>
                                 <Input />
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item label='Chương trình' name='program' rules={[{ required: true, message: 'Chương trình là bắt buộc!' }]}>
+                            <Form.Item label={t('program')} name='program' rules={[{ required: true, message: t('required-program') }]}>
                                 <Select>{renderOptions(programOptions)}</Select>
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item label='Tình trạng' name='studentStatus' rules={[{ required: true, message: 'Tình trạng là bắt buộc!' }]}>
+                            <Form.Item label={t('state')} name='studentStatus' rules={[{ required: true, message: t('required-state') }]}>
                                 <Select>{renderOptions(studentStatusOptions)}</Select>
                             </Form.Item>
                         </Col>
@@ -151,13 +153,13 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
         },
         {
             key: '2',
-            label: 'Liên hệ và Địa chỉ',
+            label: t('contact-info'),
             children: (
                 <Form form={studentForm} layout='vertical'>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label='Địa chỉ thường trú'
+                                label={t('permanent-address')}
                                 name='permanentAddress'
                             >
                                 <Input prefix={<HomeOutlined />} />
@@ -165,7 +167,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                label='Địa chỉ tạm trú'
+                                label={t('temporary-address')}
                                 name='temporaryAddress'
                             >
                                 <Input prefix={<HomeOutlined />} />
@@ -174,8 +176,8 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label='Mã quốc gia' name='phoneCountry' rules={[{ required: true, message: 'Mã quốc gia là bắt buộc!' }]}>
-                                <Select placeholder='Chọn mã quốc gia'>
+                            <Form.Item label={t('country-code')} name='phoneCountry' rules={[{ required: true, message: t('required-country-code') }]}>
+                                <Select placeholder={t('select-country-code')}>
                                     <Option value='VN'>🇻🇳 Vietnam (+84)</Option>
                                     <Option value='US'>🇺🇸 USA (+1)</Option>
                                     <Option value='UK'>🇬🇧 UK (+44)</Option>
@@ -200,10 +202,10 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                label='Số điện thoại'
+                                label={t('phone')}
                                 name='phone'
                                 rules={[
-                                    { required: true, message: 'Số điện thoại là bắt buộc!' },
+                                    { required: true, message: t('required-phone') },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             const countryCode = getFieldValue('phoneCountry');
@@ -232,7 +234,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                             if (!value || !countryCode || regexMap[countryCode]?.test(value)) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error('Số điện thoại không hợp lệ!'));
+                                            return Promise.reject(new Error(t('invalid-phone')));
                                         },
                                     }),
                                 ]}
@@ -244,12 +246,12 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label='Email'
+                                label={t('email')}
                                 name='email'
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Email là bắt buộc!',
+                                        message: t('required-email'),
                                     },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
@@ -261,7 +263,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                             if (allowedDomains.includes(emailDomain)) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error('Email không hợp lệ! Chỉ chấp nhận các domain được phép.'));
+                                            return Promise.reject(new Error(t('invalid-email')));
                                         },
                                     }),
                                 ]}
@@ -275,25 +277,25 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
         },
         {
             key: '3',
-            label: 'Giấy tờ và Quốc tịch',
+            label: t('documents'),
             children: (
                 <Form form={studentForm} layout='vertical'>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label='Loại giấy tờ'
+                                label={t('document-type')}
                                 name='documentType'
                             >
-                                <Select placeholder='Chọn loại giấy tờ' onChange={setDocumentType}>
-                                    <Option value='CMND'>Chứng minh nhân dân (CMND)</Option>
-                                    <Option value='CCCD'>Căn cước công dân (CCCD)</Option>
-                                    <Option value='Passport'>Hộ chiếu</Option>
+                                <Select placeholder={t('select-document-type')} onChange={setDocumentType}>
+                                    <Option value='CMND'>{t('id-card')}</Option>
+                                    <Option value='CCCD'>{t('citizen-id')}</Option>
+                                    <Option value='Passport'>{t('passport')}</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                label='Số giấy tờ'
+                                label={t('document-number')}
                                 name='documentNumber'
                             >
                                 <Input />
@@ -303,7 +305,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label='Ngày cấp'
+                                label={t('issue-date')}
                                 name='issuedDate'
                             >
                                 <DatePicker style={{ width: '100%' }} />
@@ -311,7 +313,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                label='Nơi cấp'
+                                label={t('issue-place')}
                                 name='issuedBy'
                             >
                                 <Input />
@@ -321,7 +323,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label='Ngày hết hạn'
+                                label={t('expiry-date')}
                                 name='expiredDate'
                             >
                                 <DatePicker style={{ width: '100%' }} />
@@ -330,7 +332,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                         {documentType === 'Passport' && (
                             <Col span={12}>
                                 <Form.Item
-                                    label='Quốc gia cấp'
+                                    label={t('issue-country')}
                                     name='issuedCountry'
                                 >
                                     <Input />
@@ -345,14 +347,14 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                     name='hasChip'
                                     valuePropName='checked'
                                 >
-                                    <Checkbox>Có gắn chip hay không?</Checkbox>
+                                    <Checkbox>{t('has-chip')}</Checkbox>
                                 </Form.Item>
                             </Col>
                         </Row>
                     )}
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label='Quốc tịch' name='nationality' rules={[{ required: true, message: 'Quốc tịch là bắt buộc!' }]}>
+                            <Form.Item label={t('nationality')} name='nationality' rules={[{ required: true, message: t('required-nationality') }]}>
                                 <Input />
                             </Form.Item>
                         </Col>
@@ -364,7 +366,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
 
     return (
         <Modal
-            title={student ? 'Sửa sinh viên' : 'Thêm sinh viên'}
+            title={student ? t('edit-student') : t('add-student')}
             open={visible}
             onCancel={() => {
                 onCancel();
@@ -388,11 +390,11 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                             };
                         })
                         .catch((error) => {
-                            message.error('Vui lòng kiểm tra lại thông tin!');
+                            message.error(t('check-info'));
                         });
                 }}
             >
-                Lưu
+                {t('save')}
             </Button>
         </Modal>
     );

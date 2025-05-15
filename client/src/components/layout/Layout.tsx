@@ -10,29 +10,25 @@ import { useTranslations } from 'next-intl';
 
 const { Header, Content, Sider } = AntdLayout;
 
-const menuItems = [
-    { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
-    { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-management' },
-    { key: '4', icon: <SettingOutlined />, label: 'Cấu hình trạng thái SV', route: '/status-rules-configuration' },
-    { key: '5', icon: <BookOutlined />, label: 'Quản lý khóa học', route: '/course-management' },
-    { key: '6', icon: <TeamOutlined />, label: 'Quản lý lớp học', route: '/class-management' },
-    { key: '7', icon: <SwapOutlined />, label: 'Đăng ký học phần', route: '/enroll-class' },
-    { key: '8', icon: <FileTextOutlined />, label: 'Bảng điểm sinh viên', route: '/transcript' },
-];
-
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
     const [collapsed, setCollapsed] = useState(false);
-    const [locale, setLocale] = useState<string>('en');
-
-    const router = useRouter();
+    const [locale, setLocale] = useState<string>('en');    const router = useRouter();
     const pathname = usePathname();
     const queryClient = new QueryClient();
-    const t = useTranslations('common');
-
-    useEffect(() => {
+    const t = useTranslations('common');    useEffect(() => {
         const savedLocale = Cookies.get('NEXT_LOCALE') || 'en';
         setLocale(savedLocale);
     }, []);
+
+    const menuItems = [
+        { key: '2', icon: <UserOutlined />, label: t('student-management'), route: '/student-management' },
+        { key: '3', icon: <ApartmentOutlined />, label: t('reference-management'), route: '/reference-management' },
+        { key: '4', icon: <SettingOutlined />, label: t('status-rules-configuration'), route: '/status-rules-configuration' },
+        { key: '5', icon: <BookOutlined />, label: t('course-management'), route: '/course-management' },
+        { key: '6', icon: <TeamOutlined />, label: t('class-management'), route: '/class-management' },
+        { key: '7', icon: <SwapOutlined />, label: t('enroll-class'), route: '/enroll-class' },
+        { key: '8', icon: <FileTextOutlined />, label: t('transcript'), route: '/transcript' },
+    ];
 
     const handleMenuClick = (e: any) => {
         const selectedItem = menuItems.find(item => item.key === e.key);
