@@ -17,8 +17,6 @@
     "student-management": "Quản lý sinh viên",
     "add-student": "Thêm sinh viên",
     "edit-student": "Sửa sinh viên",
-    "edit": "Sửa",
-    "delete": "Xóa",
     "input-data": "Nhập dữ liệu",
     "output-data": "Xuất dữ liệu",
     "mssv": "Mã số sinh viên",
@@ -60,8 +58,8 @@
     "invalid-email": "Email không hợp lệ! Chỉ chấp nhận các domain được phép.",
     "document-type": "Loại giấy tờ",
     "select-document-type": "Chọn loại giấy tờ",
-    "id-card": "Chứng minh nhân dân (CMND)",
-    "citizen-id": "Căn cước công dân (CCCD)",
+    "id-card": "CMND",
+    "citizen-id": "CCCD",
     "passport": "Hộ chiếu",
     "document-number": "Số giấy tờ",
     "issue-date": "Ngày cấp",
@@ -146,7 +144,8 @@
     "add-error": "Thêm khóa học thất bại: {error}",
     "loading-courses": "Đang tải dữ liệu khóa học...",
     "error-loading-courses": "Lỗi khi tải khóa học",
-     "actions": "Hành động"
+    "actions": "Hành động",
+    "confirm-delete": "Bạn có chắc chắn muốn xóa khóa học này?"
   },
   "enroll-class": {
     "enroll-class": "Đăng ký lớp học",
@@ -195,7 +194,8 @@
     "delete-error": "Xóa thất bại: {error}",
     "confirm-delete": "Xác nhận xóa",
     "edit": "Sửa",
-    "delete": "Xóa"
+    "delete": "Xóa",
+    "cancel": "Hủy"
   },
   "status-rules-configuration": {
     "title": "Cấu hình quy tắc chuyển trạng thái sinh viên",
@@ -225,6 +225,9 @@
     "grade": "Điểm",
     "gpa": "Điểm trung bình",
     "print": "In bảng điểm",
-    "export": "Xuất bảng điểm"
+    "export": "Xuất bảng điểm",
+    "course-code": "Mã khóa học",
+    "course-name": "Tên khóa học",
+    "credits": "Số tín chỉ"
   }
 }

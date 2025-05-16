@@ -114,7 +114,7 @@ const RegisterModal = ({
                                     const studentData = await fetchStudentById(studentId);
                                     setStudent(studentData.fullName);
                                 } catch (error) {
-                                    console.error('Error fetching student:', error);
+                                    // console.error('Error fetching student:', error);
                                 }
                             }
                         }}

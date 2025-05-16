@@ -11,7 +11,8 @@ import { useTranslations } from 'next-intl';
 export default function StudentManagementPage() {
     const t = useTranslations('common');
     const { data: students, error, isLoading } = useStudents();
+    // console.log('students', students);
     if (isLoading) return <div>{t('loading')}...</div>;
-    if (error) return <div>t('error')</div>;
+    if (error) return <div>{t('error')}</div>;
     return <Home initialStudents={students || []} />;
 }
