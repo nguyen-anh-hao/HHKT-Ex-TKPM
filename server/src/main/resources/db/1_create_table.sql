@@ -224,3 +224,19 @@ CREATE TABLE email_domains (
     created_by VARCHAR(100) DEFAULT 'admin',
     updated_by VARCHAR(100) DEFAULT 'admin'
 );
+
+CREATE TABLE translations (
+    id SERIAL PRIMARY KEY,
+    entity_type VARCHAR(50) NOT NULL,
+    entity_id SERIAL NOT NULL,
+    field_name VARCHAR(50) NOT NULL,
+    language_code VARCHAR(10) NOT NULL,
+    translated_value TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted BOOLEAN DEFAULT FALSE,
+    created_by VARCHAR(100) DEFAULT 'admin',
+    updated_by VARCHAR(100) DEFAULT 'admin'
+);
+
+CREATE INDEX idx_translation_lookup ON translations (entity_type, entity_id, field_name, language_code);

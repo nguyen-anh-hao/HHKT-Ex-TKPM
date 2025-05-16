@@ -80,16 +80,16 @@ INSERT INTO student_status_rules (current_status_id, allowed_transition_id) VALU
 
 INSERT INTO courses (course_code, course_name, credits, faculty_id, description, prerequisite_course_id, is_active, created_by, updated_by)
 VALUES
-    ('CS101', 'Introduction to Programming', 3, 1, 'Basic programming concepts', NULL, TRUE, 'admin', 'admin'),
-    ('CS102', 'Data Structures', 3, 1, 'Study of data structures', 1, TRUE, 'admin', 'admin'),
-    ('CS103', 'Algorithms', 3, 1, 'Fundamentals of algorithms', 2, TRUE, 'admin', 'admin'),
-    ('CS104', 'Database Systems', 3, 2, 'Database design and SQL', NULL, TRUE, 'admin', 'admin'),
-    ('CS105', 'Computer Networks', 3, 3, 'Network protocols and security', NULL, TRUE, 'admin', 'admin'),
-    ('CS106', 'Operating Systems', 3, 1, 'Processes, threads, and memory management', NULL, TRUE, 'admin', 'admin'),
-    ('CS107', 'Software Engineering', 3, 2, 'Software development lifecycle', NULL, TRUE, 'admin', 'admin'),
-    ('CS108', 'Artificial Intelligence', 3, 3, 'Machine learning and AI concepts', 3, TRUE, 'admin', 'admin'),
-    ('CS109', 'Cyber Security', 3, 3, 'Cyber threats and security measures', NULL, TRUE, 'admin', 'admin'),
-    ('CS110', 'Cloud Computing', 3, 1, 'Introduction to cloud services', 4, TRUE, 'admin', 'admin');
+    ('CS101', 'Nhập môn Lập trình', 3, 1, 'Các khái niệm lập trình cơ bản', NULL, TRUE, 'admin', 'admin'),
+    ('CS102', 'Cấu trúc Dữ liệu', 3, 1, 'Nghiên cứu về cấu trúc dữ liệu', 1, TRUE, 'admin', 'admin'),
+    ('CS103', 'Thuật toán', 3, 1, 'Kiến thức nền tảng về thuật toán', 2, TRUE, 'admin', 'admin'),
+    ('CS104', 'Hệ quản trị Cơ sở dữ liệu', 3, 2, 'Thiết kế cơ sở dữ liệu và SQL', NULL, TRUE, 'admin', 'admin'),
+    ('CS105', 'Mạng Máy tính', 3, 3, 'Giao thức mạng và an ninh mạng', NULL, TRUE, 'admin', 'admin'),
+    ('CS106', 'Hệ điều hành', 3, 1, 'Tiến trình, luồng và quản lý bộ nhớ', NULL, TRUE, 'admin', 'admin'),
+    ('CS107', 'Kỹ thuật Phần mềm', 3, 2, 'Vòng đời phát triển phần mềm', NULL, TRUE, 'admin', 'admin'),
+    ('CS108', 'Trí tuệ Nhân tạo', 3, 3, 'Học máy và các khái niệm AI', 3, TRUE, 'admin', 'admin'),
+    ('CS109', 'An ninh Mạng', 3, 3, 'Các mối đe dọa và biện pháp bảo mật', NULL, TRUE, 'admin', 'admin'),
+    ('CS110', 'Điện toán Đám mây', 3, 1, 'Giới thiệu về các dịch vụ đám mây', 4, TRUE, 'admin', 'admin');
 
 INSERT INTO semesters (academic_year, semester, start_date, end_date, last_cancel_date)
 VALUES
@@ -110,30 +110,29 @@ VALUES
 
 INSERT INTO lecturers (full_name, email, phone, faculty_id)
 VALUES
-    ('Dr. John Doe', 'johndoe@university.edu', '1234567890', 1),
-    ('Dr. Jane Smith', 'janesmith@university.edu', '2345678901', 1),
-    ('Prof. Alice Brown', 'alicebrown@university.edu', '3456789012', 2),
-    ('Dr. Bob Johnson', 'bobjohnson@university.edu', '4567890123', 2),
-    ('Dr. Carol White', 'carolwhite@university.edu', '5678901234', 3),
-    ('Dr. David Green', 'davidgreen@university.edu', '6789012345', 3),
-    ('Prof. Eva Black', 'evablack@university.edu', '7890123456', 1),
-    ('Dr. Frank Wilson', 'frankwilson@university.edu', '8901234567', 2),
-    ('Dr. Grace Adams', 'graceadams@university.edu', '9012345678', 3),
-    ('Dr. Henry Clark', 'henryclark@university.edu', '0123456789', 1);
-
+    ('TS. Nguyễn Văn A', 'nguyenvana@university.edu', '0912345678', 1),
+    ('TS. Trần Thị B', 'tranthib@university.edu', '0923456789', 1),
+    ('GS. Lê Thị C', 'lethic@university.edu', '0934567890', 2),
+    ('TS. Phạm Văn D', 'phamvand@university.edu', '0945678901', 2),
+    ('TS. Đặng Thị E', 'dangthie@university.edu', '0956789012', 3),
+    ('TS. Hồ Văn F', 'hovanf@university.edu', '0967890123', 3),
+    ('GS. Vũ Thị G', 'vuthig@university.edu', '0978901234', 1),
+    ('TS. Bùi Văn H', 'buivanh@university.edu', '0989012345', 2),
+    ('TS. Nguyễn Thị I', 'nguyenthii@university.edu', '0990123456', 3),
+    ('TS. Lê Văn K', 'levank@university.edu', '0901234567', 1);
 
 INSERT INTO classes (class_code, course_id, semester_id, lecturer_id, max_students, schedule, room)
 VALUES
-    ('CS101-01', 1, 1, 1, 50, 'Mon-Wed 10:00-12:00', 'Room A101'),
-    ('CS102-01', 2, 1, 2, 40, 'Tue-Thu 14:00-16:00', 'Room B201'),
-    ('CS103-01', 3, 2, 3, 45, 'Mon-Wed 08:00-10:00', 'Room C301'),
-    ('CS104-01', 4, 2, 4, 35, 'Fri 09:00-12:00', 'Room D401'),
-    ('CS105-01', 5, 3, 5, 60, 'Tue-Thu 10:00-12:00', 'Room E501'),
-    ('CS106-01', 6, 3, 6, 30, 'Wed 14:00-17:00', 'Room F601'),
-    ('CS107-01', 7, 1, 7, 50, 'Thu 09:00-12:00', 'Room G701'),
-    ('CS108-01', 8, 2, 8, 40, 'Mon 14:00-17:00', 'Room H801'),
-    ('CS109-01', 9, 3, 9, 55, 'Fri 08:00-11:00', 'Room I901'),
-    ('CS110-01', 10, 1, 10, 50, 'Wed 09:00-12:00', 'Room J1001');
+    ('CS101-01', 1, 1, 1, 50, 'Thứ Hai - Thứ Tư 10:00-12:00', 'A101'),
+    ('CS102-01', 2, 1, 2, 40, 'Thứ Ba - Thứ Năm 14:00-16:00', 'B201'),
+    ('CS103-01', 3, 2, 3, 45, 'Thứ Hai - Thứ Tư 08:00-10:00', 'C301'),
+    ('CS104-01', 4, 2, 4, 35, 'Thứ Sáu 09:00-12:00', 'D401'),
+    ('CS105-01', 5, 3, 5, 60, 'Thứ Ba - Thứ Năm 10:00-12:00', 'E501'),
+    ('CS106-01', 6, 3, 6, 30, 'Thứ Tư 14:00-17:00', 'F601'),
+    ('CS107-01', 7, 1, 7, 50, 'Thứ Năm 09:00-12:00', 'G701'),
+    ('CS108-01', 8, 2, 8, 40, 'Thứ Hai 14:00-17:00', 'H801'),
+    ('CS109-01', 9, 3, 9, 55, 'Thứ Sáu 08:00-11:00', 'I901'),
+    ('CS110-01', 10, 1, 10, 50, 'Thứ Tư 09:00-12:00', 'J1001');
 
 
 INSERT INTO class_registrations (student_id, class_id, status, grade)
