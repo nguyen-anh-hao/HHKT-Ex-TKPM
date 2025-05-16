@@ -1,13 +1,15 @@
 'use client'
 
-import RegisterPage from './components/Home'; 
-import { useRegistrations } from '@/libs/hooks/useRegisterQuery'; 
+import { Suspense } from 'react';
+import Home from './components/Home';
+import { useTranslations } from 'next-intl';
 
-export default function RegisterManagementPage() {
-    const { data: registrations, error, isLoading } = useRegistrations(); 
+export default function EnrollClassPage() {
+    const t = useTranslations('enroll-class');
 
-    if (isLoading) return <div>Đang tải dữ liệu đăng ký...</div>; 
-    if (error) return <div>Lỗi khi tải đăng ký</div>; 
-
-    return <RegisterPage initialRegisters={registrations || []} />; 
+    return (
+        <Suspense fallback={<div>{t('loading')}</div>}>
+            <Home />
+        </Suspense>
+    );
 }

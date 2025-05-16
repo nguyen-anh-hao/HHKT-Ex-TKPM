@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Input, Popconfirm, Space, Typography } from 'antd';
+import { useTranslations } from 'next-intl';
 
 const { Title } = Typography;
 
@@ -12,6 +13,8 @@ type ReferenceListProps = {
 };
 
 const ReferenceList: React.FC<ReferenceListProps> = ({ title, values, onChange, onDelete, onAdd }) => {
+    const t = useTranslations('reference-management');
+
     return (
         <div style={{ textAlign: 'center' }}>
             <Title level={3}>{title}</Title>
@@ -22,17 +25,17 @@ const ReferenceList: React.FC<ReferenceListProps> = ({ title, values, onChange, 
                         onChange={(e) => onChange(index, e.target.value)}
                     />
                     <Popconfirm
-                        title='Bạn có chắc chắn muốn xóa?'
+                        title={t('confirm-delete')}
                         onConfirm={() => { onDelete(key); }}
-                        okText='Có'
-                        cancelText='Không'
+                        okText={t('delete')}
+                        cancelText={t('cancel')}
                     >
-                        <Button danger>Xóa</Button>
+                        <Button danger>{t('delete')}</Button>
                     </Popconfirm>
                 </Space>
             ))}
             <Button style={{ marginTop: 16 }} type='primary' onClick={onAdd}>
-                Thêm {title}
+                {t('add-item')} {title}
             </Button>
         </div>
     );

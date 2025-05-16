@@ -10,12 +10,14 @@ import {
     useDeleteStatusRule,
     useUpdateStatusRule
 } from '@/libs/hooks/useStatusRuleMutation';
+import { useTranslations } from 'next-intl';
 
 const StatusMatrix = () => {
     const { data: statusRules } = useStatusRules();
     const { mutate: createStatusRule } = useCreateStatusRule();
     const { mutate: updateStatusRule } = useUpdateStatusRule();
     const { mutate: deleteStatusRule } = useDeleteStatusRule();
+    const t = useTranslations('status-rules-configuration');
 
     const { fetchReference, studentStatuses } = useReferenceStore();
 
@@ -68,7 +70,7 @@ const StatusMatrix = () => {
 
     const columns = [
         {
-            title: 'Từ trạng thái',
+            title: t('from-status'),
             dataIndex: 'from',
             fixed: 'left' as const,
             width: 150
@@ -99,7 +101,7 @@ const StatusMatrix = () => {
                                 )
                             }
                         >
-                            Sửa
+                            {t('edit')}
                         </Button>
                         <Button
                             size="small"
@@ -107,7 +109,7 @@ const StatusMatrix = () => {
                             danger
                             onClick={() => onDelete(value.id)}
                         >
-                            Xóa
+                            {t('delete')}
                         </Button>
                     </div>
                 );
@@ -155,15 +157,16 @@ const StatusMatrix = () => {
                                 item.id === editingRule.id ? updatedRule : item
                             )
                         );
-                        message.success('Cập nhật thành công');
+                        message.success(t('update-success'));
                         setIsModalVisible(false);
                     },
                     onError: (error: any) => {
                         message.error(
-                            `Cập nhật thất bại: ${error.response?.data?.errors?.map(
-                                (e: any) => e.defaultMessage
-                            ).join(' ') || error.response?.data?.message
-                            }`
+                            t('update-error', {
+                                error: error.response?.data?.errors?.map(
+                                    (e: any) => e.defaultMessage
+                                ).join(' ') || error.response?.data?.message
+                            })
                         );
                     }
                 });
@@ -186,20 +189,19 @@ const StatusMatrix = () => {
                     )?.studentStatusId!
                 };
 
-                console.log(statuses)
-
                 createStatusRule(value, {
                     onSuccess: () => {
                         setData(prev => [...prev, newRule]);
-                        message.success('Thêm mới thành công');
+                        message.success(t('add-success'));
                         setIsModalVisible(false);
                     },
                     onError: (error: any) => {
                         message.error(
-                            `Thêm mới thất bại: ${error.response?.data?.errors?.map(
-                                (e: any) => e.defaultMessage
-                            ).join(' ') || error.response?.data?.message
-                            }`
+                            t('add-error', {
+                                error: error.response?.data?.errors?.map(
+                                    (e: any) => e.defaultMessage
+                                ).join(' ') || error.response?.data?.message
+                            })
                         );
                     }
                 });
@@ -209,19 +211,20 @@ const StatusMatrix = () => {
 
     const onDelete = (id: number) => {
         Modal.confirm({
-            title: 'Xác nhận xóa',
+            title: t('confirm-delete'),
             onOk: () => {
                 deleteStatusRule(id, {
                     onSuccess: () => {
                         setData(prev => prev.filter(item => item.id !== id));
-                        message.success('Đã xóa quy tắc');
+                        message.success(t('delete-success'));
                     },
                     onError: (error: any) => {
                         message.error(
-                            `Xóa thất bại: ${error.response?.data?.errors?.map(
-                                (e: any) => e.defaultMessage
-                            ).join(' ') || error.response?.data?.message
-                            }`
+                            t('delete-error', {
+                                error: error.response?.data?.errors?.map(
+                                    (e: any) => e.defaultMessage
+                                ).join(' ') || error.response?.data?.message
+                            })
                         );
                     }
                 });
@@ -231,7 +234,7 @@ const StatusMatrix = () => {
 
     return (
         <div>
-            <h1>Cấu hình quy tắc chuyển trạng thái sinh viên</h1>
+            <h1>{t('title')}</h1>
             <Table
                 columns={columns}
                 dataSource={matrixData}
@@ -241,7 +244,7 @@ const StatusMatrix = () => {
             />
 
             <Modal
-                title={editingRule ? 'Sửa phép chuyển' : 'Thêm phép chuyển'}
+                title={editingRule ? t('edit-transition') : t('add-transition')}
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 onOk={handleOk}
@@ -249,8 +252,8 @@ const StatusMatrix = () => {
                 <Form form={form} layout="vertical">
                     <Form.Item
                         name="currentStatusName"
-                        label="Từ trạng thái"
-                        rules={[{ required: true }]}
+                        label={t('from-status')}
+                        rules={[{ required: true, message: t('required-from-status') }]}
                     >
                         <Select
                             options={statuses.map(s => ({
@@ -262,8 +265,8 @@ const StatusMatrix = () => {
                     </Form.Item>
                     <Form.Item
                         name="allowedTransitionName"
-                        label="Đến trạng thái"
-                        rules={[{ required: true }]}
+                        label={t('to-status')}
+                        rules={[{ required: true, message: t('required-to-status') }]}
                     >
                         <Select
                             options={statuses.map(s => ({

@@ -1,16 +1,18 @@
-import { Table, Button, Input, Tag, Popconfirm } from 'antd';
+import { Table, Button, Input, Tag } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RegisterResponse } from '@/interfaces/RegisterResponse';
+import { useTranslations } from 'next-intl';
 
 interface RegisterTableProps {
     registrations: RegisterResponse[];
-    onEdit: (data: RegisterResponse) => void;
+    onEdit: (registration: RegisterResponse) => void;
     loading?: boolean;
 }
 
 const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) => {
     const [searchText, setSearchText] = useState('');
+    const t = useTranslations('enroll-class');
 
     const filteredData = registrations.filter((item) =>
         item.studentId.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -21,22 +23,22 @@ const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) =
 
     const columns = [
         {
-            title: 'MSSV',
+            title: t('student-id'),
             dataIndex: 'studentId',
             key: 'studentId',
         },
         {
-            title: 'Họ tên',
+            title: t('student-name'),
             dataIndex: 'studentName',
             key: 'studentName',
         },
         {
-            title: 'Mã lớp',
+            title: t('class-code'),
             dataIndex: 'classCode',
             key: 'classCode',
         },
         {
-            title: 'Trạng thái',
+            title: t('status'),
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => {
@@ -47,14 +49,14 @@ const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) =
             },
         },
         {
-            title: 'Hành động',
+            title: t('actions'),
             key: 'action',
             render: (_: any, record: RegisterResponse) => (
                 <Button
                     icon={<EditOutlined />}
                     onClick={() => onEdit(record)}
                 >
-                    Sửa
+                    {t('edit')}
                 </Button>
             ),
         },
@@ -63,18 +65,16 @@ const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) =
     return (
         <div>
             <Input.Search
-                placeholder="Tìm theo MSSV, họ tên, mã lớp, tên môn học"
+                placeholder={t('search-placeholder')}
                 allowClear
                 onChange={(e) => setSearchText(e.target.value)}
-                style={{ marginBottom: 16, width: 350, float: 'right' }}
+                style={{
+                    marginBottom: 16,
+                    width: 300,
+                    float: 'right'
+                }}
             />
-            <Table
-                columns={columns}
-                dataSource={filteredData}
-                rowKey={(record) => `${record.studentId}-${record.classId}`}
-                pagination={{ pageSize: 10 }}
-                loading={loading}
-            />
+            <Table columns={columns} dataSource={filteredData} rowKey='id' loading={loading} />
         </div>
     );
 };

@@ -1,108 +1,111 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, message } from 'antd';
+import { Button, message, Card } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import RegisterTable from './RegisterTable';
 import RegisterModal from './RegisterModal';
 import { RegisterResponse } from '@/interfaces/RegisterResponse';
-import {
-    updateRegister as updateRegisterState,
-    addRegister as addRegisterState,
-} from '../actions/RegisterActions';
-import {
-    useCreateRegister,
-    useUpdateRegister,
-} from '@/libs/hooks/useRegisterMutation';
+import { useTranslations } from 'next-intl';
 import { useClasses } from '@/libs/hooks/useClassQuery';
 
-interface RegisterHomeProps {
-    initialRegisters: RegisterResponse[];
-}
-
-export default function RegisterHome({ initialRegisters }: RegisterHomeProps) {
-    const [registers, setRegisters] = useState<RegisterResponse[]>(initialRegisters);
+const Home = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedRegister, setSelectedRegister] = useState<RegisterResponse | null>(null);
+    const [selectedRegistration, setSelectedRegistration] = useState<RegisterResponse | null>(null);
+    const [registrations, setRegistrations] = useState<RegisterResponse[]>([]);
+    const [loading, setLoading] = useState(false);
     const [isResetModal, setIsResetModal] = useState(false);
-
+    const t = useTranslations('enroll-class');
     const { data: allClasses = [] } = useClasses();
 
-    const { mutate: createRegister, isPending: isCreating } = useCreateRegister();
-    const { mutate: updateRegister, isPending: isUpdating } = useUpdateRegister();
+    const handleAdd = () => {
+        setSelectedRegistration(null);
+        setIsModalVisible(true);
+    };
 
-    const handleAddOrUpdateRegister = (value: RegisterResponse) => {
-        if (selectedRegister) {
-            // If it's an update
-            updateRegister({ id: selectedRegister.id, value: { ...value, grade: value.grade ?? undefined } }, {
-                onSuccess: () => {
-                    message.success('Cập nhật đăng ký thành công');
-                    setRegisters(updateRegisterState(registers, value));
-                    setIsResetModal(true);
-                },
-                onError: (error: any) => {
-                    message.error(
-                        `Cập nhật thất bại: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                        error.response?.data?.message
-                        }`
-                    );
+    const handleEdit = (registration: RegisterResponse) => {
+        setSelectedRegistration(registration);
+        setIsModalVisible(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalVisible(false);
+        setSelectedRegistration(null);
+    };
+
+    const handleSubmit = async (data: RegisterResponse) => {
+        try {
+            if (selectedRegistration) {
+                // Update existing registration
+                const response = await fetch(`/api/registrations/${data.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    throw new Error(t('update-error'));
                 }
-            });
-        } else {
-            createRegister({ ...value, grade: value.grade ?? undefined }, {
-                onSuccess: () => {
-                    message.success('Thêm đăng ký thành công');
-                    setRegisters(addRegisterState(registers, value));
-                },
-                onError: (error: any) => {
-                    message.error(
-                        `Thêm thất bại: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                        error.response?.data?.message
-                        }`
-                    );
+
+                setRegistrations(registrations.map(reg => 
+                    reg.id === data.id ? data : reg
+                ));
+                message.success(t('update-success'));
+            } else {
+                // Create new registration
+                const response = await fetch('/api/registrations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    throw new Error(t('create-error'));
                 }
-            });
+
+                const newRegistration = await response.json();
+                setRegistrations([...registrations, newRegistration]);
+                message.success(t('create-success'));
+            }
+            handleModalClose();
+        } catch (error) {
+            message.error(error instanceof Error ? error.message : t('error'));
         }
     };
 
     return (
         <div>
-            <h1>Quản lý đăng ký lớp học</h1>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+            <Card>
                 <Button
                     type="primary"
                     icon={<PlusOutlined />}
-                    onClick={() => {
-                        setSelectedRegister(null);
-                        setIsModalVisible(true);
-                    }}
-                    loading={isCreating}
+                    onClick={handleAdd}
+                    style={{ marginBottom: 16 }}
                 >
-                    Thêm đăng ký
+                    {t('add-enrollment')}
                 </Button>
-            </div>
-
-            <RegisterTable
-                registrations={registers}
-                onEdit={(register) => {
-                    setSelectedRegister(register);
-                    setIsModalVisible(true);
-                }}
-                loading={isUpdating}
-            />
+                <RegisterTable
+                    registrations={registrations}
+                    onEdit={handleEdit}
+                    loading={loading}
+                />
+            </Card>
             <RegisterModal
                 visible={isModalVisible}
-                onCancel={() => {
-                    setIsModalVisible(false);
-                    setSelectedRegister(null);
-                }}
-                onSubmit={handleAddOrUpdateRegister}
-                registrationData={selectedRegister || undefined}
+                onCancel={handleModalClose}
+                onSubmit={handleSubmit}
+                registrationData={selectedRegistration || undefined}
                 allClasses={allClasses}
                 isResetModal={isResetModal}
                 setIsResetModal={setIsResetModal}
-                isUpdating={isUpdating}
+                isUpdating={loading}
             />
         </div>
     );
-}
+};
+
+export default Home;
