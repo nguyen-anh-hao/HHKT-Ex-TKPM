@@ -161,6 +161,10 @@ Bảng điểm sinh viên
 
 ![image](https://github.com/user-attachments/assets/0a7666e6-989b-4172-bdbe-45a6497c72c4)
 
+### Version 6.0: Thêm đa ngôn ngữ
+
+![image](https://github.com/user-attachments/assets/b983582e-6142-49cf-8c7d-cb4fd0fe7647)
+
 
 ## Database
 
