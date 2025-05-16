@@ -79,21 +79,20 @@ const Home = () => {
 
     return (
         <div>
-            <Card>
-                <Button
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    onClick={handleAdd}
-                    style={{ marginBottom: 16 }}
-                >
-                    {t('add-enrollment')}
-                </Button>
-                <RegisterTable
-                    registrations={registrations}
-                    onEdit={handleEdit}
-                    loading={loading}
-                />
-            </Card>
+            <h1>{t('enroll-class')}</h1>
+            <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={handleAdd}
+                style={{ marginBottom: 16 }}
+            >
+                {t('add-enrollment')}
+            </Button>
+            <RegisterTable
+                registrations={registrations}
+                onEdit={handleEdit}
+                loading={loading}
+            />
             <RegisterModal
                 visible={isModalVisible}
                 onCancel={handleModalClose}

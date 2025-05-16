@@ -45,7 +45,9 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
     const handleLocaleChange = (value: string) => {
         Cookies.set('NEXT_LOCALE', value);
         setLocale(value);
-        router.refresh();
+        // router.refresh();
+        // Optionally, you can force a page refresh to apply the new locale immediately
+        window.location.reload();
     };
 
     return (
