@@ -21,17 +21,6 @@ import java.util.Set;
 public class StudentStatusRulesConfig {
     private Map<String, Set<String>> studentStatusRulesMap;
     private final IStudentStatusRuleService studentStatusRuleService;
-//    public StudentStatusRulesConfig() throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config/student-status-rules.json");
-//        if (inputStream == null) {
-//            log.error("student-status-rules.json not found");
-//            throw new RuntimeException("student-status-rules.json not found");
-//        }
-//        log.info("Loading student status rules from student-status-rules.json");
-//        studentStatusRulesMap = objectMapper.readValue(inputStream, new TypeReference<>() {});
-//        log.info("Successfully loaded student status rules");
-//    }
 
     @PostConstruct
     public void loadStudentRules() {

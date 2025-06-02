@@ -72,11 +72,94 @@ INSERT INTO student_status_rules (current_status_id, allowed_transition_id) VALU
 
 -- "Tạm dừng học" can transition to:
 (2, 1),  -- Đang học
-(2, 4)  -- Đã thôi học
+(2, 4);  -- Đã thôi học
 
 -- "Đã tốt nghiệp" has no transitions
 
 -- "Đã thôi học" has no transitions;
+
+INSERT INTO courses (course_code, course_name, credits, faculty_id, description, prerequisite_course_id, is_active, created_by, updated_by)
+VALUES
+    ('CS101', 'Nhập môn Lập trình', 3, 1, 'Các khái niệm lập trình cơ bản', NULL, TRUE, 'admin', 'admin'),
+    ('CS102', 'Cấu trúc Dữ liệu', 3, 1, 'Nghiên cứu về cấu trúc dữ liệu', 1, TRUE, 'admin', 'admin'),
+    ('CS103', 'Thuật toán', 3, 1, 'Kiến thức nền tảng về thuật toán', 2, TRUE, 'admin', 'admin'),
+    ('CS104', 'Hệ quản trị Cơ sở dữ liệu', 3, 2, 'Thiết kế cơ sở dữ liệu và SQL', NULL, TRUE, 'admin', 'admin'),
+    ('CS105', 'Mạng Máy tính', 3, 3, 'Giao thức mạng và an ninh mạng', NULL, TRUE, 'admin', 'admin'),
+    ('CS106', 'Hệ điều hành', 3, 1, 'Tiến trình, luồng và quản lý bộ nhớ', NULL, TRUE, 'admin', 'admin'),
+    ('CS107', 'Kỹ thuật Phần mềm', 3, 2, 'Vòng đời phát triển phần mềm', NULL, TRUE, 'admin', 'admin'),
+    ('CS108', 'Trí tuệ Nhân tạo', 3, 3, 'Học máy và các khái niệm AI', 3, TRUE, 'admin', 'admin'),
+    ('CS109', 'An ninh Mạng', 3, 3, 'Các mối đe dọa và biện pháp bảo mật', NULL, TRUE, 'admin', 'admin'),
+    ('CS110', 'Điện toán Đám mây', 3, 1, 'Giới thiệu về các dịch vụ đám mây', 4, TRUE, 'admin', 'admin');
+
+INSERT INTO semesters (academic_year, semester, start_date, end_date, last_cancel_date)
+VALUES
+    ('2023-2024', 1, '2023-09-01', '2023-12-31', '2023-10-15'), -- Fall
+    ('2023-2024', 2, '2024-01-10', '2024-04-30', '2024-02-28'), -- Spring
+    ('2023-2024', 3, '2024-06-01', '2024-07-31', '2024-06-20'), -- Summer
+
+    ('2024-2025', 1, '2024-09-05', '2024-12-25', '2024-10-20'), -- Fall
+    ('2024-2025', 2, '2025-01-08', '2025-04-28', '2025-02-25'), -- Spring
+    ('2024-2025', 3, '2025-06-05', '2025-07-30', '2025-06-18'), -- Summer
+
+    ('2025-2026', 1, '2025-09-03', '2025-12-20', '2025-10-10'), -- Fall
+    ('2025-2026', 2, '2026-01-12', '2026-04-25', '2026-02-22'), -- Spring
+    ('2025-2026', 3, '2026-06-07', '2026-08-01', '2026-06-22'), -- Summer
+
+    ('2026-2027', 1, '2026-09-04', '2026-12-22', '2026-10-12'); -- Fall
+
+
+INSERT INTO lecturers (full_name, email, phone, faculty_id)
+VALUES
+    ('TS. Nguyễn Văn A', 'nguyenvana@university.edu', '0912345678', 1),
+    ('TS. Trần Thị B', 'tranthib@university.edu', '0923456789', 1),
+    ('GS. Lê Thị C', 'lethic@university.edu', '0934567890', 2),
+    ('TS. Phạm Văn D', 'phamvand@university.edu', '0945678901', 2),
+    ('TS. Đặng Thị E', 'dangthie@university.edu', '0956789012', 3),
+    ('TS. Hồ Văn F', 'hovanf@university.edu', '0967890123', 3),
+    ('GS. Vũ Thị G', 'vuthig@university.edu', '0978901234', 1),
+    ('TS. Bùi Văn H', 'buivanh@university.edu', '0989012345', 2),
+    ('TS. Nguyễn Thị I', 'nguyenthii@university.edu', '0990123456', 3),
+    ('TS. Lê Văn K', 'levank@university.edu', '0901234567', 1);
+
+INSERT INTO classes (class_code, course_id, semester_id, lecturer_id, max_students, schedule, room)
+VALUES
+    ('CS101-01', 1, 1, 1, 50, 'Thứ Hai - Thứ Tư 10:00-12:00', 'A101'),
+    ('CS102-01', 2, 1, 2, 40, 'Thứ Ba - Thứ Năm 14:00-16:00', 'B201'),
+    ('CS103-01', 3, 2, 3, 45, 'Thứ Hai - Thứ Tư 08:00-10:00', 'C301'),
+    ('CS104-01', 4, 2, 4, 35, 'Thứ Sáu 09:00-12:00', 'D401'),
+    ('CS105-01', 5, 3, 5, 60, 'Thứ Ba - Thứ Năm 10:00-12:00', 'E501'),
+    ('CS106-01', 6, 3, 6, 30, 'Thứ Tư 14:00-17:00', 'F601'),
+    ('CS107-01', 7, 1, 7, 50, 'Thứ Năm 09:00-12:00', 'G701'),
+    ('CS108-01', 8, 2, 8, 40, 'Thứ Hai 14:00-17:00', 'H801'),
+    ('CS109-01', 9, 3, 9, 55, 'Thứ Sáu 08:00-11:00', 'I901'),
+    ('CS110-01', 10, 1, 10, 50, 'Thứ Tư 09:00-12:00', 'J1001');
+
+
+INSERT INTO class_registrations (student_id, class_id, status, grade)
+VALUES
+    ('SV001', 1, 'REGISTERED', NULL),
+    ('SV002', 2, 'REGISTERED', NULL),
+    ('SV003', 3, 'REGISTERED', NULL),
+    ('SV004', 4, 'CANCELLED', NULL),
+    ('SV005', 5, 'CANCELLED', NULL),
+    ('SV006', 6, 'CANCELLED', NULL),
+    ('SV007', 7, 'COMPLETED', 9.5),
+    ('SV008', 8, 'COMPLETED', 8.0),
+    ('SV009', 9, 'COMPLETED', 7.5),
+    ('SV010', 10, 'COMPLETED', 6.0);
+
+INSERT INTO class_registration_history (class_registration_id, action, reason)
+VALUES
+    (1, 'REGISTERED', 'Đăng ký học phần'),
+    (2, 'REGISTERED', 'Đăng ký học phần'),
+    (3, 'REGISTERED', 'Đăng ký học phần'),
+    (4, 'CANCELLED', 'Hủy đăng ký học phần'),
+    (5, 'CANCELLED', 'Hủy đăng ký học phần'),
+    (6, 'CANCELLED', 'Hủy đăng ký học phần'),
+    (7, 'COMPLETED', 'Hoàn thành học phần'),
+    (8, 'COMPLETED', 'Hoàn thành học phần'),
+    (9, 'COMPLETED', 'Hoàn thành học phần'),
+    (10, 'COMPLETED', 'Hoàn thành học phần');
 
 -- Thêm dữ liệu mẫu số điện thoại đơn giản chỉ với format quốc tế
 INSERT INTO phone_patterns (country_code, regex_pattern, description) VALUES

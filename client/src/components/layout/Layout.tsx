@@ -1,29 +1,34 @@
 'use client'
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined, ApartmentOutlined, HomeOutlined, SwapOutlined } from '@ant-design/icons';
-import { Button, Menu, theme, Layout as AntdLayout, Typography } from 'antd';
-import { Content, Header } from 'antd/es/layout/layout';
-import Sider from 'antd/es/layout/Sider';
-import {useRouter, usePathname} from 'next/navigation';
-
-import { useState } from 'react';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined, FileTextOutlined, ApartmentOutlined, BookOutlined, SwapOutlined } from '@ant-design/icons';
+import { Button, Menu, Layout as AntdLayout, Typography, Select } from 'antd';
+import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
+import { useTranslations } from 'next-intl';
 
-const menuItems = [
-    { key: '1', icon: <HomeOutlined />, label: 'Trang chủ', route: '/' },
-    { key: '2', icon: <UserOutlined />, label: 'Quản lý sinh viên', route: '/student-management' },
-    { key: '3', icon: <ApartmentOutlined />, label: 'Quản lý danh mục', route: '/reference-management' },
-    { key: '4', icon: <SwapOutlined />, label: 'Nhập xuất dữ liệu', route: '/inputoutput-data-management' },
-    { key: '5', icon: <SettingOutlined />, label: 'Cấu hình', route: '/configuration' },
-];
+const { Header, Content, Sider } = AntdLayout;
 
-export default function Layout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
+export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
     const [collapsed, setCollapsed] = useState(false);
-    const router = useRouter();
+    const [locale, setLocale] = useState<string>('en');    const router = useRouter();
+    const pathname = usePathname();
+    const queryClient = new QueryClient();
+    const t = useTranslations('common');    useEffect(() => {
+        const savedLocale = Cookies.get('NEXT_LOCALE') || 'en';
+        setLocale(savedLocale);
+    }, []);
+
+    const menuItems = [
+        { key: '2', icon: <UserOutlined />, label: t('student-management'), route: '/student-management' },
+        { key: '3', icon: <ApartmentOutlined />, label: t('reference-management'), route: '/reference-management' },
+        { key: '4', icon: <SettingOutlined />, label: t('status-rules-configuration'), route: '/status-rules-configuration' },
+        { key: '5', icon: <BookOutlined />, label: t('course-management'), route: '/course-management' },
+        { key: '6', icon: <TeamOutlined />, label: t('class-management'), route: '/class-management' },
+        { key: '7', icon: <SwapOutlined />, label: t('enroll-class'), route: '/enroll-class' },
+        { key: '8', icon: <FileTextOutlined />, label: t('transcript'), route: '/transcript' },
+    ];
 
     const handleMenuClick = (e: any) => {
         const selectedItem = menuItems.find(item => item.key === e.key);
@@ -33,11 +38,17 @@ export default function Layout({
     };
 
     const getKeyFromUrl = (url: string) => {
-        const foundItem = menuItems.find(item => item.route === url);
+        const foundItem = menuItems.find(item => url.startsWith(item.route));
         return foundItem ? foundItem.key : '1';
     };
 
-    const queryClient = new QueryClient();
+    const handleLocaleChange = (value: string) => {
+        Cookies.set('NEXT_LOCALE', value);
+        setLocale(value);
+        // router.refresh();
+        // Optionally, you can force a page refresh to apply the new locale immediately
+        window.location.reload();
+    };
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -47,8 +58,8 @@ export default function Layout({
                         <TeamOutlined />
                     </Typography.Title>
                     <Menu
-                        mode="inline"
-                        selectedKeys={[getKeyFromUrl(usePathname())]}
+                        mode='inline'
+                        selectedKeys={[getKeyFromUrl(pathname)]}
                         onClick={handleMenuClick}
                         items={menuItems.map(item => ({
                             key: item.key,
@@ -57,21 +68,30 @@ export default function Layout({
                         }))}
                     />
                 </Sider>
-                <AntdLayout className="site-layout">
-                    <Header style={{ padding: 0, background: '#FFFFFF' }} >
+                <AntdLayout className='site-layout'>
+                    <Header style={{ padding: 0, background: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Button
-                            type="text"
+                            type='text'
                             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                             onClick={() => setCollapsed(!collapsed)}
-                            style={{
-                                fontSize: '16px',
-                                width: 64,
-                                height: 64,
-                            }}
+                            style={{ fontSize: '16px', width: 64, height: 64 }}
                         />
+                        <div style={{ marginRight: '16px' }}>
+                            <Typography.Text style={{ marginRight: '8px' }}>{t('language')}:</Typography.Text>
+                            <Select
+                                key={locale}
+                                value={locale}
+                                onChange={handleLocaleChange}
+                                style={{ width: 120 }}
+                                options={[
+                                    { value: 'en', label: 'English' },
+                                    { value: 'vi', label: 'Tiếng Việt' },
+                                ]}
+                            />
+                        </div>
                     </Header>
                     <Content
-                        className="site-layout-background"
+                        className='site-layout-background'
                         style={{
                             margin: '24px 16px',
                             padding: 24,

@@ -1,7 +1,7 @@
+import { redirect } from 'next/navigation';
+
 const Home = () => {
-    return (
-      <div>Hello World</div>
-    );
+  redirect('/student-management');
 };
 
 export default Home;

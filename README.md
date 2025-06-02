@@ -6,53 +6,25 @@
 ├── client/
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── configuration/
-│   │   │   │   └── page.tsx
-│   │   │   ├── inputoutput-data-management/
-│   │   │   │   └── page.tsx
+│   │   │   ├── class-management/
+│   │   │   ├── course-management/
+│   │   │   ├── enroll-class/
 │   │   │   ├── reference-management/
-│   │   │   │   └── page.tsx
+│   │   │   ├── status-rules-configuration/
 │   │   │   ├── student-management/
-│   │   │   │   ├── actions/
-│   │   │   │   │   └── StudentActions.ts
-│   │   │   │   ├── components/
-│   │   │   │   │   ├── Home.tsx
-│   │   │   │   │   ├── StudentModal.tsx
-│   │   │   │   │   └── StudentTable.tsx
-│   │   │   │   └── page.tsx
+│   │   │   ├── transcript/
 │   │   │   ├── favicon.ico
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   ├── components/
-│   │   │   └── layout/
-│   │   │       └── Layout.tsx
 │   │   ├── interfaces/
-│   │   │   ├── Address.ts
-│   │   │   ├── CreateStudentRequest.ts
-│   │   │   ├── Identify.ts
-│   │   │   ├── Student.ts
-│   │   │   ├── StudentResponse.ts
-│   │   │   └── UpdateStudentRequest.ts
 │   │   └── libs/
 │   │       ├── api/
-│   │       │   ├── api.ts
-│   │       │   ├── referenceApi.ts
-│   │       │   └── studentApi.ts
 │   │       ├── hooks/
-│   │       │   ├── useReferences.ts
-│   │       │   ├── useStudentMutation.ts
-│   │       │   └── useStudents.ts
 │   │       ├── services/
-│   │       │   ├── referenceService.ts
-│   │       │   └── studentService.ts
 │   │       ├── stores/
-│   │       │   └── referenceStore.ts
 │   │       ├── utils/
-│   │       │   ├── cleanData.ts
-│   │       │   └── studentTransform.ts
 │   │       └── validators/
-│   │           ├── dataValidation.ts
-│   │           └── studentValidator.ts
 │   ├── .gitignore
 │   ├── README.md
 │   ├── eslint.config.mjs
@@ -68,17 +40,6 @@
 │   ├── .mvn/
 │   │   └── wrapper/
 │   │       └── maven-wrapper.properties
-│   ├── node_modules/
-│   │   └── .cache/
-│   │       └── _logs/
-│   │           ├── 2025-03-19T12_36_48_635Z-debug-0.log
-│   │           ├── 2025-03-20T00_36_41_407Z-debug-0.log
-│   │           ├── 2025-03-21T06_32_07_932Z-debug-0.log
-│   │           ├── 2025-03-25T03_04_41_647Z-debug-0.log
-│   │           ├── 2025-03-26T13_40_07_391Z-debug-0.log
-│   │           ├── 2025-03-27T01_39_25_715Z-debug-0.log
-│   │           ├── 2025-03-27T13_38_54_714Z-debug-0.log
-│   │           └── 2025-03-28T07_10_26_098Z-debug-0.log
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/
@@ -86,114 +47,25 @@
 │   │   │   │       └── example/
 │   │   │   │           └── backend/
 │   │   │   │               ├── common/
-│   │   │   │               │   ├── Auditable.java
-│   │   │   │               │   └── PaginationInfo.java
 │   │   │   │               ├── config/
-│   │   │   │               │   ├── AuditorAwareConfig.java
-│   │   │   │               │   ├── CorsConfig.java
-│   │   │   │               │   ├── JacksonConfig.java
-│   │   │   │               │   ├── OpenAPIConfig.java
-│   │   │   │               │   └── StudentStatusRulesConfig.java
 │   │   │   │               ├── controller/
-│   │   │   │               │   ├── EmailDomainController.java
-│   │   │   │               │   ├── FacultyController.java
-│   │   │   │               │   ├── FileTransferController.java
-│   │   │   │               │   ├── ProgramController.java
-│   │   │   │               │   ├── StudentController.java
-│   │   │   │               │   ├── StudentStatusController.java
-│   │   │   │               │   └── StudentStatusRuleController.java
 │   │   │   │               ├── domain/
-│   │   │   │               │   ├── Address.java
-│   │   │   │               │   ├── Document.java
-│   │   │   │               │   ├── EmailDomain.java
-│   │   │   │               │   ├── Faculty.java
-│   │   │   │               │   ├── PhonePattern.java
-│   │   │   │               │   ├── Program.java
-│   │   │   │               │   ├── Student.java
-│   │   │   │               │   ├── StudentStatus.java
-│   │   │   │               │   └── StudentStatusRule.java
 │   │   │   │               ├── dto/
+│   │   │   │               │   ├── data/
 │   │   │   │               │   ├── request/
-│   │   │   │               │   │   ├── AddressRequest.java
-│   │   │   │               │   │   ├── DocumentRequest.java
-│   │   │   │               │   │   ├── EmailDomainRequest.java
-│   │   │   │               │   │   ├── FacultyRequest.java
-│   │   │   │               │   │   ├── ProgramRequest.java
-│   │   │   │               │   │   ├── StudentRequest.java
-│   │   │   │               │   │   ├── StudentStatusRequest.java
-│   │   │   │               │   │   ├── StudentStatusRuleRequest.java
-│   │   │   │               │   │   └── StudentUpdateRequest.java
 │   │   │   │               │   └── response/
-│   │   │   │               │       ├── APIResponse.java
-│   │   │   │               │       ├── AddressResponse.java
-│   │   │   │               │       ├── DocumentResponse.java
-│   │   │   │               │       ├── EmailDomainResponse.java
-│   │   │   │               │       ├── FacultyResponse.java
-│   │   │   │               │       ├── ProgramResponse.java
-│   │   │   │               │       ├── StudentResponse.java
-│   │   │   │               │       ├── StudentStatusResponse.java
-│   │   │   │               │       └── StudentStatusRuleResponse.java
 │   │   │   │               ├── mapper/
-│   │   │   │               │   ├── AddressMapper.java
-│   │   │   │               │   ├── DocumentMapper.java
-│   │   │   │               │   ├── EmailDomainMapper.java
-│   │   │   │               │   ├── FacultyMapper.java
-│   │   │   │               │   ├── ProgramMapper.java
-│   │   │   │               │   ├── StudentMapper.java
-│   │   │   │               │   ├── StudentStatusMapper.java
-│   │   │   │               │   └── StudentStatusRuleMapper.java
 │   │   │   │               ├── repository/
-│   │   │   │               │   ├── IAddressRepository.java
-│   │   │   │               │   ├── IDocumentRepository.java
-│   │   │   │               │   ├── IEmailDomainRepository.java
-│   │   │   │               │   ├── IFacultyRepository.java
-│   │   │   │               │   ├── IPhonePatternRepository.java
-│   │   │   │               │   ├── IProgramRepository.java
-│   │   │   │               │   ├── IStudentRepository.java
-│   │   │   │               │   ├── IStudentStatusRepository.java
-│   │   │   │               │   └── IStudentStatusRuleRepository.java
 │   │   │   │               ├── service/
 │   │   │   │               │   ├── Import/
-│   │   │   │               │   │   ├── CSVImportService.java
-│   │   │   │               │   │   ├── ExcelImportService.java
-│   │   │   │               │   │   ├── ImportService.java
-│   │   │   │               │   │   ├── ImportServiceFactory.java
-│   │   │   │               │   │   ├── JSONImportService.java
-│   │   │   │               │   │   └── XMLImportService.java
 │   │   │   │               │   ├── export/
-│   │   │   │               │   │   ├── CSVExportService.java
-│   │   │   │               │   │   ├── ExcelExportService.java
-│   │   │   │               │   │   ├── ExportService.java
-│   │   │   │               │   │   ├── ExportServiceFactory.java
-│   │   │   │               │   │   ├── JSONExportService.java
-│   │   │   │               │   │   └── XMLExportService.java
 │   │   │   │               │   ├── impl/
-│   │   │   │               │   │   ├── EmailDomainServiceImpl.java
-│   │   │   │               │   │   ├── FacultyServiceImpl.java
-│   │   │   │               │   │   ├── ProgramServiceImpl.java
-│   │   │   │               │   │   ├── StudentServiceImpl.java
-│   │   │   │               │   │   ├── StudentStatusRuleServiceImpl.java
-│   │   │   │               │   │   └── StudentStatusServiceImpl.java
-│   │   │   │               │   ├── IEmailDomainService.java
-│   │   │   │               │   ├── IFacultyService.java
-│   │   │   │               │   ├── IProgramService.java
-│   │   │   │               │   ├── IStudentService.java
-│   │   │   │               │   ├── IStudentStatusRuleService.java
-│   │   │   │               │   └── IStudentStatusService.java
 │   │   │   │               ├── validator/
-│   │   │   │               │   ├── EmailDomain.java
-│   │   │   │               │   ├── EmailDomainValidator.java
-│   │   │   │               │   ├── PhoneNumber.java
-│   │   │   │               │   ├── PhoneNumberValidator.java
-│   │   │   │               │   ├── StudentStatusTransitionValidator.java
-│   │   │   │               │   └── ValidStudentStatusTransition.java
 │   │   │   │               └── BackendApplication.java
 │   │   │   └── resources/
 │   │   │       ├── config/
-│   │   │       │   └── student-status-rules.json
 │   │   │       ├── db/
-│   │   │       │   ├── 1_create_table.sql
-│   │   │       │   └── 2_insert_data.sql
+│   │   │       ├── font/
 │   │   │       └── application.yml
 │   │   └── test/
 │   │       └── java/
@@ -201,18 +73,8 @@
 │   │               └── example/
 │   │                   └── backend/
 │   │                       ├── controller/
-│   │                       │   ├── EmailDomainControllerTest.java
-│   │                       │   ├── FacultyControllerTest.java
-│   │                       │   ├── ProgramControllerTest.java
-│   │                       │   └── StudentStatusControllerTest.java
 │   │                       ├── service/
-│   │                       │   ├── EmailDomainServiceTest.java
-│   │                       │   ├── FacultyServiceTest.java
-│   │                       │   ├── ProgramServiceTest.java
-│   │                       │   └── StudentStatusServiceTest.java
 │   │                       ├── validator/
-│   │                       │   ├── EmailDomainValidatorTest.java
-│   │                       │   └── PhoneNumberValidatorTest.java
 │   │                       └── BackendApplicationTests.java
 │   ├── .gitattributes
 │   ├── .gitignore
@@ -266,23 +128,43 @@ Backend API (Swagger)
 
 Để xem danh sách sinh viên, vào mục "Quản lý sinh viên", ở đây cũng có thể xóa, sửa sinh viên
 
-![image](https://github.com/user-attachments/assets/c67179a9-3ea7-4b8f-84ed-30abaffc9ab0)
+![image](https://github.com/user-attachments/assets/303fc915-145b-4f12-9303-98316ec24c12)
+
 
 Để thêm sinh viên, ấn nút bấm "Thêm sinh viên"
 
 ![image](https://github.com/user-attachments/assets/f71057c1-922a-4055-89bf-bcb3077d0a9b)
 
-Để thêm, xóa, sửa các nhãn mới cho Khoa, Chương trình, Trạng thái, vào mục "Quản lý danh muc"
+Để thêm, xóa, sửa các nhãn mới cho Khoa, Chương trình, Trạng thái, Domain Email vào mục "Quản lý danh muc"
 
-![image](https://github.com/user-attachments/assets/3e906e30-5837-45fd-929a-11931e88275f)
+![image](https://github.com/user-attachments/assets/b41e3421-af03-42a3-b03f-adcf99678cb4)
 
-Để nhập xuất dữ liệu, vào mục "Nhập xuất dữ liệu"
+Cấu hình quy tắc chuyển trạng thái sinh viên
 
-![image](https://github.com/user-attachments/assets/4234a42c-4838-4a5b-95e8-2c29eb700916)
+![image](https://github.com/user-attachments/assets/5de8f980-5c2e-4daf-a2ad-0b5e88860226)
 
-Cấu hình Business Rules
+Quản lý môn học
 
-![image](https://github.com/user-attachments/assets/9474a02b-5edd-441e-8406-f19527e4ecd2)
+![image](https://github.com/user-attachments/assets/489c371b-9b44-4b73-90b9-e2a0784eaefd)
+
+Quản lý lớp học
+
+![image](https://github.com/user-attachments/assets/783cdf1a-0219-4782-93d7-46a97fe1fb60)
+
+Quản lý đăng ký lớp học
+
+![image](https://github.com/user-attachments/assets/abd295fc-8581-4a3f-957e-c27caa8b0f00)
+
+Bảng điểm sinh viên
+
+![image](https://github.com/user-attachments/assets/4933647a-d89e-4da1-9363-be3dd2b33e01)
+
+![image](https://github.com/user-attachments/assets/0a7666e6-989b-4172-bdbe-45a6497c72c4)
+
+### Version 6.0: Thêm đa ngôn ngữ
+
+![image](https://github.com/user-attachments/assets/b983582e-6142-49cf-8c7d-cb4fd0fe7647)
+
 
 ## Database
 

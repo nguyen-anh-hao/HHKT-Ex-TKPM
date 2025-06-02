@@ -1,0 +1,104 @@
+<students>
+    <student>
+        <studentId>SV026</studentId>
+        <fullName>Nguyễn Hoàng Anh</fullName>
+        <dob>2002-05-10</dob>
+        <gender>Male</gender>
+        <facultyId>1</facultyId>
+        <intake>K20</intake>
+        <programId>2</programId>
+        <email>nguyenhoanganh@example.com</email>
+        <phone>0987938321</phone>
+        <studentStatusId>2</studentStatusId>
+        <nationality>Việt Nam</nationality>
+        <addresses>
+            <address>
+                <addressType>Permanent</addressType>
+                <houseNumberStreetName>123 Lê Lợi</houseNumberStreetName>
+                <wardCommune>Phường 1</wardCommune>
+                <district>Quận 3</district>
+                <cityProvince>TP.HCM</cityProvince>
+                <country>Việt Nam</country>
+            </address>
+            <address>
+                <addressType>Temporary</addressType>
+                <houseNumberStreetName>456 Trần Hưng Đạo</houseNumberStreetName>
+                <wardCommune>Phường 5</wardCommune>
+                <district>Quận 1</district>
+                <cityProvince>TP.HCM</cityProvince>
+                <country>Việt Nam</country>
+            </address>
+        </addresses>
+        <documents>
+            <document>
+                <documentType>Citizen ID</documentType>
+                <documentNumber>129286702712</documentNumber>
+                <issuedDate>2020-10-01</issuedDate>
+                <expiredDate>2030-10-01</expiredDate>
+                <issuedBy>TP.HCM</issuedBy>
+                <issuedCountry>Việt Nam</issuedCountry>
+                <note></note>
+                <hasChip>true</hasChip>
+            </document>
+        </documents>
+    </student>
+    <student>
+        <studentId>SV027</studentId>
+        <fullName>Trần Thị Bành</fullName>
+        <dob>2001-08-15</dob>
+        <gender>Female</gender>
+        <facultyId>2</facultyId>
+        <intake>K19</intake>
+        <programId>2</programId>
+        <email>tranthibanha@example.com</email>
+        <phone>0978372210</phone>
+        <studentStatusId>2</studentStatusId>
+        <nationality>Việt Nam</nationality>
+        <addresses>
+            <address>
+                <addressType>Permanent</addressType>
+                <houseNumberStreetName>789 Nguyễn Huệ</houseNumberStreetName>
+                <wardCommune>Phường 2</wardCommune>
+                <district>Quận 4</district>
+                <cityProvince>TP.HCM</cityProvince>
+                <country>Việt Nam</country>
+            </address>
+        </addresses>
+        <documents>
+            <document>
+                <documentType>Passport</documentType>
+                <documentNumber>B1233192</documentNumber>
+                <issuedDate>2019-06-15</issuedDate>
+                <expiredDate>2029-06-15</expiredDate>
+                <issuedBy>Hà Nội</issuedBy>
+                <issuedCountry>Việt Nam</issuedCountry>
+                <note>Used for studying abroad</note>
+                <hasChip>false</hasChip>
+            </document>
+        </documents>
+    </student>
+    <student>
+        <studentId>SV028</studentId>
+        <fullName>Lê Hoàng Công Toàn</fullName>
+        <dob>2003-03-22</dob>
+        <gender>Male</gender>
+        <facultyId>1</facultyId>
+        <intake>K21</intake>
+        <programId>2</programId>
+        <email>lehoangcongtoan@example.com</email>
+        <phone>0965438881</phone>
+        <studentStatusId>1</studentStatusId>
+        <nationality>Việt Nam</nationality>
+        <addresses>
+            <address>
+                <addressType>Permanent</addressType>
+                <houseNumberStreetName>234 Hai Bà Trưng</houseNumberStreetName>
+                <wardCommune>Phường 6</wardCommune>
+                <district>Quận 1</district>
+                <cityProvince>TP.HCM</cityProvince>
+                <country>Việt Nam</country>
+            </address>
+        </addresses>
+        <documents/>
+    </student>
+</students>

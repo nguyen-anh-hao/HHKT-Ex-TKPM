@@ -10,6 +10,8 @@ import org.example.backend.mapper.StudentStatusRuleMapper;
 import org.example.backend.repository.IStudentStatusRepository;
 import org.example.backend.repository.IStudentStatusRuleRepository;
 import org.example.backend.service.IStudentStatusRuleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -102,6 +104,23 @@ public class StudentStatusRuleServiceImpl implements IStudentStatusRuleService {
         log.info("Successfully fetched student status rule with ID: {}", id);
 
         return StudentStatusRuleMapper.mapFromDomainToStudentStatusRuleResponse(studentStatusRule);
+    }
+
+    @Override
+    public Page<StudentStatusRuleResponse> getAllStudentStatusRules(Pageable pageable) {
+        log.info("Fetching all student status rules");
+
+        Page<StudentStatusRule> studentStatusRules;
+        try {
+            studentStatusRules = studentStatusRuleRepository.findAll(pageable);
+        } catch (Exception e) {
+            log.error("Error fetching student status rules", e);
+            throw new RuntimeException("Error fetching student status rules", e);
+        }
+
+        log.info("Successfully fetched all student status rules");
+
+        return studentStatusRules.map(StudentStatusRuleMapper::mapFromDomainToStudentStatusRuleResponse);
     }
 
     @Override

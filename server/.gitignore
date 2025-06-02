@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Ignore npm/yarn/pnpm cache logs
+node_modules/.cache/_logs/
+
 ### STS ###
 .apt_generated
 .classpath
@@ -31,3 +34,4 @@ build/
 
 ### VS Code ###
 .vscode/
+.node_modules/

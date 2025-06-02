@@ -1,15 +1,17 @@
-import { Table, Button, Popconfirm, Input } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Student } from "@/interfaces/Student";
-import moment from "moment";
-import { useState } from "react";
-import { SortOrder } from "antd/es/table/interface";
-import { useEffect } from "react";
-import { fetchReference } from "@/libs/services/referenceService";
+import { Table, Button, Popconfirm, Input } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Student } from '@/interfaces/Student';
+import moment from 'moment';
+import { useState } from 'react';
+import { SortOrder } from 'antd/es/table/interface';
+import { useEffect } from 'react';
+import { fetchReference } from '@/libs/services/referenceService';
+import { useTranslations } from 'next-intl';
 
 const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState('');
     const [facultyOptions, setFacultyOptions] = useState<{ text: string; value: string }[]>([]);
+    const t = useTranslations('student-management');
 
     const filteredStudents = students.filter((student: Student) =>
         student.studentId.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -18,7 +20,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
     
     useEffect(() => {
         const fetchFacultyOptions = async () => {
-            const response = await fetchReference("faculties");
+            const response = await fetchReference('faculties');
             const options = response.map((option: any) => ({
                 text: option.facultyName,
                 value: option.facultyName,
@@ -30,23 +32,23 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
     }, []);
 
     const columns = [
-        { title: "MSSV", dataIndex: "studentId", sorter: (a: Student, b: Student) => a.studentId.localeCompare(b.studentId), defaultSortOrder: "ascend" as SortOrder, sortDirections: ["ascend", "descend"] as SortOrder[] },
-        { title: "Họ tên", dataIndex: "fullName" },
-        { title: "Ngày sinh", dataIndex: "dob", render: (dob: string) => moment(dob).format("YYYY-MM-DD") },
-        { title: "Giới tính", dataIndex: "gender" },
+        { title: t('mssv'), dataIndex: 'studentId'},
+        { title: t('full-name'), dataIndex: 'fullName' },
+        { title: t('dob'), dataIndex: 'dob', render: (dob: string) => moment(dob).format('YYYY-MM-DD') },
+        { title: t('gender'), dataIndex: 'gender' },
         {
-            title: "Khoa",
-            dataIndex: "faculty",
+            title: t('faculty'),
+            dataIndex: 'faculty',
             filters: facultyOptions?.map((option) => ({
                 text: option.text,
                 value: option.value,
             })) || [],
             onFilter: (value: any, record: Student) => record.faculty === value as string,
         },
-        { title: "Khóa", dataIndex: "intake" },
-        { title: "Tình trạng", dataIndex: "studentStatus" },
+        { title: t('year'), dataIndex: 'intake' },
+        { title: t('state'), dataIndex: 'studentStatus' },
         {
-            title: "Hành động",
+            title: t('actions'),
             render: (_: any, record: Student) => (
                 <>
                     <Button
@@ -57,16 +59,16 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
                             openModal(true);
                         }}
                     >
-                        Sửa
+                        {t('edit')}
                     </Button>
                     <Popconfirm
-                        title="Bạn có chắc chắn muốn xóa sinh viên này?"
+                        title={t('confirm-delete')}
                         onConfirm={() => onDelete(record.studentId)}
-                        okText="Xóa"
-                        cancelText="Hủy"
+                        okText={t('delete')}
+                        cancelText={t('cancel')}
                     >
                         <Button icon={<DeleteOutlined />} danger>
-                            Xóa
+                            {t('delete')}
                         </Button>
                     </Popconfirm>
                 </>
@@ -77,7 +79,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
     return (
         <div>
             <Input.Search
-                placeholder="Tìm kiếm theo MSSV hoặc họ tên"
+                placeholder={t('search-placeholder')}
                 allowClear
                 onChange={(e) => setSearchText(e.target.value)}
                 style={{
@@ -86,7 +88,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
                     float: 'right'
                 }}
             />
-            <Table columns={columns} dataSource={filteredStudents} rowKey="studentId" />
+            <Table columns={columns} dataSource={filteredStudents} rowKey='studentId' />
         </div>
     );
 };

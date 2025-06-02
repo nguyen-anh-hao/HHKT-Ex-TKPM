@@ -1,29 +1,42 @@
 'use client'
 
-import { Tabs, Form, Input, Button, Modal, Select, Row, Col, DatePicker, Checkbox } from 'antd';
+import { Tabs, Form, Input, Button, Modal, Select, Row, Col, DatePicker, Checkbox, message } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
-import moment from "moment";
-import { useState, useEffect } from "react";
-import { Student } from "../../../interfaces/Student";
-import { useFaculties, usePrograms, useStudentStatuses } from "@/libs/hooks/useReferences";
+import moment from 'moment';
+import { useState, useEffect, use } from 'react';
+import { Student } from '../../../interfaces/Student';
+import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/useReferences';
+import { useTranslations } from 'next-intl';
+// import { Controller, useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { studentSchema, StudentSchema } from '@/libs/validators/studentSchema';
 
 const { Option } = Select;
 
 interface StudentModalProps {
     visible: boolean;
     onCancel: () => void;
-    onSubmit: (values: any) => void;
+    onSubmit: (value: any) => void;
     student?: Student;
+    isResetModal?: boolean;
+    setIsResetModal?: any;
 }
 
-const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProps) => {
+const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setIsResetModal }: StudentModalProps) => {
     const [studentForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [documentType, setDocumentType] = useState<string | null>(null);
+    const t = useTranslations('student-management');
 
     const { data: facultyOptions } = useFaculties();
     const { data: programOptions } = usePrograms();
     const { data: studentStatusOptions } = useStudentStatuses();
+    const { data: emailDomainOptions } = useEmailDomains();
+
+    // const { control, handleSubmit, formState: { errors } } = useForm<StudentSchema>({
+    //     resolver: zodResolver(studentSchema),
+    //     mode: "onBlur",
+    // });
 
     useEffect(() => {
         if (student) {
@@ -52,16 +65,16 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
     const tabItems = [
         {
             key: '1',
-            label: 'Thông tin cá nhân và học tập',
+            label: t('personal-info'),
             children: (
-                <Form form={studentForm} layout="vertical">
+                <Form form={studentForm} layout='vertical'>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="Mã số sinh viên"
-                                name="studentId"
+                                label={t('mssv')}
+                                name='studentId'
                                 rules={[
-                                    { required: true, message: 'Mã số sinh viên là bắt buộc!' },
+                                    { required: true, message: t('required-mssv') },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (isEdit) {
@@ -70,53 +83,67 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                                             if (!value || !student || value !== student.studentId) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error('Mã số sinh viên không được trùng!'));
+                                            return Promise.reject(new Error(t('duplicate-mssv')));
                                         },
                                     }),
                                 ]}
-                            >
+                                >
+                                {/* validateStatus={errors.studentId ? 'error' : ''}
+                                    help={errors.studentId?.message}  
+                                <Controller
+                                    name='studentId'
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            disabled={!!student}
+                                            prefix={<UserOutlined />}
+                                            placeholder='Nhập mã số sinh viên'
+                                        />
+                                    )}
+                                /> */}
                                 <Input prefix={<UserOutlined />} disabled={!!student} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Họ tên" name="fullName" rules={[{ required: true, message: 'Họ tên là bắt buộc!' }]}>
+                            <Form.Item label={t('full-name')} name='fullName' rules={[{ required: true, message: t('required-fullname') }]}>
                                 <Input />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="Ngày tháng năm sinh" name="dob" rules={[{ required: true, message: 'Ngày tháng năm sinh là bắt buộc!' }]}>
+                            <Form.Item label={t('dob')} name='dob' rules={[{ required: true, message: t('required-dob') }]}>
                                 <DatePicker style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Giới tính" name="gender" rules={[{ required: true, message: 'Giới tính là bắt buộc!' }]}>
-                                <Select placeholder="Chọn giới tính">
-                                    <Option value="Nam">Nam</Option>
-                                    <Option value="Nữ">Nữ</Option>
+                            <Form.Item label={t('gender')} name='gender' rules={[{ required: true, message: t('required-gender') }]}>
+                                <Select placeholder={t('select-gender')}>
+                                    <Option value='Nam'>{t('male')}</Option>
+                                    <Option value='Nữ'>{t('female')}</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={6}>
-                            <Form.Item label="Khoa" name="faculty" rules={[{ required: true, message: 'Khoa là bắt buộc!' }]}>
+                            <Form.Item label={t('faculty')} name='faculty' rules={[{ required: true, message: t('required-faculty') }]}>
                                 <Select>{renderOptions(facultyOptions)}</Select>
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item label="Khóa" name="intake" rules={[{ required: true, message: 'Khóa là bắt buộc!' }]}>
+                            <Form.Item label={t('year')} name='intake' rules={[{ required: true, message: t('required-year') }]}>
                                 <Input />
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item label="Chương trình" name="program" rules={[{ required: true, message: 'Chương trình là bắt buộc!' }]}>
+                            <Form.Item label={t('program')} name='program' rules={[{ required: true, message: t('required-program') }]}>
                                 <Select>{renderOptions(programOptions)}</Select>
                             </Form.Item>
                         </Col>
                         <Col span={6}>
-                            <Form.Item label="Tình trạng" name="studentStatus" rules={[{ required: true, message: 'Tình trạng là bắt buộc!' }]}>
+                            <Form.Item label={t('state')} name='studentStatus' rules={[{ required: true, message: t('required-state') }]}>
                                 <Select>{renderOptions(studentStatusOptions)}</Select>
                             </Form.Item>
                         </Col>
@@ -126,22 +153,22 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
         },
         {
             key: '2',
-            label: 'Liên hệ và Địa chỉ',
+            label: t('contact-info'),
             children: (
-                <Form form={studentForm} layout="vertical">
+                <Form form={studentForm} layout='vertical'>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="Địa chỉ thường trú"
-                                name="permanentAddress"
+                                label={t('permanent-address')}
+                                name='permanentAddress'
                             >
                                 <Input prefix={<HomeOutlined />} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                label="Địa chỉ tạm trú"
-                                name="temporaryAddress"
+                                label={t('temporary-address')}
+                                name='temporaryAddress'
                             >
                                 <Input prefix={<HomeOutlined />} />
                             </Form.Item>
@@ -149,27 +176,99 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item
-                                label="Email"
-                                name="email"
-                                rules={[
-                                    {
-                                        required: true,
-                                        type: 'email',
-                                        message: 'Email không hợp lệ!'
-                                    },
-                                    {
-                                        pattern: /^[a-zA-Z0-9._%+-]+@example\.com$/,
-                                        message: 'Email phải có đuôi @example.com!'
-                                    }
-                                ]}
-                            >
-                                <Input prefix={<MailOutlined />} />
+                            <Form.Item label={t('country-code')} name='phoneCountry' rules={[{ required: true, message: t('required-country-code') }]}>
+                                <Select placeholder={t('select-country-code')}>
+                                    <Option value='VN'>🇻🇳 Vietnam (+84)</Option>
+                                    <Option value='US'>🇺🇸 USA (+1)</Option>
+                                    <Option value='UK'>🇬🇧 UK (+44)</Option>
+                                    <Option value='AU'>🇦🇺 Australia (+61)</Option>
+                                    <Option value='JP'>🇯🇵 Japan (+81)</Option>
+                                    <Option value='DE'>🇩🇪 Germany (+49)</Option>
+                                    <Option value='FR'>🇫🇷 France (+33)</Option>
+                                    <Option value='IT'>🇮🇹 Italy (+39)</Option>
+                                    <Option value='ES'>🇪🇸 Spain (+34)</Option>
+                                    <Option value='RU'>🇷🇺 Russia (+7)</Option>
+                                    <Option value='CN'>🇨🇳 China (+86)</Option>
+                                    <Option value='IN'>🇮🇳 India (+91)</Option>
+                                    <Option value='ID'>🇮🇩 Indonesia (+62)</Option>
+                                    <Option value='PH'>🇵🇭 Philippines (+63)</Option>
+                                    <Option value='MY'>🇲🇾 Malaysia (+60)</Option>
+                                    <Option value='BR'>🇧🇷 Brazil (+55)</Option>
+                                    <Option value='MX'>🇲🇽 Mexico (+52)</Option>
+                                    <Option value='KR'>🇰🇷 South Korea (+82)</Option>
+                                    <Option value='CA'>🇨🇦 Canada (+1)</Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Số điện thoại" name="phone" rules={[{ required: true, pattern: /^\+84[0-9]{9}$/, message: 'Số điện thoại không hợp lệ! Số điện thoại phải bắt đầu bằng +84 và có 9 chữ số tiếp theo.' }]}>
+                            <Form.Item
+                                label={t('phone')}
+                                name='phone'
+                                rules={[
+                                    { required: true, message: t('required-phone') },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            const countryCode = getFieldValue('phoneCountry');
+                                            const regexMap: Record<string, RegExp> = {
+                                                VN: /^\+84[0-9]{9}$/,
+                                                US: /^\+1[2-9][0-9]{9}$/,
+                                                UK: /^\+44[0-9]{10}$/,
+                                                AU: /^\+61[2-478][0-9]{8}$/,
+                                                JP: /^\+81[1-9][0-9]{9}$/,
+                                                DE: /^\+49[1-9][0-9]{10}$/,
+                                                FR: /^\+33[1-9][0-9]{8}$/,
+                                                IT: /^\+39[0-9]{10}$/,
+                                                ES: /^\+34[6-9][0-9]{8}$/,
+                                                RU: /^\+7[0-9]{10}$/,
+                                                CN: /^\+861[3-9][0-9]{9}$/,
+                                                IN: /^\+91[6789][0-9]{9}$/,
+                                                ID: /^\+62[1-9][0-9]{10}$/,
+                                                PH: /^\+63[9][0-9]{9}$/,
+                                                MY: /^\+60[1-9][0-9]{8}$/,
+                                                BR: /^\+55[1-9][0-9]{10}$/,
+                                                MX: /^\+52[1-9][0-9]{9}$/,
+                                                KR: /^\+82[1-9][0-9]{8}$/,
+                                                CA: /^\+1[2-9][0-9]{9}$/,
+                                            };
+
+                                            if (!value || !countryCode || regexMap[countryCode]?.test(value)) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error(t('invalid-phone')));
+                                        },
+                                    }),
+                                ]}
+                            >
                                 <Input prefix={<PhoneOutlined />} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label={t('email')}
+                                name='email'
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: t('required-email'),
+                                    },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value) {
+                                                return Promise.resolve();
+                                            }
+                                            const allowedDomains = emailDomainOptions?.map((option: any) => option.value) || [];
+                                            const emailDomain = value.split('@')[1];
+                                            if (allowedDomains.includes(emailDomain)) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error(t('invalid-email')));
+                                        },
+                                    }),
+                                ]}
+                            >
+                                <Input prefix={<MailOutlined />} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -178,26 +277,26 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
         },
         {
             key: '3',
-            label: 'Giấy tờ và Quốc tịch',
+            label: t('documents'),
             children: (
-                <Form form={studentForm} layout="vertical">
+                <Form form={studentForm} layout='vertical'>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="Loại giấy tờ"
-                                name="documentType"
+                                label={t('document-type')}
+                                name='documentType'
                             >
-                                <Select placeholder="Chọn loại giấy tờ" onChange={setDocumentType}>
-                                    <Option value="CMND">Chứng minh nhân dân (CMND)</Option>
-                                    <Option value="CCCD">Căn cước công dân (CCCD)</Option>
-                                    <Option value="Passport">Hộ chiếu</Option>
+                                <Select placeholder={t('select-document-type')} onChange={setDocumentType}>
+                                    <Option value='CMND'>{t('id-card')}</Option>
+                                    <Option value='CCCD'>{t('citizen-id')}</Option>
+                                    <Option value='Passport'>{t('passport')}</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                label="Số giấy tờ"
-                                name="documentNumber"
+                                label={t('document-number')}
+                                name='documentNumber'
                             >
                                 <Input />
                             </Form.Item>
@@ -206,16 +305,16 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="Ngày cấp"
-                                name="issuedDate"
+                                label={t('issue-date')}
+                                name='issuedDate'
                             >
                                 <DatePicker style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                label="Nơi cấp"
-                                name="issuedBy"
+                                label={t('issue-place')}
+                                name='issuedBy'
                             >
                                 <Input />
                             </Form.Item>
@@ -224,38 +323,38 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="Ngày hết hạn"
-                                name="expiredDate"
+                                label={t('expiry-date')}
+                                name='expiredDate'
                             >
                                 <DatePicker style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
-                        {documentType === "Passport" && (
+                        {documentType === 'Passport' && (
                             <Col span={12}>
                                 <Form.Item
-                                    label="Quốc gia cấp"
-                                    name="issuedCountry"
+                                    label={t('issue-country')}
+                                    name='issuedCountry'
                                 >
                                     <Input />
                                 </Form.Item>
                             </Col>
                         )}
                     </Row>
-                    {documentType === "CCCD" && (
+                    {documentType === 'CCCD' && (
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    name="hasChip"
-                                    valuePropName="checked"
+                                    name='hasChip'
+                                    valuePropName='checked'
                                 >
-                                    <Checkbox>Có gắn chip hay không?</Checkbox>
+                                    <Checkbox>{t('has-chip')}</Checkbox>
                                 </Form.Item>
                             </Col>
                         </Row>
                     )}
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="Quốc tịch" name="nationality" rules={[{ required: true, message: 'Quốc tịch là bắt buộc!' }]}>
+                            <Form.Item label={t('nationality')} name='nationality' rules={[{ required: true, message: t('required-nationality') }]}>
                                 <Input />
                             </Form.Item>
                         </Col>
@@ -267,7 +366,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
 
     return (
         <Modal
-            title={student ? "Sửa sinh viên" : "Thêm sinh viên"}
+            title={student ? t('edit-student') : t('add-student')}
             open={visible}
             onCancel={() => {
                 onCancel();
@@ -276,31 +375,29 @@ const StudentModal = ({ visible, onCancel, onSubmit, student }: StudentModalProp
             footer={null}
             width={800}
         >
-            <Tabs defaultActiveKey="1" items={tabItems} />
+            <Tabs defaultActiveKey='1' items={tabItems} />
             <Button
-                type="primary"
+                type='primary'
                 onClick={() => {
-                    studentForm.validateFields().then((values) => {
-                        onSubmit(values);
-                        if (!isEdit) studentForm.resetFields();
-                    });
+                    studentForm.validateFields()
+                        .then((value) => {
+                            onSubmit(value);
+                            if (!isEdit) {
+                                if (isResetModal) {
+                                    studentForm.resetFields();
+                                    setIsResetModal(false);
+                                }
+                            };
+                        })
+                        .catch((error) => {
+                            message.error(t('check-info'));
+                        });
                 }}
             >
-                Lưu
+                {t('save')}
             </Button>
         </Modal>
     );
 };
 
 export default StudentModal
-
-// problem: id, value, label
-// table data will be show as type value
-// but modal will be show as type label and save as type value
-// and when we post data to api, we need to convert it back to id
-// solution: use key? không phải vấn đề của mình, mà vấn đề từ API khi mà trả ra name chứ không phải id
-// giải pháp tạm thời: transform và ràng buộc không được trùng tên trong reference
-
-// reference data
-// import file
-// configuration

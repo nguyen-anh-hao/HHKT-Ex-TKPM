@@ -48,3 +48,56 @@ export const useStudentStatuses = () => {
 
     return { data, error, isLoading };
 }
+
+export const useEmailDomains = () => {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['email-domains'],
+        queryFn: async () => {
+            const data = await fetchReference('email-domains');
+            return data.map((option: any) => ({
+                key: option.id,
+                value: option.domain,
+            }));
+        },
+    });
+
+
+    return { data, error, isLoading };
+}
+
+export const useLecturers = () => {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['lecturers'],
+        queryFn: async () => {
+            const data = await fetchReference('lecturers');
+            // console.log('Raw lecturers:', data);
+            return data.map((option: any) => ({
+                    key: option.id,
+                    value: option.fullName,
+                    label: option.fullName,
+                }));
+        },
+    });
+    // console.log('noRaw lecturers:', data);
+    return { data, error, isLoading };
+};
+
+
+export const useCourses = () => {
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['courses'],
+        queryFn: async () => {
+            const data = await fetchReference('courses');
+            // console.log('Raw courses:', data);
+            return data.map((option: any) => ({
+                    key: option.courseId,
+                    value: option.courseName,
+                    label: option.courseName,
+                    code: option.courseCode,
+                }));
+        },
+    });
+
+    // console.log('noRaw courses:', data);
+    return { data, error, isLoading };
+};
