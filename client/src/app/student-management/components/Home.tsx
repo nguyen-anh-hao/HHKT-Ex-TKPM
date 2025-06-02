@@ -5,9 +5,9 @@ import { Button, message, Popconfirm } from 'antd';
 import { PlusOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import StudentTable from './StudentTable';
 import StudentModal from './StudentModal';
-import { Student } from '@/interfaces/Student';
+import { Student } from '@/interfaces/student/Student';
 import { updateStudent as updateStudentState, addStudent as addStudentState, deleteStudent as deleteStudentState } from '../actions/StudentActions';
-import { useCreateStudent, useDeleteStudent, useUpdateStudent } from '@/libs/hooks/useStudentMutation';
+import { useCreateStudent, useDeleteStudent, useUpdateStudent } from '@/libs/hooks/student/useStudentMutation';
 import useReferenceStore from '@/libs/stores/referenceStore';
 import ImportModal from './ImportModal'
 import ExportModal from './ExportModal';

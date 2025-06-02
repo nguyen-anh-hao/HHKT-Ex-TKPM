@@ -4,8 +4,8 @@ import { Tabs, Form, Input, Button, Modal, Select, Row, Col, DatePicker, Checkbo
 import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useState, useEffect, use } from 'react';
-import { Student } from '../../../interfaces/Student';
-import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/useReferences';
+import { Student } from '../../../interfaces/student/Student';
+import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
 // import { Controller, useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";

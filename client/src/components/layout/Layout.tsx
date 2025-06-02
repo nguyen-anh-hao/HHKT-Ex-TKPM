@@ -26,7 +26,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
         { key: '4', icon: <SettingOutlined />, label: t('status-rules-configuration'), route: '/status-rules-configuration' },
         { key: '5', icon: <BookOutlined />, label: t('course-management'), route: '/course-management' },
         { key: '6', icon: <TeamOutlined />, label: t('class-management'), route: '/class-management' },
-        { key: '7', icon: <SwapOutlined />, label: t('enroll-class'), route: '/enroll-class' },
+        { key: '7', icon: <SwapOutlined />, label: t('register-class'), route: '/register-class' },
         { key: '8', icon: <FileTextOutlined />, label: t('transcript'), route: '/transcript' },
     ];
 

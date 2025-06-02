@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import * as registerService from '@/libs/services/registerService';
-import { RegisterResponse } from '@/interfaces/RegisterResponse';
-import { RegisterRequest } from '@/interfaces/CreateRegisterRequest';
+import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
+import { RegisterRequest } from '@/interfaces/register/CreateRegisterRequest';
 
 
 export const useCreateRegister = () => {

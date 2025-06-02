@@ -6,7 +6,6 @@ export const getFile = async (fileName: string, page: number, size: number) => {
     try {
         const type = fileName.split('.').pop() || 'json';
         const fileNameWithoutExt = fileName.split('.').slice(0, -1).join('.');
-        // const response = await api.get(`/file-transfer/export?type=${type}&fileName=${fileNameWithoutExt}&page=${page}&size=${size}`);
         return `${BASE_URL}/file-transfer/export?type=${type}&fileName=${fileNameWithoutExt}&page=${page}&size=${size}`;
     } catch (error) {
         throw error;

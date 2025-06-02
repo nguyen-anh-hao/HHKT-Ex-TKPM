@@ -1,6 +1,6 @@
 import { Table, Button, Popconfirm, Input } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Student } from '@/interfaces/Student';
+import { Student } from '@/interfaces/student/Student';
 import moment from 'moment';
 import { useState } from 'react';
 import { SortOrder } from 'antd/es/table/interface';

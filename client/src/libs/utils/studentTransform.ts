@@ -1,10 +1,10 @@
 import moment from 'moment';
-import { Student } from '@/interfaces/Student';
+import { Student } from '@/interfaces/student/Student';
 import { Address } from '@/interfaces/Address';
 import { Identity } from '@/interfaces/Identify';
-import { StudentResponse } from '@/interfaces/StudentResponse';
-import { CreateStudentRequest } from '@/interfaces/CreateStudentRequest';
-import { UpdateStudentRequest } from '@/interfaces/UpdateStudentRequest';
+import { StudentResponse } from '@/interfaces/student/StudentResponse';
+import { CreateStudentRequest } from '@/interfaces/student/CreateStudentRequest';
+import { UpdateStudentRequest } from '@/interfaces/student/UpdateStudentRequest';
 import useReferenceStore from '@/libs/stores/referenceStore';
 
 export const transformGetResponseToStudent = (response: StudentResponse): Student => {

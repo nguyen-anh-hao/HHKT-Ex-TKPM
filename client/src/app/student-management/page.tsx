@@ -1,7 +1,7 @@
 'use client'
 
 import Home from './components/Home';
-import { useStudents } from '@/libs/hooks/useStudents';
+import { useStudents } from '@/libs/hooks/student/useStudents';
 
 // import { fetchStudents } from '@/libs/services/studentService';
 // export const dynamic = 'force-dynamic';

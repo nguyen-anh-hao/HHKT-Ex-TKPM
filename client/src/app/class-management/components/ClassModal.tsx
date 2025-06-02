@@ -1,7 +1,7 @@
 import { Form, Input, Modal, Button, Select, message } from 'antd';
 import { useEffect, useState } from 'react';
-import { Class } from '../../../interfaces/ClassResponse';
-import { useLecturers, useCourses } from '@/libs/hooks/useReferences';
+import { Class } from '../../../interfaces/class/ClassResponse';
+import { useLecturers, useCourses } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
 
 const { Option } = Select;

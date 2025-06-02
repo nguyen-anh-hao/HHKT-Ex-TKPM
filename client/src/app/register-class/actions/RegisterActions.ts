@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { RegisterResponse } from '../../../interfaces/RegisterResponse';
+import { RegisterResponse } from '../../../interfaces/register/RegisterResponse';
 
 // Function to add a new register
 export const addRegister = (registers: RegisterResponse[], newRegister: RegisterResponse): RegisterResponse[] => {

@@ -5,9 +5,9 @@ import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ClassTable from './ClassTable';
 import ClassModal from './ClassModal';
-import { Class } from '@/interfaces/ClassResponse';
+import { Class } from '@/interfaces/class/ClassResponse';
 import { addClass as addClassState } from '../actions/ClassActions';
-import { useCreateClass } from '@/libs/hooks/useClassMutation';
+import { useCreateClass } from '@/libs/hooks/class/useClassMutation';
 import useReferenceStore from '@/libs/stores/referenceStore';
 import { useTranslations } from 'next-intl';
 

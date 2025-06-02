@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Button, Modal, Input, Typography } from 'antd';
-import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/useReferences';
-import { useCreateReference, useUpdateReference, useDeleteReference } from '@/libs/hooks/useReferenceMutation';
+import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/reference/useReferences';
+import { useCreateReference, useUpdateReference, useDeleteReference } from '@/libs/hooks/reference/useReferenceMutation';
 import ReferenceList from './components/ReferenceList';
 import { message } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -154,52 +154,55 @@ const ReferencePage = () => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', padding: '20px', background: '#f8f6f2' }}>
-            <ReferenceList
-                title={t('faculties')}
-                values={facultyValues}
-                onChange={(index, newValue) => handleChange(setFacultyValues, index, newValue, facultyValues, 'faculties')}
-                onDelete={(id) => handleDelete(id, 'faculties')}
-                onAdd={() => handleAdd('faculties')}
-            />
-
-            <ReferenceList
-                title={t('programs')}
-                values={programValues}
-                onChange={(index, newValue) => handleChange(setProgramValues, index, newValue, programValues, 'programs')}
-                onDelete={(id) => handleDelete(id, 'programs')}
-                onAdd={() => handleAdd('programs')}
-            />
-
-            <ReferenceList
-                title={t('student-statuses')}
-                values={statusValues}
-                onChange={(index, newValue) => handleChange(setStatusValues, index, newValue, statusValues, 'student-statuses')}
-                onDelete={(id) => handleDelete(id, 'student-statuses')}
-                onAdd={() => handleAdd('student-statuses')}
-            />
-
-            <ReferenceList
-                title={t('email-domains')}
-                values={emailDomainValues}
-                onChange={(index, newValue) => handleChange(setEmailDomainValues, index, newValue, emailDomainValues, 'email-domains')}
-                onDelete={(id) => handleDelete(id, 'email-domains')}
-                onAdd={() => handleAdd('email-domains')}
-            />
-
-            <Modal
-                title={getModalTitle()}
-                open={isModalVisible}
-                onOk={handleOk}
-                onCancel={handleCancel}
-            >
-                <Input
-                    value={newItemValue}
-                    onChange={(e) => setNewItemValue(e.target.value)}
-                    placeholder={t('item-name')}
+        <>
+            <h1>{t('title')}</h1>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', padding: '20px', background: '#f8f6f2' }}>
+                <ReferenceList
+                    title={t('faculties')}
+                    values={facultyValues}
+                    onChange={(index, newValue) => handleChange(setFacultyValues, index, newValue, facultyValues, 'faculties')}
+                    onDelete={(id) => handleDelete(id, 'faculties')}
+                    onAdd={() => handleAdd('faculties')}
                 />
-            </Modal>
-        </div>
+
+                <ReferenceList
+                    title={t('programs')}
+                    values={programValues}
+                    onChange={(index, newValue) => handleChange(setProgramValues, index, newValue, programValues, 'programs')}
+                    onDelete={(id) => handleDelete(id, 'programs')}
+                    onAdd={() => handleAdd('programs')}
+                />
+
+                <ReferenceList
+                    title={t('student-statuses')}
+                    values={statusValues}
+                    onChange={(index, newValue) => handleChange(setStatusValues, index, newValue, statusValues, 'student-statuses')}
+                    onDelete={(id) => handleDelete(id, 'student-statuses')}
+                    onAdd={() => handleAdd('student-statuses')}
+                />
+
+                <ReferenceList
+                    title={t('email-domains')}
+                    values={emailDomainValues}
+                    onChange={(index, newValue) => handleChange(setEmailDomainValues, index, newValue, emailDomainValues, 'email-domains')}
+                    onDelete={(id) => handleDelete(id, 'email-domains')}
+                    onAdd={() => handleAdd('email-domains')}
+                />
+
+                <Modal
+                    title={getModalTitle()}
+                    open={isModalVisible}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                >
+                    <Input
+                        value={newItemValue}
+                        onChange={(e) => setNewItemValue(e.target.value)}
+                        placeholder={t('item-name')}
+                    />
+                </Modal>
+            </div>
+        </>
     );
 };
 
