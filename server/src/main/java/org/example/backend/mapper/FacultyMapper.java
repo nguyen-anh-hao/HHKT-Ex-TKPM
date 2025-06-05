@@ -28,39 +28,4 @@ public class FacultyMapper {
                 .updatedBy(faculty.getUpdatedBy())
                 .build();
     }
-
-    public static FacultyResponse mapToResponseWithTranslation(
-            Faculty faculty,
-            Map<String, String> facultyTranslations,
-            Map<Integer, Map<String, String>> studentTranslations) {
-
-        List<StudentResponse> studentResponses = null;
-        if (faculty.getStudents() != null) {
-            studentResponses = faculty.getStudents().stream()
-                    .map(student -> {
-                        Map<String, String> studentTrans = studentTranslations.getOrDefault(Integer.parseInt(student.getStudentId().replaceAll("[^\\d]", "")), Collections.emptyMap());
-
-                        return StudentMapper.mapToResponseWithTranslation(
-                                student,
-                                studentTrans,
-                                Collections.emptyMap(),
-                                Collections.emptyMap(),
-                                Collections.emptyMap(),
-                                Collections.emptyMap(),
-                                Collections.emptyMap()
-                        );
-                    })
-                    .collect(Collectors.toList());
-        }
-
-        return FacultyResponse.builder()
-                .id(faculty.getId())
-                .facultyName(facultyTranslations.getOrDefault("facultyName", faculty.getFacultyName()))
-                .students(studentResponses)
-                .createdAt(faculty.getCreatedAt())
-                .updatedAt(faculty.getUpdatedAt())
-                .createdBy(faculty.getCreatedBy())
-                .updatedBy(faculty.getUpdatedBy())
-                .build();
-    }
 }

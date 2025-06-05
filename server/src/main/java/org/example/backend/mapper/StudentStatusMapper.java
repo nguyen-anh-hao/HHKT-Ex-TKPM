@@ -28,40 +28,4 @@ public class StudentStatusMapper {
                 .updatedBy(studentStatus.getUpdatedBy())
                 .build();
     }
-
-    public static StudentStatusResponse mapToResponseWithTranslation(
-            StudentStatus studentStatus,
-            Map<String, String> statusTranslations,
-            Map<Integer, Map<String, String>> studentTranslations) {
-
-        List<StudentResponse> studentResponses = null;
-        if (studentStatus.getStudents() != null) {
-            studentResponses = studentStatus.getStudents().stream()
-                    .map(student -> {
-                        Map<String, String> studentTrans = studentTranslations.getOrDefault(Integer.parseInt(student.getStudentId().replaceAll("[^\\d]", "")), Collections.emptyMap());
-
-                        // Pass empty maps for other translation types since the full method requires them
-                        return StudentMapper.mapToResponseWithTranslation(
-                                student,
-                                studentTrans,
-                                Collections.emptyMap(), // facultyTranslations
-                                Collections.emptyMap(), // programTranslations
-                                Collections.emptyMap(), // statusTranslations
-                                Collections.emptyMap(), // addressTranslations
-                                Collections.emptyMap()  // documentTranslations
-                        );
-                    })
-                    .collect(Collectors.toList());
-        }
-
-        return StudentStatusResponse.builder()
-                .id(studentStatus.getId())
-                .studentStatusName(statusTranslations.getOrDefault("studentStatusName", studentStatus.getStudentStatusName()))
-                .students(studentResponses)
-                .createdAt(studentStatus.getCreatedAt())
-                .updatedAt(studentStatus.getUpdatedAt())
-                .createdBy(studentStatus.getCreatedBy())
-                .updatedBy(studentStatus.getUpdatedBy())
-                .build();
-    }
 }

@@ -19,15 +19,6 @@ public class ClassMapper {
                 .build();
     }
 
-    public static ClassSummaryResponse mapFromDomainToClassSummaryResponseWithTranslation(Class aClass, Map<String, String> translation) {
-        return ClassSummaryResponse.builder()
-                .classCode(aClass.getClassCode())
-                .maxStudents(aClass.getMaxStudents())
-                .schedule(translation.getOrDefault("schedule", aClass.getSchedule()))
-                .room(aClass.getRoom())
-                .build();
-    }
-
     public static Class mapFromClassRequestToDomain(ClassRequest classRequest) {
         return Class.builder()
                 .classCode(classRequest.getClassCode())
@@ -51,39 +42,6 @@ public class ClassMapper {
                 .facultyName(aClass.getCourse().getFaculty().getFacultyName())
                 .prerequisiteCourseCode(aClass.getCourse().getPrerequisiteCourse() != null ? aClass.getCourse().getPrerequisiteCourse().getCourseCode() : null)
                 .prerequisiteCourseName(aClass.getCourse().getPrerequisiteCourse() != null ? aClass.getCourse().getPrerequisiteCourse().getCourseName() : null)
-                .lecturerId(aClass.getLecturer().getId())
-                .lecturerName(aClass.getLecturer().getFullName())
-                .semesterId(aClass.getSemester().getId())
-                .semesterName(aClass.getSemester().getSemester())
-                .createdDate(aClass.getCreatedAt())
-                .updatedDate(aClass.getUpdatedAt())
-                .createdBy(aClass.getCreatedBy())
-                .updatedBy(aClass.getUpdatedBy())
-                .build();
-    }
-
-    public static ClassResponse mapFromDomainToClassResponseWithTranslation(
-            Class aClass,
-            Map<String, String> classTranslations,
-            Map<String, String> courseTranslations,
-            Map<String, String> facultyTranslations,
-            Map<String, String> prerequisiteCourseTranslations) {
-
-        return ClassResponse.builder()
-                .id(aClass.getId())
-                .classCode(aClass.getClassCode())
-                .maxStudents(aClass.getMaxStudents())
-                .schedule(classTranslations.getOrDefault("schedule", aClass.getSchedule()))
-                .room(aClass.getRoom())
-                .courseId(aClass.getCourse().getId())
-                .courseCode(aClass.getCourse().getCourseCode())
-                .courseName(courseTranslations.getOrDefault("courseName", aClass.getCourse().getCourseName()))
-                .credits(aClass.getCourse().getCredits())
-                .facultyName(facultyTranslations.getOrDefault("facultyName", aClass.getCourse().getFaculty().getFacultyName()))
-                .prerequisiteCourseCode(aClass.getCourse().getPrerequisiteCourse() != null ? aClass.getCourse().getPrerequisiteCourse().getCourseCode() : null)
-                .prerequisiteCourseName(aClass.getCourse().getPrerequisiteCourse() != null ?
-                        prerequisiteCourseTranslations.getOrDefault("courseName", aClass.getCourse().getPrerequisiteCourse().getCourseName()) :
-                        null)
                 .lecturerId(aClass.getLecturer().getId())
                 .lecturerName(aClass.getLecturer().getFullName())
                 .semesterId(aClass.getSemester().getId())
