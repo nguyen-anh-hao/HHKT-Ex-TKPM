@@ -3,7 +3,6 @@ package org.example.backend.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.common.LanguageInterceptor;
 import org.example.backend.common.RegistrationStatus;
 import org.example.backend.domain.Address;
 import org.example.backend.domain.ClassRegistration;
@@ -25,7 +24,6 @@ import org.example.backend.repository.IProgramRepository;
 import org.example.backend.repository.IStudentRepository;
 import org.example.backend.repository.IStudentStatusRepository;
 import org.example.backend.service.IStudentService;
-import org.example.backend.service.ITranslationService;
 import org.example.backend.service.export.TranscriptPdfExportService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +32,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,7 +46,6 @@ public class StudentServiceImpl implements IStudentService {
     private final IStudentStatusRepository studentStatusRepository;
     private final IClassRegistrationRepository classRegistrationRepository;
     private final TranscriptPdfExportService transcriptPdfExportService;
-    private final ITranslationService translationService;
 
     @Override
     @Transactional
@@ -85,139 +81,16 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public StudentResponse getStudent(String studentId) {
-        Student student = studentRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+        Student student = studentRepository.findByStudentId(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
 
         log.info("Student {} has been retrieved", student.getStudentId());
 
-        String currentLanguage = LanguageInterceptor.CURRENT_LANGUAGE.get();
-        if ("vi".equals(currentLanguage)) {
-            return StudentMapper.mapToResponse(student);
-        } else {
-            // Get translation for student
-            Map<String, String> studentTranslations = translationService.getTranslation(
-                    "Student", Integer.parseInt(student.getStudentId().replaceAll("[^\\d]", "")), currentLanguage);
-
-            // Get translation for faculty
-            Map<String, String> facultyTranslations = translationService.getTranslation(
-                    "Faculty", student.getFaculty().getId(), currentLanguage);
-
-            // Get translation for program
-            Map<String, String> programTranslations = translationService.getTranslation(
-                    "Program", student.getProgram().getId(), currentLanguage);
-
-            // Get translation for student status
-            Map<String, String> studentStatusTranslations = translationService.getTranslation(
-                    "StudentStatus", student.getStudentStatus().getId(), currentLanguage);
-
-            // Get translations for addresses if present
-            Map<Integer, Map<String, String>> addressTranslations = Collections.emptyMap();
-            if (student.getAddresses() != null && !student.getAddresses().isEmpty()) {
-                List<Integer> addressIds = student.getAddresses().stream()
-                        .map(Address::getId)
-                        .toList();
-                addressTranslations = translationService
-                        .getTranslations("Address", addressIds, currentLanguage);
-            }
-
-            // Get translations for documents if present
-            Map<Integer, Map<String, String>> documentTranslations = Collections.emptyMap();
-            if (student.getDocuments() != null && !student.getDocuments().isEmpty()) {
-                List<Integer> documentIds = student.getDocuments().stream()
-                        .map(Document::getId)
-                        .toList();
-                documentTranslations = translationService
-                        .getTranslations("Document", documentIds, currentLanguage);
-            }
-
-            return StudentMapper.mapToResponseWithTranslation(
-                    student,
-                    studentTranslations,
-                    facultyTranslations,
-                    programTranslations,
-                    studentStatusTranslations,
-                    addressTranslations,
-                    documentTranslations
-            );
-        }
+        return StudentMapper.mapToResponse(student);
     }
 
     @Override
     public Page<StudentResponse> getAllStudents(Pageable pageable) {
-        Page<Student> studentPage = studentRepository.findAll(pageable);
-
-        String currentLanguage = LanguageInterceptor.CURRENT_LANGUAGE.get();
-        if ("vi".equals(currentLanguage)) {
-            return studentPage.map(StudentMapper::mapToResponse);
-        } else {
-            // Get translations for students
-            List<Integer> studentIds = studentPage.getContent().stream()
-                    .map(Student::getStudentId)
-                    .map(id -> Integer.parseInt(id.replaceAll("[^\\d]", "")))
-                    .toList();
-            Map<Integer, Map<String, String>> studentTranslations = translationService
-                    .getTranslations("Student", studentIds, currentLanguage);
-
-            // Get translations for faculties
-            List<Integer> facultyIds = studentPage.getContent().stream()
-                    .map(student -> student.getFaculty().getId())
-                    .distinct()
-                    .toList();
-            Map<Integer, Map<String, String>> facultyTranslations = translationService
-                    .getTranslations("Faculty", facultyIds, currentLanguage);
-
-            // Get translations for programs
-            List<Integer> programIds = studentPage.getContent().stream()
-                    .map(student -> student.getProgram().getId())
-                    .distinct()
-                    .toList();
-            Map<Integer, Map<String, String>> programTranslations = translationService
-                    .getTranslations("Program", programIds, currentLanguage);
-
-            // Get translations for student statuses
-            List<Integer> statusIds = studentPage.getContent().stream()
-                    .map(student -> student.getStudentStatus().getId())
-                    .distinct()
-                    .toList();
-            Map<Integer, Map<String, String>> statusTranslations = translationService
-                    .getTranslations("StudentStatus", statusIds, currentLanguage);
-
-            // Get all address IDs
-            List<Integer> allAddressIds = studentPage.getContent().stream()
-                    .filter(student -> student.getAddresses() != null && !student.getAddresses().isEmpty())
-                    .flatMap(student -> student.getAddresses().stream())
-                    .map(Address::getId)
-                    .distinct()
-                    .toList();
-
-            // Get translations for addresses
-            Map<Integer, Map<String, String>> addressTranslations = allAddressIds.isEmpty() ?
-                    Collections.emptyMap() :
-                    translationService.getTranslations("Address", allAddressIds, currentLanguage);
-
-            // Get all document IDs
-            List<Integer> allDocumentIds = studentPage.getContent().stream()
-                    .filter(student -> student.getDocuments() != null && !student.getDocuments().isEmpty())
-                    .flatMap(student -> student.getDocuments().stream())
-                    .map(Document::getId)
-                    .distinct()
-                    .toList();
-
-            // Get translations for documents
-            Map<Integer, Map<String, String>> documentTranslations = allDocumentIds.isEmpty() ?
-                    Collections.emptyMap() :
-                    translationService.getTranslations("Document", allDocumentIds, currentLanguage);
-
-            return studentPage.map(student -> StudentMapper.mapToResponseWithTranslation(
-                    student,
-                    studentTranslations.getOrDefault(Integer.parseInt(student.getStudentId().replaceAll("[^\\d]", "")), Collections.emptyMap()),
-                    facultyTranslations.getOrDefault(student.getFaculty().getId(), Collections.emptyMap()),
-                    programTranslations.getOrDefault(student.getProgram().getId(), Collections.emptyMap()),
-                    statusTranslations.getOrDefault(student.getStudentStatus().getId(), Collections.emptyMap()),
-                    addressTranslations,
-                    documentTranslations
-            ));
-        }
+        return studentRepository.findAll(pageable).map(StudentMapper::mapToResponse);
     }
 
     @Override
@@ -317,81 +190,7 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public Page<StudentResponse> searchStudent(String keyword, Pageable pageable) {
-        Page<Student> studentPage = studentRepository.searchByKeyword(keyword, pageable);
-
-        String currentLanguage = LanguageInterceptor.CURRENT_LANGUAGE.get();
-        if ("vi".equals(currentLanguage)) {
-            return studentPage.map(StudentMapper::mapToResponse);
-        } else {
-            // Get translations for students
-            List<Integer> studentIds = studentPage.getContent().stream()
-                    .map(Student::getStudentId)
-                    .map(id -> Integer.parseInt(id.replaceAll("[^\\d]", "")))
-                    .toList();
-            Map<Integer, Map<String, String>> studentTranslations = translationService
-                    .getTranslations("Student", studentIds, currentLanguage);
-
-            // Get translations for faculties
-            List<Integer> facultyIds = studentPage.getContent().stream()
-                    .map(student -> student.getFaculty().getId())
-                    .distinct()
-                    .toList();
-            Map<Integer, Map<String, String>> facultyTranslations = translationService
-                    .getTranslations("Faculty", facultyIds, currentLanguage);
-
-            // Get translations for programs
-            List<Integer> programIds = studentPage.getContent().stream()
-                    .map(student -> student.getProgram().getId())
-                    .distinct()
-                    .toList();
-            Map<Integer, Map<String, String>> programTranslations = translationService
-                    .getTranslations("Program", programIds, currentLanguage);
-
-            // Get translations for student statuses
-            List<Integer> statusIds = studentPage.getContent().stream()
-                    .map(student -> student.getStudentStatus().getId())
-                    .distinct()
-                    .toList();
-            Map<Integer, Map<String, String>> statusTranslations = translationService
-                    .getTranslations("StudentStatus", statusIds, currentLanguage);
-
-            // Get all address IDs
-            List<Integer> allAddressIds = studentPage.getContent().stream()
-                    .filter(student -> student.getAddresses() != null && !student.getAddresses().isEmpty())
-                    .flatMap(student -> student.getAddresses().stream())
-                    .map(Address::getId)
-                    .distinct()
-                    .toList();
-
-            // Get translations for addresses
-            Map<Integer, Map<String, String>> addressTranslations = allAddressIds.isEmpty() ?
-                    Collections.emptyMap() :
-                    translationService.getTranslations("Address", allAddressIds, currentLanguage);
-
-            // Get all document IDs
-            List<Integer> allDocumentIds = studentPage.getContent().stream()
-                    .filter(student -> student.getDocuments() != null && !student.getDocuments().isEmpty())
-                    .flatMap(student -> student.getDocuments().stream())
-                    .map(Document::getId)
-                    .distinct()
-                    .toList();
-
-            // Get translations for documents
-            Map<Integer, Map<String, String>> documentTranslations = allDocumentIds.isEmpty() ?
-                    Collections.emptyMap() :
-                    translationService.getTranslations("Document", allDocumentIds, currentLanguage);
-
-            return studentPage.map(student -> StudentMapper.mapToResponseWithTranslation(
-                    student,
-                    studentTranslations.getOrDefault(Integer.parseInt(student.getStudentId().replaceAll("[^\\d]", "")), Collections.emptyMap()),
-                    facultyTranslations.getOrDefault(student.getFaculty().getId(), Collections.emptyMap()),
-                    programTranslations.getOrDefault(student.getProgram().getId(), Collections.emptyMap()),
-                    statusTranslations.getOrDefault(student.getStudentStatus().getId(), Collections.emptyMap()),
-                    addressTranslations,
-                    documentTranslations
-            ));
-
-        }
+        return studentRepository.searchByKeyword(keyword, pageable).map(StudentMapper::mapToResponse);
     }
 
     @Override
