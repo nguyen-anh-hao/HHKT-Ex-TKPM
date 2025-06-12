@@ -1,24 +1,23 @@
 'use client'
 
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined, FileTextOutlined, ApartmentOutlined, BookOutlined, SwapOutlined } from '@ant-design/icons';
-import { Button, Menu, Layout as AntdLayout, Typography, Select } from 'antd';
+import { Button, Menu, Layout as AntdLayout, Typography } from 'antd';
 import { useRouter, usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
+import React from 'react';
+import LanguageSelector from './LanguageSelector';
 
 const { Header, Content, Sider } = AntdLayout;
 
 export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
     const [collapsed, setCollapsed] = useState(false);
-    const [locale, setLocale] = useState<string>('en');    const router = useRouter();
+    const router = useRouter();
     const pathname = usePathname();
     const queryClient = new QueryClient();
-    const t = useTranslations('common');    useEffect(() => {
-        const savedLocale = Cookies.get('NEXT_LOCALE') || 'en';
-        setLocale(savedLocale);
-    }, []);
+    const t = useTranslations('common');    
 
     const menuItems = [
         { key: '2', icon: <UserOutlined />, label: t('student-management'), route: '/student-management' },
@@ -40,14 +39,6 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
     const getKeyFromUrl = (url: string) => {
         const foundItem = menuItems.find(item => url.startsWith(item.route));
         return foundItem ? foundItem.key : '1';
-    };
-
-    const handleLocaleChange = (value: string) => {
-        Cookies.set('NEXT_LOCALE', value);
-        setLocale(value);
-        // router.refresh();
-        // Optionally, you can force a page refresh to apply the new locale immediately
-        window.location.reload();
     };
 
     return (
@@ -76,19 +67,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                             onClick={() => setCollapsed(!collapsed)}
                             style={{ fontSize: '16px', width: 64, height: 64 }}
                         />
-                        <div style={{ marginRight: '16px' }}>
-                            <Typography.Text style={{ marginRight: '8px' }}>{t('language')}:</Typography.Text>
-                            <Select
-                                key={locale}
-                                value={locale}
-                                onChange={handleLocaleChange}
-                                style={{ width: 120 }}
-                                options={[
-                                    { value: 'en', label: 'English' },
-                                    { value: 'vi', label: 'Tiếng Việt' },
-                                ]}
-                            />
-                        </div>
+                        <LanguageSelector />
                     </Header>
                     <Content
                         className='site-layout-background'
