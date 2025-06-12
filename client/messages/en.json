@@ -183,7 +183,9 @@
     "required-student-id": "Student ID is required!",
     "required-class-code": "Class code is required!",
     "required-status": "Status is required!",
-    "save": "Save"
+    "save": "Save",
+    "required-grade": "Grade is required!",
+    "check-info": "Please check your information!"
   },
   "reference-management": {
     "title": "Reference Management",
@@ -201,7 +203,10 @@
     "add-transition": "Add Transition",
     "edit-transition": "Edit Transition",
     "required-from-status": "From Status is required!",
-    "required-to-status": "To Status is required!"
+    "required-to-status": "To Status is required!",
+    "add-success": "Added successfully",
+    "update-success": "Updated successfully",
+    "reference": "Reference"
   },
   "transcript": {
     "title": "Student Transcript",

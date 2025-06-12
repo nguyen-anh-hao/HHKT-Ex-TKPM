@@ -183,7 +183,9 @@
     "required-student-id": "MSSV là bắt buộc!",
     "required-class-code": "Mã lớp là bắt buộc!",
     "required-status": "Trạng thái là bắt buộc!",
-    "save": "Lưu"
+    "save": "Lưu",
+    "required-grade": "Điểm là bắt buộc!",
+    "check-info": "Vui lòng kiểm tra lại thông tin!"
   },
   "reference-management": {
     "title": "Quản lý danh mục",
@@ -201,7 +203,10 @@
     "add-transition": "Thêm phép chuyển",
     "edit-transition": "Sửa phép chuyển",
     "required-from-status": "Trạng thái bắt đầu là bắt buộc!",
-    "required-to-status": "Trạng thái đích là bắt buộc!"
+    "required-to-status": "Trạng thái đích là bắt buộc!",
+    "add-success": "Thêm thành công",
+    "update-success": "Cập nhật thành công",
+    "reference": "Danh mục"
   },
   "transcript": {
     "title": "Bảng điểm sinh viên",
