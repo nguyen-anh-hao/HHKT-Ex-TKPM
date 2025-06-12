@@ -5,7 +5,7 @@ import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import CourseTable from './CourseTable';
 import CourseModal from './CourseModal';
-import { Course } from '@/interfaces/Course';
+import { Course } from '@/interfaces/course/Course';
 import {
     updateCourse as updateCourseState,
     addCourse as addCourseState,
@@ -15,9 +15,9 @@ import {
     useCreateCourse,
     useDeleteCourse,
     useUpdateCourse
-} from '@/libs/hooks/useCourseMutation';
+} from '@/libs/hooks/course/useCourseMutation';
 import useReferenceStore from '@/libs/stores/referenceStore';
-import { useFaculties } from '@/libs/hooks/useReferences';
+import { useFaculties } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
 
 export default function Home({ initialCourses }: { initialCourses: Course[] }) {
@@ -86,10 +86,10 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
             },
             onError: (error: any) => {
                 message.error(
-                    t('delete-error', {
+                    t('delete-error') + {
                         error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
                             error.response?.data?.message
-                    })
+                    }
                 );
             },
         });

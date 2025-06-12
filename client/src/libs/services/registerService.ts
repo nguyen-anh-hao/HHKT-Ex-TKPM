@@ -1,5 +1,5 @@
-import { RegisterRequest } from '@/interfaces/CreateRegisterRequest';
-import { RegisterResponse } from '@/interfaces/RegisterResponse';
+import { RegisterRequest } from '@/interfaces/register/CreateRegisterRequest';
+import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
 import {
     getRegistrations,
     getRegistrationById,

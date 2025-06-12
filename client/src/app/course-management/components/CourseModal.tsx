@@ -2,8 +2,8 @@
 
 import { Form, Input, Modal, Button, Select, message, Switch, Spin } from 'antd';
 import { useEffect, useState } from 'react';
-import { Course } from '../../../interfaces/Course';
-import { useFaculties } from '@/libs/hooks/useReferences';
+import { Course } from '../../../interfaces/course/Course';
+import { useFaculties } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
 
 const { Option } = Select;

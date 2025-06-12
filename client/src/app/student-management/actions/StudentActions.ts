@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { Student } from '../../../interfaces/Student';
+import { Student } from '../../../interfaces/student/Student';
 
 export const addStudent = (students: Student[], newStudent: Student) => {
     return [...students, newStudent];

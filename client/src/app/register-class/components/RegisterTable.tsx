@@ -1,7 +1,7 @@
 import { Table, Button, Input, Tag } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
-import { RegisterResponse } from '@/interfaces/RegisterResponse';
+import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
 import { useTranslations } from 'next-intl';
 
 interface RegisterTableProps {
@@ -12,7 +12,7 @@ interface RegisterTableProps {
 
 const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) => {
     const [searchText, setSearchText] = useState('');
-    const t = useTranslations('enroll-class');
+    const t = useTranslations('register-class');
 
     const filteredData = registrations.filter((item) =>
         item.studentId.toLowerCase().includes(searchText.toLowerCase()) ||

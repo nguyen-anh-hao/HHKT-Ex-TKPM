@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Student } from '@/interfaces/Student'
+import { Student } from '@/interfaces/student/Student'
 
 export const createStudentSchema = (students: Student[]) => {
     return z.object({

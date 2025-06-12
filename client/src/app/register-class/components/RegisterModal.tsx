@@ -2,8 +2,8 @@
 
 import { Form, Input, Modal, Button, Select, message, InputNumber } from 'antd';
 import { useEffect, useState } from 'react';
-import { RegisterResponse } from '@/interfaces/RegisterResponse';
-import { Class } from '@/interfaces/ClassResponse';
+import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
+import { Class } from '@/interfaces/class/ClassResponse';
 import { fetchStudentById } from '@/libs/services/studentService';
 import { useTranslations } from 'next-intl';
 
@@ -33,7 +33,7 @@ const RegisterModal = ({
     const [isEdit, setIsEdit] = useState(false);
     const [status, setStatus] = useState('REGISTERED');
     const [student, setStudent] = useState('');
-    const t = useTranslations('enroll-class');
+    const t = useTranslations('register-class');
 
     useEffect(() => {
         if (registrationData) {

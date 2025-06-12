@@ -3,7 +3,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { SortOrder } from 'antd/es/table/interface';
 import { fetchReference } from '@/libs/services/referenceService';
-import { Course } from '@/interfaces/Course';
+import { Course } from '@/interfaces/course/Course';
 import { useTranslations } from 'next-intl';
 
 interface CourseTableProps {
@@ -62,10 +62,10 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
             // render: (facultyId: number) => facultyMap[facultyId] || 'Không xác định',
         },
         {
-            title: 'Học phần tiên quyết',
+            title: t('prerequisite-courses'),
             dataIndex: 'prerequisiteCourseId',
             render: (courseId: number | null) =>
-                courseId && courseCodeMap[courseId] ? courseCodeMap[courseId] : 'Không có',
+                courseId && courseCodeMap[courseId] ? courseCodeMap[courseId] : t('no-prerequisite'),
         },
         {
             title: t('description'),

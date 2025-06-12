@@ -3,8 +3,8 @@
 import { Table, Input } from 'antd';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Student } from '@/interfaces/Student';
-import { useStudents } from '@/libs/hooks/useStudents';
+import { Student } from '@/interfaces/student/Student';
+import { useStudents } from '@/libs/hooks/student/useStudents';
 import moment from 'moment';
 import { useTranslations } from 'next-intl';
 

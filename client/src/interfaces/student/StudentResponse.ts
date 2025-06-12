@@ -1,5 +1,5 @@
-import { Address } from './Address';
-import { Identity } from './Identify';
+import { Address } from '../Address';
+import { Identity } from '../Identify';
 
 export interface StudentResponse {
     studentId: string;

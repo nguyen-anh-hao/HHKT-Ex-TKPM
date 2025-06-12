@@ -1,7 +1,7 @@
 'use client'
 
 import ClassPage from './components/Home';
-import { useClasses } from '@/libs/hooks/useClassQuery';
+import { useClasses } from '@/libs/hooks/class/useClassQuery';
 import { useTranslations } from 'next-intl';
 
 export default function ClassManagementPage() {

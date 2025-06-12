@@ -1,21 +1,17 @@
-import { Class } from '@/interfaces/ClassResponse';
-import {
-    getClasses,
-    postClass,
-
-} from '@/libs/api/classApi';
+import { Class } from '@/interfaces/class/ClassResponse';
+import { getClasses, postClass } from '@/libs/api/classApi';
 import { cleanData } from '@/libs/utils/cleanData';
 
 export const fetchClasses = async (): Promise<Class[]> => {
     try {
-        return await getClasses(); // Không cần map transform nữa
+        return await getClasses();
     } catch (error) {
         throw error;
     }
 };
 
 export const createClass = async (value: Class) => {
-    const requestData = cleanData(value); // Dùng object Class trực tiếp
+    const requestData = cleanData(value);
     try {
         const data = await postClass(requestData);
         return data;

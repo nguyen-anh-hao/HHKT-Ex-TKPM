@@ -1,5 +1,5 @@
-import { Address } from './Address';
-import { Identity } from './Identify';
+import { Address } from '@/interfaces/Address';
+import { Identity } from '@/interfaces/Identify';
 
 export interface UpdateStudentRequest {
     studentId: string;

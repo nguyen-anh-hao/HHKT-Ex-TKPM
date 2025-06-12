@@ -3,7 +3,7 @@
 import { Card, Table, Button, Typography, Descriptions } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { downloadTranscript } from '@/libs/services/transcriptService';
-import { useStudent } from '@/libs/hooks/useStudents';
+import { useStudent } from '@/libs/hooks/student/useStudents';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 

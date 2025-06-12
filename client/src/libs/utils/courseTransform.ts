@@ -1,6 +1,6 @@
-import { Course } from "@/interfaces/Course";
-import { CreateCourseRequest } from "@/interfaces/CreateCourseRequest";
-import { UpdateCourseRequest } from "@/interfaces/UpdateCourseRequest";
+import { Course } from "@/interfaces/course/Course";
+import { CreateCourseRequest } from "@/interfaces/course/CreateCourseRequest";
+import { UpdateCourseRequest } from "@/interfaces/course/UpdateCourseRequest";
 import useReferenceStore from '@/libs/stores/referenceStore';
 
 export const transformCourseToGetResponse = (response: any) => {

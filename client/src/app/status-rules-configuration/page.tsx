@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Select, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import useReferenceStore from '@/libs/stores/referenceStore';
-import { useStatusRules } from '@/libs/hooks/useStatusRules';
+import { useStatusRules } from '@/libs/hooks/statusRule/useStatusRules';
 import {
     useCreateStatusRule,
     useDeleteStatusRule,
     useUpdateStatusRule
-} from '@/libs/hooks/useStatusRuleMutation';
+} from '@/libs/hooks/statusRule/useStatusRuleMutation';
 import { useTranslations } from 'next-intl';
 
 const StatusMatrix = () => {
@@ -37,7 +37,7 @@ const StatusMatrix = () => {
 
     useEffect(() => {
         fetchReference();
-    });
+    }, []);
 
     useEffect(() => {
         if (statusRules) {
