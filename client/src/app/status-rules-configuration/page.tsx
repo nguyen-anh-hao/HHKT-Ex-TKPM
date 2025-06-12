@@ -18,6 +18,9 @@ const StatusMatrix = () => {
     const { mutate: updateStatusRule } = useUpdateStatusRule();
     const { mutate: deleteStatusRule } = useDeleteStatusRule();
     const t = useTranslations('status-rules-configuration');
+    const tCommon = useTranslations('common');
+    const tMessages = useTranslations('messages');
+    const tValidation = useTranslations('validation');
 
     const { fetchReference, studentStatuses } = useReferenceStore();
 
@@ -101,7 +104,7 @@ const StatusMatrix = () => {
                                 )
                             }
                         >
-                            {t('edit')}
+                            {tCommon('edit')}
                         </Button>
                         <Button
                             size="small"
@@ -109,7 +112,7 @@ const StatusMatrix = () => {
                             danger
                             onClick={() => onDelete(value.id)}
                         >
-                            {t('delete')}
+                            {tCommon('delete')}
                         </Button>
                     </div>
                 );
@@ -211,20 +214,18 @@ const StatusMatrix = () => {
 
     const onDelete = (id: number) => {
         Modal.confirm({
-            title: t('confirm-delete'),
+            title: tCommon('confirm-delete'),
             onOk: () => {
                 deleteStatusRule(id, {
                     onSuccess: () => {
                         setData(prev => prev.filter(item => item.id !== id));
-                        message.success(t('delete-success'));
+                        message.success(tMessages('delete-success', { entity: t('title').toLowerCase() }));
                     },
                     onError: (error: any) => {
                         message.error(
-                            t('delete-error', {
-                                error: error.response?.data?.errors?.map(
-                                    (e: any) => e.defaultMessage
-                                ).join(' ') || error.response?.data?.message
-                            })
+                            `${tMessages('delete-error', { entity: t('title').toLowerCase() })}: ${error.response?.data?.errors?.map(
+                                (e: any) => e.defaultMessage
+                            ).join(' ') || error.response?.data?.message}`
                         );
                     }
                 });

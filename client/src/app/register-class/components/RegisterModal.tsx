@@ -34,6 +34,7 @@ const RegisterModal = ({
     const [status, setStatus] = useState('REGISTERED');
     const [student, setStudent] = useState('');
     const t = useTranslations('register-class');
+    const tCommon = useTranslations('common');
 
     useEffect(() => {
         if (registrationData) {
@@ -171,7 +172,7 @@ const RegisterModal = ({
             </Form>
 
             <Button type="primary" onClick={handleSubmit}>
-                {t('save')}
+                {tCommon('save')}
             </Button>
         </Modal>
     );

@@ -13,6 +13,7 @@ interface RegisterTableProps {
 const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) => {
     const [searchText, setSearchText] = useState('');
     const t = useTranslations('register-class');
+    const tCommon = useTranslations('common');
 
     const filteredData = registrations.filter((item) =>
         item.studentId.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -56,7 +57,7 @@ const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) =
                     icon={<EditOutlined />}
                     onClick={() => onEdit(record)}
                 >
-                    {t('edit')}
+                    {tCommon('edit')}
                 </Button>
             ),
         },

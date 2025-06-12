@@ -17,6 +17,8 @@ const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
     const [fileName, setFileName] = useState<string>('');
     const [uploading, setUploading] = useState(false);
     const t = useTranslations('student-management');
+    const tMessages = useTranslations('messages');
+    const tValidation = useTranslations('validation');
 
     const handleUpload = async (options: UploadRequestOption) => {
         const { file, onSuccess, onError } = options;
@@ -29,15 +31,15 @@ const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
             const result = await uploadFile(realFile);
             if (result.status !== 200) {
                 const errorMessage = result.data?.message || result.statusText || 'Unknown error';
-                message.error(t('import-error', { fileName: realFile.name, error: errorMessage }));
+                message.error(tMessages('import-error', { fileName: realFile.name }));
                 return;
             }
-            message.success(t('import-success', { fileName: realFile.name }));
+            message.success(tMessages('import-success', { fileName: realFile.name }));
             onSuccess?.(result, new XMLHttpRequest());
             onCancel();
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || t('upload-error');
-            message.error(t('import-error', { fileName: realFile.name, error: errorMessage }));
+            const errorMessage = error.response?.data?.message || tMessages('upload-error');
+            message.error(tMessages('import-error', { fileName: realFile.name }));
             onError?.(new Error(errorMessage));
         } finally {
             setUploading(false);

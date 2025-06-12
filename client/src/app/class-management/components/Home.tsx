@@ -11,7 +11,7 @@ import { useCreateClass } from '@/libs/hooks/class/useClassMutation';
 import useReferenceStore from '@/libs/stores/referenceStore';
 import { useTranslations } from 'next-intl';
 
-export default function Home({ initialClasses }: { initialClasses: Class[] }) {
+const Home = ({ initialClasses }: { initialClasses: Class[] }) => {
     const [classes, setClasses] = useState<Class[]>(initialClasses);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedClass, setSelectedClass] = useState<Class | null>(null);
@@ -20,6 +20,8 @@ export default function Home({ initialClasses }: { initialClasses: Class[] }) {
     const { mutate: createClass } = useCreateClass();
     const fetchReference = useReferenceStore((state) => state.fetchReference);
     const t = useTranslations('class-management');
+    const tCommon = useTranslations('common');
+    const tMessages = useTranslations('messages');
 
     useEffect(() => {
         fetchReference();
@@ -28,16 +30,14 @@ export default function Home({ initialClasses }: { initialClasses: Class[] }) {
     const handleAddOrUpdateClass = (value: Class) => {
         createClass(value, {
             onSuccess: () => {
-                message.success(t('add-success'));
+                message.success(tMessages('create-success', { entity: tCommon('class-management').toLowerCase() }));
                 setClasses(addClassState(classes, value));
                 setIsModalVisible(false);
             },
             onError: (error: any) => {
                 message.error(
-                    t('add-error', {
-                        error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                            error.response?.data?.message
-                    })
+                    `${tMessages('create-error', { entity: tCommon('class-management').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                        error.response?.data?.message}`
                 );
             },
         });
@@ -82,4 +82,6 @@ export default function Home({ initialClasses }: { initialClasses: Class[] }) {
             />
         </div>
     );
-}
+};
+
+export default Home;

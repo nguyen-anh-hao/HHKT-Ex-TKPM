@@ -31,6 +31,7 @@ const CourseModal = ({
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const { data: facultyOptions } = useFaculties();
     const t = useTranslations('course-management');
+    const tCommon = useTranslations('common');
 
     const renderOptions = (options?: { key: number; value: string; label: string }[]) =>
         options?.map((option) => (
@@ -141,7 +142,7 @@ const CourseModal = ({
             </Form>
 
             <Button type="primary" onClick={handleSubmit}>
-                {t('save')}
+                {tCommon('save')}
             </Button>
         </Modal>
     );

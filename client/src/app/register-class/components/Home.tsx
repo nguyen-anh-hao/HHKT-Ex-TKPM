@@ -16,6 +16,9 @@ import RegisterModal from './RegisterModal';
 
 const Home = () => {
     const t = useTranslations('register-class');
+    const tCommon = useTranslations('common');
+    const tMessages = useTranslations('messages');
+    
     const [state, setState] = useState<{
         isModalVisible: boolean;
         selectedRegistration: RegisterResponse | null;
@@ -71,11 +74,11 @@ const Home = () => {
                     },
                     {
                         onSuccess: () => {
-                            message.success(t('update-success'));
+                            message.success(tMessages('update-success', { entity: tCommon('register-class').toLowerCase() }));
                             handleModalClose();
                         },
                         onError: (error) => {
-                            message.error(error.message || t('update-error'));
+                            message.error(`${tMessages('update-error', { entity: tCommon('register-class').toLowerCase() })}: ${error.message}`);
                         }
                     }
                 );
@@ -87,17 +90,17 @@ const Home = () => {
                     },
                     {
                         onSuccess: () => {
-                            message.success(t('create-success'));
+                            message.success(tMessages('create-success', { entity: tCommon('register-class').toLowerCase() }));
                             handleModalClose();
                         },
                         onError: (error) => {
-                            message.error(error.message || t('create-error'));
+                            message.error(`${tMessages('create-error', { entity: tCommon('register-class').toLowerCase() })}: ${error.message}`);
                         }
                     }
                 );
             }
         } catch (error) {
-            message.error(error instanceof Error ? error.message : t('error'));
+            message.error(error instanceof Error ? error.message : tCommon('error'));
         }
     };
 

@@ -16,6 +16,8 @@ const ExportModal = ({ visible, onCancel }: ExportModalProps) => {
     const [page, setPage] = useState<number>(0);
     const [size, setSize] = useState<number>(10);
     const t = useTranslations('student-management');
+    const tMessages = useTranslations('messages');
+    const tCommon = useTranslations('common');
     
     const handleExport = async () => {
         try {
@@ -25,7 +27,7 @@ const ExportModal = ({ visible, onCancel }: ExportModalProps) => {
             link.href = response;
             link.click();
         } catch (error) {
-            message.error(t('export-error'));
+            message.error(tMessages('export-error'));
         } finally {
             setIsLoading(false);
         }

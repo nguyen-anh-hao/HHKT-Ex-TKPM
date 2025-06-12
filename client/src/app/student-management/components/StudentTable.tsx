@@ -12,6 +12,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
     const [searchText, setSearchText] = useState('');
     const [facultyOptions, setFacultyOptions] = useState<{ text: string; value: string }[]>([]);
     const t = useTranslations('student-management');
+    const tCommon = useTranslations('common');
 
     const filteredStudents = students.filter((student: Student) =>
         student.studentId.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -48,7 +49,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
         { title: t('year'), dataIndex: 'intake' },
         { title: t('state'), dataIndex: 'studentStatus' },
         {
-            title: t('actions'),
+            title: tCommon('actions'),
             render: (_: any, record: Student) => (
                 <>
                     <Button
@@ -59,16 +60,16 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
                             openModal(true);
                         }}
                     >
-                        {t('edit')}
+                        {tCommon('edit')}
                     </Button>
                     <Popconfirm
-                        title={t('confirm-delete')}
+                        title={tCommon('confirm-delete')}
                         onConfirm={() => onDelete(record.studentId)}
-                        okText={t('delete')}
-                        cancelText={t('cancel')}
+                        okText={tCommon('delete')}
+                        cancelText={tCommon('cancel')}
                     >
                         <Button icon={<DeleteOutlined />} danger>
-                            {t('delete')}
+                            {tCommon('delete')}
                         </Button>
                     </Popconfirm>
                 </>

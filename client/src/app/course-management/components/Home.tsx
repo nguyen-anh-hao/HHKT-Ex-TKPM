@@ -20,7 +20,7 @@ import useReferenceStore from '@/libs/stores/referenceStore';
 import { useFaculties } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
 
-export default function Home({ initialCourses }: { initialCourses: Course[] }) {
+const Home = ({ initialCourses }: { initialCourses: Course[] }) => {
     const [courses, setCourses] = useState<Course[]>(initialCourses);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -34,6 +34,8 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
     const { data: facultyOptions } = useFaculties();
     const fetchReference = useReferenceStore((state) => state.fetchReference);
     const t = useTranslations('course-management');
+    const tCommon = useTranslations('common');
+    const tMessages = useTranslations('messages');
 
     useEffect(() => {
         fetchReference();
@@ -45,16 +47,14 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
                 { ...value, courseId: selectedCourse.courseId },
                 {
                     onSuccess: () => {
-                        message.success(t('update-success'));
+                        message.success(tMessages('update-success', { entity: tCommon('course-management').toLowerCase() }));
                         setCourses(updateCourseState(courses, { ...value, courseId: selectedCourse.courseId }));
                         setIsModalVisible(false);
                     },
                     onError: (error: any) => {
                         message.error(
-                            t('update-error', {
-                                error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                                    error.response?.data?.message
-                            })
+                            `${tMessages('update-error', { entity: tCommon('course-management').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                                error.response?.data?.message}`
                         );
                     },
                 }
@@ -62,16 +62,14 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
         } else {
             createCourse(value, {
                 onSuccess: () => {
-                    message.success(t('add-success'));
+                    message.success(tMessages('create-success', { entity: tCommon('course-management').toLowerCase() }));
                     setCourses(addCourseState(courses, value));
                     setIsModalVisible(false);
                 },
                 onError: (error: any) => {
                     message.error(
-                        t('add-error', {
-                            error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                                error.response?.data?.message
-                        })
+                        `${tMessages('create-error', { entity: tCommon('course-management').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                            error.response?.data?.message}`
                     );
                 },
             });
@@ -81,15 +79,13 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
     const handleDeleteCourse = (id: number) => {
         deleteCourse(id, {
             onSuccess: () => {
-                message.success(t('delete-success'));
+                message.success(tMessages('delete-success', { entity: tCommon('course-management').toLowerCase() }));
                 setCourses(deleteCourseState(courses, id));
             },
             onError: (error: any) => {
                 message.error(
-                    t('delete-error') + {
-                        error: error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                            error.response?.data?.message
-                    }
+                    `${tMessages('delete-error', { entity: tCommon('course-management').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                        error.response?.data?.message}`
                 );
             },
         });
@@ -133,4 +129,6 @@ export default function Home({ initialCourses }: { initialCourses: Course[] }) {
             />
         </div>
     );
-}
+};
+
+export default Home;

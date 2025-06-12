@@ -7,9 +7,6 @@ import { useState, useEffect, use } from 'react';
 import { Student } from '../../../interfaces/student/Student';
 import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
-// import { Controller, useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { studentSchema, StudentSchema } from '@/libs/validators/studentSchema';
 
 const { Option } = Select;
 
@@ -27,16 +24,13 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [documentType, setDocumentType] = useState<string | null>(null);
     const t = useTranslations('student-management');
+    const tCommon = useTranslations('common');
+    const tValidation = useTranslations('validation');
 
     const { data: facultyOptions } = useFaculties();
     const { data: programOptions } = usePrograms();
     const { data: studentStatusOptions } = useStudentStatuses();
     const { data: emailDomainOptions } = useEmailDomains();
-
-    // const { control, handleSubmit, formState: { errors } } = useForm<StudentSchema>({
-    //     resolver: zodResolver(studentSchema),
-    //     mode: "onBlur",
-    // });
 
     useEffect(() => {
         if (student) {
@@ -74,7 +68,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                 label={t('mssv')}
                                 name='studentId'
                                 rules={[
-                                    { required: true, message: t('required-mssv') },
+                                    { required: true, message: tValidation('required', { field: t('mssv') }) },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (isEdit) {
@@ -83,30 +77,20 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                             if (!value || !student || value !== student.studentId) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error(t('duplicate-mssv')));
+                                            return Promise.reject(new Error(tValidation('duplicate', { field: t('mssv') })));
                                         },
                                     }),
                                 ]}
-                                >
-                                {/* validateStatus={errors.studentId ? 'error' : ''}
-                                    help={errors.studentId?.message}  
-                                <Controller
-                                    name='studentId'
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            disabled={!!student}
-                                            prefix={<UserOutlined />}
-                                            placeholder='Nhập mã số sinh viên'
-                                        />
-                                    )}
-                                /> */}
+                            >
                                 <Input prefix={<UserOutlined />} disabled={!!student} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label={t('full-name')} name='fullName' rules={[{ required: true, message: t('required-fullname') }]}>
+                            <Form.Item 
+                                label={t('full-name')} 
+                                name='fullName' 
+                                rules={[{ required: true, message: tValidation('required', { field: t('full-name') }) }]}
+                            >
                                 <Input />
                             </Form.Item>
                         </Col>
@@ -390,11 +374,11 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                             };
                         })
                         .catch((error) => {
-                            message.error(t('check-info'));
+                            message.error(tValidation('check-info'));
                         });
                 }}
             >
-                {t('save')}
+                {tCommon('save')}
             </Button>
         </Modal>
     );

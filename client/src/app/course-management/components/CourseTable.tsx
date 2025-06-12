@@ -19,6 +19,7 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
     const [facultyMap, setFacultyMap] = useState<Record<number, string>>({});
     const [courseCodeMap, setCourseCodeMap] = useState<Record<number, string>>({});
     const t = useTranslations('course-management');
+    const tCommon = useTranslations('common');
 
     useEffect(() => {
         const fetchFacultyOptions = async () => {
@@ -82,7 +83,7 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
             ),
         },
         {
-            title: t('actions'),
+            title: tCommon('actions'),
             render: (_: any, record: Course) => (
                 <>
                     <Button
@@ -93,16 +94,16 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
                             openModal?.(true);
                         }}
                     >
-                        {t('edit')}
+                        {tCommon('edit')}
                     </Button>
                     <Popconfirm
                         title={t('confirm-delete')}
                         onConfirm={() => onDelete(record.courseId)}
-                        okText={t('delete')}
-                        cancelText={t('cancel')}
+                        okText={tCommon('delete')}
+                        cancelText={tCommon('cancel')}
                     >
                         <Button icon={<DeleteOutlined />} danger>
-                            {t('delete')}
+                            {tCommon('delete')}
                         </Button>
                     </Popconfirm>
                 </>

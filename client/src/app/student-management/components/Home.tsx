@@ -29,6 +29,8 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
     const fetchReference = useReferenceStore((state) => state.fetchReference);
     
     const t = useTranslations('student-management');
+    const tCommon = useTranslations('common');
+    const tMessages = useTranslations('messages');
     
     useEffect(() => {
         fetchReference();
@@ -40,12 +42,12 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
                 value, 
                 {
                     onSuccess: () => {
-                        message.success('Cập nhật sinh viên thành công');
+                        message.success(tMessages('update-success', { entity: tCommon('student-management').toLowerCase() }));
                         setStudents(updateStudentState(students, value));
                         setIsResetModal(true);
                     },
                     onError: (error : any) => {
-                        message.error(`Cập nhật sinh viên thất bại: ${error.response.data.errors
+                        message.error(`${tMessages('update-error', { entity: tCommon('student-management').toLowerCase() })}: ${error.response.data.errors
                             ? error.response.data.errors.map((error: any) => error.defaultMessage).join(' ')
                             : error.response.data.message}`);
                     }
@@ -55,18 +57,18 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
             const validation = createStudentSchema(students).safeParse(value);
             if (!validation.success) {
                 const errorMessages = validation.error.errors.map((error) => error.message).join(', ');
-                message.error(`Thêm sinh viên thất bại: ${errorMessages}`);
+                message.error(`${tMessages('create-error', { entity: tCommon('student-management').toLowerCase() })}: ${errorMessages}`);
                 return;
             }
             createStudent(
                 value,
                 {
                     onSuccess: () => {
-                        message.success('Thêm sinh viên thành công');
+                        message.success(tMessages('create-success', { entity: tCommon('student-management').toLowerCase() }));
                         setStudents(addStudentState(students, value));
                     },
                     onError: (error: any) => {
-                        message.error(`Thêm sinh viên thất bại: ${error.response.data.errors.map((error: any) => error.defaultMessage).join(' ') || error.response.data.message}`);
+                        message.error(`${tMessages('create-error', { entity: tCommon('student-management').toLowerCase() })}: ${error.response.data.errors.map((error: any) => error.defaultMessage).join(' ') || error.response.data.message}`);
                     }
                 }
             );
@@ -78,11 +80,11 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
             studentId,
             {
                 onSuccess: () => {
-                    message.success('Xóa sinh viên thành công');
+                    message.success(tMessages('delete-success', { entity: tCommon('student-management').toLowerCase() }));
                     setStudents(deleteStudentState(students, studentId));
                 },
                 onError: (error: any) => {
-                    message.error(`Xóa sinh viên thất bại: ${error.response.data.errors.map((error: any) => error.defaultMessage).join(' ') || error.response.data.message}`);
+                    message.error(`${tMessages('delete-error', { entity: tCommon('student-management').toLowerCase() })}: ${error.response.data.errors.map((error: any) => error.defaultMessage).join(' ') || error.response.data.message}`);
                 }
             }
         );
