@@ -3,12 +3,19 @@ import { EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 import { Student } from '@/interfaces/student/Student';
 import moment from 'moment';
 import { useState } from 'react';
-import { SortOrder } from 'antd/es/table/interface';
 import { useEffect } from 'react';
 import { fetchReference } from '@/libs/services/referenceService';
 import { useTranslations } from 'next-intl';
 
-const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
+interface StudentTableProps {
+    students: Student[];
+    onEdit: (student: Student) => void;
+    onDelete: (studentId: string) => void;
+    openModal: (visible: boolean) => void;
+    loading?: boolean;
+}
+
+const StudentTable = ({ students, onEdit, onDelete, openModal, loading }: StudentTableProps) => {
     const [searchText, setSearchText] = useState('');
     const [facultyOptions, setFacultyOptions] = useState<{ text: string; value: string }[]>([]);
     const t = useTranslations('student-management');
@@ -109,6 +116,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
                 columns={columns} 
                 dataSource={filteredStudents} 
                 rowKey='studentId'
+                loading={loading}
                 pagination={{ 
                     showSizeChanger: true,
                     pageSizeOptions: ['10', '20', '50'],

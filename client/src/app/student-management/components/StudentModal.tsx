@@ -17,9 +17,10 @@ interface StudentModalProps {
     student?: Student;
     isResetModal?: boolean;
     setIsResetModal?: any;
+    isSubmitting?: boolean;
 }
 
-const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setIsResetModal }: StudentModalProps) => {
+const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setIsResetModal, isSubmitting }: StudentModalProps) => {
     const [studentForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [documentType, setDocumentType] = useState<string | null>(null);
@@ -386,6 +387,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                             message.error(tValidation('check-info'));
                         });
                 }}
+                loading={isSubmitting}
             >
                 {tCommon('save')}
             </Button>
@@ -393,4 +395,4 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
     );
 };
 
-export default StudentModal
+export default StudentModal;

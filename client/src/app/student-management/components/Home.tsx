@@ -8,23 +8,32 @@ import StudentModal from './StudentModal';
 import { Student } from '@/interfaces/student/Student';
 import { updateStudent as updateStudentState, addStudent as addStudentState, deleteStudent as deleteStudentState } from '../actions/StudentActions';
 import { useCreateStudent, useDeleteStudent, useUpdateStudent } from '@/libs/hooks/student/useStudentMutation';
+import { useStudents } from '@/libs/hooks/student/useStudents';
 import useReferenceStore from '@/libs/stores/referenceStore';
 import ImportModal from './ImportModal'
 import ExportModal from './ExportModal';
 import { createStudentSchema } from '@/libs/validators/studentSchema';
 import { useTranslations } from 'next-intl';
 
-export default function Home({ initialStudents }: { initialStudents: Student[] }) {
-    const [students, setStudents] = useState<Student[]>(initialStudents);
+export default function Home() {
+    const { data: initialStudents = [], isLoading: isLoadingStudents } = useStudents();
+    const [students, setStudents] = useState<Student[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
     const [isImportModalVisible, setIsImportModalVisible] = useState(false);
     const [isExportModalVisible, setIsExportModalVisible] = useState(false);
     const [isResetModal, setIsResetModal] = useState(false);
 
-    const { mutate: createStudent } = useCreateStudent();
-    const { mutate: updateStudent } = useUpdateStudent();
-    const { mutate: deleteStudent } = useDeleteStudent();
+    // Update local state when data from API changes
+    useEffect(() => {
+        if (initialStudents) {
+            setStudents(initialStudents);
+        }
+    }, [initialStudents]);
+
+    const { mutate: createStudent, isPending: isCreating } = useCreateStudent();
+    const { mutate: updateStudent, isPending: isUpdating } = useUpdateStudent();
+    const { mutate: deleteStudent, isPending: isDeleting } = useDeleteStudent();
 
     const fetchReference = useReferenceStore((state) => state.fetchReference);
     
@@ -44,12 +53,15 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
                     onSuccess: () => {
                         message.success(tMessages('update-success', { entity: tCommon('student').toLowerCase() }));
                         setStudents(updateStudentState(students, value));
+                        setIsModalVisible(false);
+                        setSelectedStudent(null);
                         setIsResetModal(true);
                     },
                     onError: (error : any) => {
-                        message.error(`${tMessages('update-error', { entity: tCommon('student').toLowerCase() })}: ${error.response.data.errors
+                        const errorMessage = error.response?.data?.errors
                             ? error.response.data.errors.map((error: any) => error.defaultMessage).join(' ')
-                            : error.response.data.message}`);
+                            : error.response?.data?.message || error.message || tMessages('update-error', { entity: tCommon('student').toLowerCase() });
+                        message.error(`${tMessages('update-error', { entity: tCommon('student').toLowerCase() })}: ${errorMessage}`);
                     }
                 }
             );
@@ -66,9 +78,13 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
                     onSuccess: () => {
                         message.success(tMessages('create-success', { entity: tCommon('student').toLowerCase() }));
                         setStudents(addStudentState(students, value));
+                        setIsModalVisible(false);
                     },
                     onError: (error: any) => {
-                        message.error(`${tMessages('create-error', { entity: tCommon('student').toLowerCase() })}: ${error.response.data.errors.map((error: any) => error.defaultMessage).join(' ') || error.response.data.message}`);
+                        const errorMessage = error.response?.data?.errors
+                            ? error.response.data.errors.map((error: any) => error.defaultMessage).join(' ')
+                            : error.response?.data?.message || error.message || tMessages('create-error', { entity: tCommon('student').toLowerCase() });
+                        message.error(`${tMessages('create-error', { entity: tCommon('student').toLowerCase() })}: ${errorMessage}`);
                     }
                 }
             );
@@ -84,17 +100,27 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
                     setStudents(deleteStudentState(students, studentId));
                 },
                 onError: (error: any) => {
-                    message.error(`${tMessages('delete-error', { entity: tCommon('student').toLowerCase() })}: ${error.response.data.errors.map((error: any) => error.defaultMessage).join(' ') || error.response.data.message}`);
+                    const errorMessage = error.response?.data?.errors
+                        ? error.response.data.errors.map((error: any) => error.defaultMessage).join(' ')
+                        : error.response?.data?.message || error.message || tMessages('delete-error', { entity: tCommon('student').toLowerCase() });
+                    message.error(`${tMessages('delete-error', { entity: tCommon('student').toLowerCase() })}: ${errorMessage}`);
                 }
             }
         );
     };
 
+    const isLoading = isLoadingStudents || isCreating || isUpdating || isDeleting;
+
     return (
         <div>
             <h1>{t('student-management')}</h1>
             <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-                <Button type='primary' icon={<PlusOutlined />} onClick={() => { setSelectedStudent(null); setIsModalVisible(true); }}>
+                <Button 
+                    type='primary' 
+                    icon={<PlusOutlined />} 
+                    onClick={() => { setSelectedStudent(null); setIsModalVisible(true); }}
+                    loading={isCreating}
+                >
                     {t('add-student')}
                 </Button>
                 <Button onClick={() => setIsImportModalVisible(true)} icon={<UploadOutlined />}>{t('input-data')}</Button>
@@ -105,6 +131,7 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
                 openModal={setIsModalVisible}
                 onEdit={setSelectedStudent}
                 onDelete={handleDeleteStudent}
+                loading={isLoading}
             />
             <StudentModal
                 visible={isModalVisible}
@@ -113,6 +140,7 @@ export default function Home({ initialStudents }: { initialStudents: Student[] }
                 student={selectedStudent || undefined}
                 isResetModal={isResetModal}
                 setIsResetModal={setIsResetModal}
+                isSubmitting={isCreating || isUpdating}
             />
             <ImportModal
                 visible={isImportModalVisible}
