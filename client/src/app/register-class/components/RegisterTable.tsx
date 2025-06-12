@@ -50,7 +50,7 @@ const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) =
             },
         },
         {
-            title: t('actions'),
+            title: tCommon('actions'),
             key: 'action',
             render: (_: any, record: RegisterResponse) => (
                 <Button

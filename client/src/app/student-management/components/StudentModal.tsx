@@ -38,14 +38,15 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
             studentForm.setFieldsValue({
                 ...student,
                 dob: moment(student.dob),
-                issuedDate: moment(student.issuedDate),
-                expiredDate: moment(student.expiredDate),
+                issuedDate: student.issuedDate ? moment(student.issuedDate) : null,
+                expiredDate: student.expiredDate ? moment(student.expiredDate) : null,
             });
             setDocumentType(documents[0]?.documentType || null);
             setIsEdit(true);
         } else {
-            // studentForm.resetFields();
+            studentForm.resetFields();
             setIsEdit(false);
+            setDocumentType(null);
         }
     }, [student, studentForm]);
 
@@ -189,14 +190,18 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                 label={t('phone')}
                                 name='phone'
                                 rules={[
-                                    { required: true, message: t('required-phone') },
+                                    { required: true, message: tValidation('required', { field: t('phone') }) },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             const countryCode = getFieldValue('phoneCountry');
+                                            if (!value || !countryCode) return Promise.resolve();
+                                            
+                                            // Make phone number validation more user-friendly
+                                            // Just check for basic format based on country code
                                             const regexMap: Record<string, RegExp> = {
-                                                VN: /^\+84[0-9]{9}$/,
-                                                US: /^\+1[2-9][0-9]{9}$/,
-                                                UK: /^\+44[0-9]{10}$/,
+                                                VN: /^\+?84[0-9]{9}$/,
+                                                US: /^\+?1[2-9][0-9]{9}$/,
+                                                UK: /^\+?44[0-9]{10}$/,
                                                 AU: /^\+61[2-478][0-9]{8}$/,
                                                 JP: /^\+81[1-9][0-9]{9}$/,
                                                 DE: /^\+49[1-9][0-9]{10}$/,
@@ -215,15 +220,19 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                                 CA: /^\+1[2-9][0-9]{9}$/,
                                             };
 
-                                            if (!value || !countryCode || regexMap[countryCode]?.test(value)) {
+                                            const regex = regexMap[countryCode];
+                                            // Allow with or without + prefix
+                                            const normalizedValue = value.startsWith('+') ? value : `+${value}`;
+                                            
+                                            if (!regex || regex.test(normalizedValue)) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error(t('invalid-phone')));
+                                            return Promise.reject(new Error(tValidation('invalid', { field: t('phone') })));
                                         },
                                     }),
                                 ]}
                             >
-                                <Input prefix={<PhoneOutlined />} />
+                                <Input prefix={<PhoneOutlined />} placeholder="+84xxxxxxxxx" />
                             </Form.Item>
                         </Col>
                     </Row>

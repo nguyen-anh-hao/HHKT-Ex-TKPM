@@ -1,5 +1,5 @@
-import { Table, Button, Popconfirm, Input } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, Popconfirm, Input, Space } from 'antd';
+import { EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { Student } from '@/interfaces/student/Student';
 import moment from 'moment';
 import { useState } from 'react';
@@ -14,9 +14,12 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
     const t = useTranslations('student-management');
     const tCommon = useTranslations('common');
 
+    // Enhanced search functionality to include more fields
     const filteredStudents = students.filter((student: Student) =>
         student.studentId.toLowerCase().includes(searchText.toLowerCase()) ||
-        student.fullName.toLowerCase().includes(searchText.toLowerCase())
+        student.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
+        student.faculty.toLowerCase().includes(searchText.toLowerCase()) ||
+        String(student.intake).includes(searchText)
     );
     
     useEffect(() => {
@@ -33,9 +36,19 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
     }, []);
 
     const columns = [
-        { title: t('mssv'), dataIndex: 'studentId'},
-        { title: t('full-name'), dataIndex: 'fullName' },
-        { title: t('dob'), dataIndex: 'dob', render: (dob: string) => moment(dob).format('YYYY-MM-DD') },
+        { 
+            title: t('mssv'), 
+            dataIndex: 'studentId',
+        },
+        { 
+            title: t('full-name'), 
+            dataIndex: 'fullName',
+        },
+        { 
+            title: t('dob'), 
+            dataIndex: 'dob', 
+            render: (dob: string) => moment(dob).format('YYYY-MM-DD'),
+        },
         { title: t('gender'), dataIndex: 'gender' },
         {
             title: t('faculty'),
@@ -46,14 +59,16 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
             })) || [],
             onFilter: (value: any, record: Student) => record.faculty === value as string,
         },
-        { title: t('year'), dataIndex: 'intake' },
+        { 
+            title: t('year'), 
+            dataIndex: 'intake',
+        },
         { title: t('state'), dataIndex: 'studentStatus' },
         {
             title: tCommon('actions'),
             render: (_: any, record: Student) => (
-                <>
+                <Space>
                     <Button
-                        style={{ marginRight: 8, marginBottom: 8 }}
                         icon={<EditOutlined />}
                         onClick={() => {
                             onEdit(record);
@@ -72,7 +87,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
                             {tCommon('delete')}
                         </Button>
                     </Popconfirm>
-                </>
+                </Space>
             ),
         },
     ];
@@ -88,8 +103,18 @@ const StudentTable = ({ students, onEdit, onDelete, openModal }: any) => {
                     width: 300,
                     float: 'right'
                 }}
+                prefix={<SearchOutlined />}
             />
-            <Table columns={columns} dataSource={filteredStudents} rowKey='studentId' />
+            <Table 
+                columns={columns} 
+                dataSource={filteredStudents} 
+                rowKey='studentId'
+                pagination={{ 
+                    showSizeChanger: true,
+                    pageSizeOptions: ['10', '20', '50'],
+                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`
+                }}
+            />
         </div>
     );
 };

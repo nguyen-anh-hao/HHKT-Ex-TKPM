@@ -47,13 +47,13 @@ const Home = ({ initialCourses }: { initialCourses: Course[] }) => {
                 { ...value, courseId: selectedCourse.courseId },
                 {
                     onSuccess: () => {
-                        message.success(tMessages('update-success', { entity: tCommon('course-management').toLowerCase() }));
+                        message.success(tMessages('update-success', { entity: tCommon('course').toLowerCase() }));
                         setCourses(updateCourseState(courses, { ...value, courseId: selectedCourse.courseId }));
                         setIsModalVisible(false);
                     },
                     onError: (error: any) => {
                         message.error(
-                            `${tMessages('update-error', { entity: tCommon('course-management').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                            `${tMessages('update-error', { entity: tCommon('course').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
                                 error.response?.data?.message}`
                         );
                     },
@@ -62,13 +62,13 @@ const Home = ({ initialCourses }: { initialCourses: Course[] }) => {
         } else {
             createCourse(value, {
                 onSuccess: () => {
-                    message.success(tMessages('create-success', { entity: tCommon('course-management').toLowerCase() }));
+                    message.success(tMessages('create-success', { entity: tCommon('course').toLowerCase() }));
                     setCourses(addCourseState(courses, value));
                     setIsModalVisible(false);
                 },
                 onError: (error: any) => {
                     message.error(
-                        `${tMessages('create-error', { entity: tCommon('course-management').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                        `${tMessages('create-error', { entity: tCommon('course').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
                             error.response?.data?.message}`
                     );
                 },
@@ -79,12 +79,12 @@ const Home = ({ initialCourses }: { initialCourses: Course[] }) => {
     const handleDeleteCourse = (id: number) => {
         deleteCourse(id, {
             onSuccess: () => {
-                message.success(tMessages('delete-success', { entity: tCommon('course-management').toLowerCase() }));
+                message.success(tMessages('delete-success', { entity: tCommon('course').toLowerCase() }));
                 setCourses(deleteCourseState(courses, id));
             },
             onError: (error: any) => {
                 message.error(
-                    `${tMessages('delete-error', { entity: tCommon('course-management').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                    `${tMessages('delete-error', { entity: tCommon('course').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
                         error.response?.data?.message}`
                 );
             },

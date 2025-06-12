@@ -1,5 +1,5 @@
 {
-  "common": {    
+  "common": {
     "language": "Ngôn ngữ",
     "loading": "Đang tải",
     "error": "Có lỗi xảy ra",
@@ -12,7 +12,14 @@
     "transcript": "Bảng điểm sinh viên",
     "register-class": "Đăng ký học phần",
     "reference-management": "Quản lý danh mục",
-    
+
+    "student": "Sinh viên",
+    "category": "Danh mục",
+    "status-rules": "Quy tắc",
+    "course": "Khóa học",
+    "class": "Lớp học",
+    "reference": "Danh mục",
+
     "actions": "Hành động",
     "add": "Thêm",
     "edit": "Sửa",
@@ -89,7 +96,17 @@
     "export-from-page": "Xuất từ trang",
     "size": "Kích thước",
     "export-file": "Xuất tệp tin",
-    "invalid-email": "Email không hợp lệ! Chỉ chấp nhận các domain được phép."
+    "invalid-email": "Email không hợp lệ! Chỉ chấp nhận các domain được phép.",
+    "invalid-phone": "Số điện thoại không hợp lệ!",
+    "required-dob": "Ngày sinh là bắt buộc!",
+    "required-gender": "Giới tính là bắt buộc!",
+    "required-faculty": "Khoa là bắt buộc!",
+    "required-year": "Năm học là bắt buộc!",
+    "required-program": "Chương trình là bắt buộc!",
+    "required-state": "Trạng thái là bắt buộc!",
+    "required-country-code": "Mã quốc gia là bắt buộc!",
+    "required-email": "Email là bắt buộc!",
+    "required-nationality": "Quốc tịch là bắt buộc!"
   },
   "class-management": {
     "class-management": "Quản lý lớp học",
@@ -110,11 +127,22 @@
     "room": "Phòng học",
     "search-placeholder": "Tìm kiếm theo mã lớp hoặc tên khóa học",
     "loading-classes": "Đang tải dữ liệu lớp học...",
-    "error-loading-classes": "Lỗi khi tải lớp học"
+    "error-loading-classes": "Lỗi khi tải lớp học",
+    "duplicate-class": "Lớp học đã tồn tại!",
+    "not-implemented": "Chức năng chưa được thực hiện.",
+    "required-class-code": "Mã lớp học là bắt buộc!",
+    "required-course": "Khóa học là bắt buộc!",
+    "required-semester": "Học kỳ là bắt buộc!",
+    "required-lecturer": "Giảng viên là bắt buộc!",
+    "required-max-students": "Số lượng sinh viên tối đa là bắt buộc!",
+    "required-schedule": "Lịch học là bắt buộc!",
+    "required-room": "Phòng học là bắt buộc!",
+    "confirm-delete": "Bạn có chắc chắn muốn xóa lớp học này?"
   },
   "course-management": {
     "course-management": "Quản lý khóa học",
     "add-course": "Thêm khóa học",
+    "edit-course": "Sửa khóa học",
     "course-code": "Mã khóa học",
     "course-name": "Tên khóa học",
     "credits": "Số tín chỉ",
@@ -128,7 +156,14 @@
     "loading-courses": "Đang tải dữ liệu khóa học...",
     "error-loading-courses": "Lỗi khi tải khóa học",
     "prerequisite-courses": "Học phần tiên quyết",
-    "no-prerequisite": "Không có"
+    "no-prerequisite": "Không có",
+    "required-course-code": "Mã khóa học là bắt buộc!",
+    "required-course-name": "Tên khóa học là bắt buộc!",
+    "required-credits": "Số tín chỉ là bắt buộc!",
+    "required-faculty": "Khoa là bắt buộc!",
+    "confirm-delete": "Bạn có chắc chắn muốn xóa khóa học này?",
+    "check-info": "Vui lòng kiểm tra lại thông tin khóa học!",
+    "missing-course-id": "Không thể cập nhật vì thiếu mã khóa học!"
   },
   "register-class": {
     "register-class": "Đăng ký lớp học",
@@ -143,7 +178,12 @@
     "search-placeholder": "Tìm theo MSSV, họ tên, mã lớp, tên môn học",
     "loading": "Đang tải dữ liệu đăng ký...",
     "error": "Lỗi khi tải đăng ký",
-    "class-not-found": "Không tìm thấy lớp học!"
+    "class-not-found": "Không tìm thấy lớp học!",
+    "actions": "Hành động",
+    "required-student-id": "MSSV là bắt buộc!",
+    "required-class-code": "Mã lớp là bắt buộc!",
+    "required-status": "Trạng thái là bắt buộc!",
+    "save": "Lưu"
   },
   "reference-management": {
     "title": "Quản lý danh mục",

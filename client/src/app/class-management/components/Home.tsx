@@ -30,17 +30,28 @@ const Home = ({ initialClasses }: { initialClasses: Class[] }) => {
     const handleAddOrUpdateClass = (value: Class) => {
         createClass(value, {
             onSuccess: () => {
-                message.success(tMessages('create-success', { entity: tCommon('class-management').toLowerCase() }));
+                message.success(tMessages('create-success', { entity: tCommon('class').toLowerCase() }));
                 setClasses(addClassState(classes, value));
                 setIsModalVisible(false);
             },
             onError: (error: any) => {
                 message.error(
-                    `${tMessages('create-error', { entity: tCommon('class-management').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
+                    `${tMessages('create-error', { entity: tCommon('class').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
                         error.response?.data?.message}`
                 );
             },
         });
+    };
+
+    const handleDeleteClass = (id: number) => {
+        message.info(t('not-implemented'));
+        // Implementation would go here
+    };
+
+    const handleEditClass = (classData: Class) => {
+        message.info(t('not-implemented'));
+        setSelectedClass(classData);
+        setIsModalVisible(true);
     };
 
     return (
@@ -61,12 +72,8 @@ const Home = ({ initialClasses }: { initialClasses: Class[] }) => {
             <ClassTable
                 classes={classes}
                 openModal={setIsModalVisible}
-                onEdit={function (classData: Class): void {
-                    throw new Error('Function not implemented.');
-                }}
-                onDelete={function (id: number): void {
-                    throw new Error('Function not implemented.');
-                }}
+                onEdit={handleEditClass}
+                onDelete={handleDeleteClass}
             />
             <ClassModal
                 visible={isModalVisible}

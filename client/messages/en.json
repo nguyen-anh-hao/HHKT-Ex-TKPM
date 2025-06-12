@@ -12,7 +12,14 @@
     "transcript": "Student Transcript",
     "reference-management": "Reference Management",
     "register-class": "Register Class",
-    
+
+    "student": "Student",
+    "category": "Reference",
+    "status-rules": "Student Status",
+    "course": "Course",
+    "class": "Class",
+    "reference": "Reference",
+
     "actions": "Actions",
     "add": "Add",
     "edit": "Edit",
@@ -89,7 +96,17 @@
     "export-from-page": "Export from page",
     "size": "Size",
     "export-file": "Export file",
-    "invalid-email": "Invalid email! Only allowed domains are accepted."
+    "invalid-email": "Invalid email! Only allowed domains are accepted.",
+    "invalid-phone": "Invalid phone number!",
+    "required-dob": "Date of birth is required!",
+    "required-gender": "Gender is required!",
+    "required-faculty": "Faculty is required!",
+    "required-year": "Academic year is required!",
+    "required-program": "Program is required!",
+    "required-state": "State is required!",
+    "required-country-code": "Country code is required!",
+    "required-email": "Email is required!",
+    "required-nationality": "Nationality is required!"
   },
   "class-management": {
     "class-management": "Class Management",
@@ -110,11 +127,22 @@
     "room": "Room",
     "search-placeholder": "Search by class code or course name",
     "loading-classes": "Loading class data...",
-    "error-loading-classes": "Error loading classes"
+    "error-loading-classes": "Error loading classes",
+    "duplicate-class": "Class already exists!",
+    "not-implemented": "Function not implemented.",
+    "required-class-code": "Class code is required!",
+    "required-course": "Course is required!",
+    "required-semester": "Semester is required!",
+    "required-lecturer": "Lecturer is required!",
+    "required-max-students": "Maximum number of students is required!",
+    "required-schedule": "Schedule is required!",
+    "required-room": "Room is required!",
+    "confirm-delete": "Are you sure you want to delete this class?"
   },
   "course-management": {
     "course-management": "Course Management",
     "add-course": "Add Course",
+    "edit-course": "Edit Course",
     "course-code": "Course Code",
     "course-name": "Course Name",
     "credits": "Credits",
@@ -128,7 +156,14 @@
     "loading-courses": "Loading course data...",
     "error-loading-courses": "Error loading courses",
     "prerequisite-courses": "Prerequisite Courses",
-    "no-prerequisite": "None"
+    "no-prerequisite": "None",
+    "required-course-code": "Course code is required!",
+    "required-course-name": "Course name is required!",
+    "required-credits": "Credits are required!",
+    "required-faculty": "Faculty is required!",
+    "confirm-delete": "Are you sure you want to delete this course?",
+    "check-info": "Please check your course information!",
+    "missing-course-id": "Cannot update due to missing course ID!"
   },
   "register-class": {
     "register-class": "Register Class",

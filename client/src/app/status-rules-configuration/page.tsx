@@ -219,11 +219,11 @@ const StatusMatrix = () => {
                 deleteStatusRule(id, {
                     onSuccess: () => {
                         setData(prev => prev.filter(item => item.id !== id));
-                        message.success(tMessages('delete-success', { entity: t('title').toLowerCase() }));
+                        message.success(tMessages('delete-success', { entity: t('reference').toLowerCase() }));
                     },
                     onError: (error: any) => {
                         message.error(
-                            `${tMessages('delete-error', { entity: t('title').toLowerCase() })}: ${error.response?.data?.errors?.map(
+                            `${tMessages('delete-error', { entity: t('reference').toLowerCase() })}: ${error.response?.data?.errors?.map(
                                 (e: any) => e.defaultMessage
                             ).join(' ') || error.response?.data?.message}`
                         );

@@ -56,7 +56,7 @@ const CourseModal = ({
             .then((value) => {
                 if (course) {
                     if (!course.courseId) {
-                        message.error('Không thể cập nhật vì thiếu courseId!');
+                        message.error(t('missing-course-id'));
                         return;
                     }
 

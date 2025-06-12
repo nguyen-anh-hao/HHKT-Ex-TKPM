@@ -74,11 +74,11 @@ const Home = () => {
                     },
                     {
                         onSuccess: () => {
-                            message.success(tMessages('update-success', { entity: tCommon('register-class').toLowerCase() }));
+                            message.success(tMessages('update-success', { entity: tCommon('class').toLowerCase() }));
                             handleModalClose();
                         },
                         onError: (error) => {
-                            message.error(`${tMessages('update-error', { entity: tCommon('register-class').toLowerCase() })}: ${error.message}`);
+                            message.error(`${tMessages('update-error', { entity: tCommon('class').toLowerCase() })}: ${error.message}`);
                         }
                     }
                 );
@@ -90,11 +90,11 @@ const Home = () => {
                     },
                     {
                         onSuccess: () => {
-                            message.success(tMessages('create-success', { entity: tCommon('register-class').toLowerCase() }));
+                            message.success(tMessages('create-success', { entity: tCommon('class').toLowerCase() }));
                             handleModalClose();
                         },
                         onError: (error) => {
-                            message.error(`${tMessages('create-error', { entity: tCommon('register-class').toLowerCase() })}: ${error.message}`);
+                            message.error(`${tMessages('create-error', { entity: tCommon('class').toLowerCase() })}: ${error.message}`);
                         }
                     }
                 );
