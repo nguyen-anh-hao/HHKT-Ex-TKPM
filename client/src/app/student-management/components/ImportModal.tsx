@@ -3,7 +3,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import { useState } from 'react';
 import type { RcFile, UploadRequestOption } from 'rc-upload/lib/interface';
-import { uploadFile } from '@/libs/services/fileService';
+import { uploadFile } from '@/libs/services/studentsFileService';
 import { useTranslations } from 'next-intl';
 
 const BASE_URL = 'http://localhost:9000/api';

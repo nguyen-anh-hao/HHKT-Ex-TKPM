@@ -1,6 +1,6 @@
 import { Form, Input, Modal, Button, Select, message } from 'antd';
 import { useEffect, useState } from 'react';
-import { Class } from '../../../interfaces/class/ClassResponse';
+import { Class } from '../../../interfaces/class/Class';
 import { useLecturers, useCourses } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
 

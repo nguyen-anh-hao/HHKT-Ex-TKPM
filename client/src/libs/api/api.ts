@@ -10,7 +10,7 @@ const REQUEST_TIMEOUT = 10000; // 10 seconds
  * @returns A configured Axios instance
  */
 const createApiClient = (): AxiosInstance => {
-  const savedLocale = Cookies.get('NEXT_LOCALE') || 'en';
+  const savedLocale = Cookies.get('NEXT_LOCALE') || 'vi';
 
   const instance = axios.create({
     baseURL: API_BASE_URL,

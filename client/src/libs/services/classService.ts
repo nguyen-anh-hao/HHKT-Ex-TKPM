@@ -1,8 +1,9 @@
-import { Class } from '@/interfaces/class/ClassResponse';
+import { Class } from '@/interfaces/class/Class';
+import { ClassResponse } from '@/interfaces/class/ClassResponse';
 import { getClasses, postClass } from '@/libs/api/classApi';
 import { cleanData } from '@/libs/utils/cleanData';
 
-export const fetchClasses = async (): Promise<Class[]> => {
+export const fetchClasses = async (): Promise<ClassResponse[]> => {
     try {
         return await getClasses();
     } catch (error) {

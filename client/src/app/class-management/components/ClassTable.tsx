@@ -2,7 +2,7 @@ import { Table, Input } from 'antd';
 import { useEffect, useState } from 'react';
 import { SortOrder } from 'antd/es/table/interface';
 import { fetchReference } from '@/libs/services/referenceService';
-import { Class } from '@/interfaces/class/ClassResponse';
+import { Class } from '@/interfaces/class/Class';
 import { useTranslations } from 'next-intl';
 
 interface ClassTableProps {

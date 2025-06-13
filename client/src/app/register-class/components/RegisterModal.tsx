@@ -3,7 +3,7 @@
 import { Form, Input, Modal, Button, Select, message, InputNumber } from 'antd';
 import { useEffect, useState } from 'react';
 import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
-import { Class } from '@/interfaces/class/ClassResponse';
+import { Class } from '@/interfaces/class/Class';
 import { fetchStudentById } from '@/libs/services/studentService';
 import { useTranslations } from 'next-intl';
 

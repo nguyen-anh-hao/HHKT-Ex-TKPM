@@ -1,6 +1,6 @@
 import { Button, Form, Input, Modal, Select } from 'antd';
 import { useState } from 'react';
-import { downloadFile } from '@/libs/services/fileService';
+import { downloadFile } from '@/libs/services/studentsFileService';
 import { message } from 'antd';
 import { useTranslations } from 'next-intl';
 

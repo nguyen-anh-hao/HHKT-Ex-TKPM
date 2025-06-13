@@ -18,7 +18,6 @@ const RegisterTable = ({ registrations, onEdit, loading }: RegisterTableProps) =
     const filteredData = registrations.filter((item) =>
         item.studentId.toLowerCase().includes(searchText.toLowerCase()) ||
         item.studentName?.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.classId?.toLowerCase().includes(searchText.toLowerCase()) ||
         item.courseName?.toLowerCase().includes(searchText.toLowerCase())
     );
 

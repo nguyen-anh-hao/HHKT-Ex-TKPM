@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { Class } from '../../../interfaces/class/ClassResponse';
+import { Class } from '../../../interfaces/class/Class';
 import { useTranslations } from 'next-intl';
 
 // Create a function that takes the translations function as a parameter
@@ -15,12 +15,12 @@ export const createClassActions = (t: ReturnType<typeof useTranslations>) => {
 
     const updateClass = (classes: Class[], updatedClass: Class): Class[] => {
         return classes.map(cls =>
-            cls.classId === updatedClass.classId ? { ...cls, ...updatedClass } : cls
+            cls.id === updatedClass.id ? { ...cls, ...updatedClass } : cls
         );
     };
 
     const deleteClass = (classes: Class[], classId: number): Class[] => {
-        return classes.filter(cls => cls.classId !== classId);
+        return classes.filter(cls => cls.id !== classId);
     };
 
     return { addClass, updateClass, deleteClass };
@@ -38,10 +38,10 @@ export const addClass = (classes: Class[], newClass: Class): Class[] => {
 
 export const updateClass = (classes: Class[], updatedClass: Class): Class[] => {
     return classes.map(cls =>
-        cls.classId === updatedClass.classId ? { ...cls, ...updatedClass } : cls
+        cls.id === updatedClass.id ? { ...cls, ...updatedClass } : cls
     );
 };
 
 export const deleteClass = (classes: Class[], classId: number): Class[] => {
-    return classes.filter(cls => cls.classId !== classId);
+    return classes.filter(cls => cls.id !== classId);
 };

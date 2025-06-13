@@ -1,4 +1,4 @@
-import { Class } from '@/interfaces/class/ClassResponse';
+import { Class } from '@/interfaces/class/Class';
 import { CreateClassRequest } from '@/interfaces/class/CreateClassRequest';
 import { UpdateClassRequest } from '@/interfaces/class/UpdateClassRequest';
 import { ApiSuccessResponse } from '@/interfaces/ApiResponse';

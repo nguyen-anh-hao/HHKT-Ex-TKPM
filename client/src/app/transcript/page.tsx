@@ -1,7 +1,7 @@
 'use client'
 
 import { Table, Input } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Student } from '@/interfaces/student/Student';
 import { useStudents } from '@/libs/hooks/student/useStudents';
@@ -30,7 +30,9 @@ const TranscriptTable = () => {
         { title: t('faculty'), dataIndex: 'faculty' },
         { title: t('year'), dataIndex: 'intake' },
         { title: t('state'), dataIndex: 'studentStatus' },
-    ];    if (isLoading) return <div>{tCommon('loading')}</div>;
+    ];
+
+    if (isLoading) return <div>{tCommon('loading')}</div>;
     if (error) return <div>{tCommon('error')}: {error.message}</div>;
 
     return (
