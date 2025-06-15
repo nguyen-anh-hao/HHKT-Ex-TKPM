@@ -13,7 +13,11 @@ import org.example.backend.service.export.ExportServiceFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -35,7 +39,7 @@ public class FileTransferController {
             Pageable pageable
 
     ) throws IOException {
-        log.info("Exporting data to file: type={}, fileName={}", type, fileName);
+        log.info("Received request to export data: type={}, fileName={}, pageable={}", type, fileName, pageable);
         ExportService exportService = exportServiceFactory.getExportService(type);
 
         if (exportService == null) {
@@ -59,9 +63,9 @@ public class FileTransferController {
     @PostMapping("/import")
     public ResponseEntity<APIResponse> importData(
             @RequestParam String type,
-            @RequestParam("file")MultipartFile file
-            ) throws IOException {
-        log.info("Importing data from file: type={}, fileName={}", type, file.getOriginalFilename());
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        log.info("Received request to import data: type={}, fileName={}", type, file.getOriginalFilename());
 
         ImportService importService = importServiceFactory.getImportService(type);
         if (importService == null) {
