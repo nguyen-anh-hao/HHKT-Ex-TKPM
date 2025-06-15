@@ -13,7 +13,6 @@ import java.util.List;
 public class StudentStatusResponse {
     private Integer id;
     private String studentStatusName;
-    private List<StudentResponse> students;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

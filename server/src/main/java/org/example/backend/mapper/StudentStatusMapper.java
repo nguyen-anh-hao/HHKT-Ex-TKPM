@@ -21,7 +21,6 @@ public class StudentStatusMapper {
         return StudentStatusResponse.builder()
                 .id(studentStatus.getId())
                 .studentStatusName(studentStatus.getStudentStatusName())
-                .students(studentStatus.getStudents() != null ? studentStatus.getStudents().stream().map(StudentMapper::mapToResponse).collect(Collectors.toList()) : null)
                 .createdAt(studentStatus.getCreatedAt())
                 .updatedAt(studentStatus.getUpdatedAt())
                 .createdBy(studentStatus.getCreatedBy())
