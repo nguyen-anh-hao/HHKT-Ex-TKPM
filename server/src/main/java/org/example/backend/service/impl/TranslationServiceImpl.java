@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dto.request.TranslateRequest;
 import org.example.backend.dto.response.TranslateResponse;
 import org.example.backend.service.TranslationService;
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
+@Slf4j
 public class TranslationServiceImpl implements TranslationService {
-
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
 
@@ -23,11 +24,11 @@ public class TranslationServiceImpl implements TranslationService {
         this.webClient = WebClient.builder()
                 .baseUrl("http://localhost:5000")
                 .build();
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
-    public String translateText(String text, String from, String to) {
+    private String translateText(String text, String from, String to) {
         if (text == null || text.trim().isEmpty()) {
             return text;
         }
@@ -48,45 +49,25 @@ public class TranslationServiceImpl implements TranslationService {
 
             return response != null ? response.getTranslatedText() : text;
         } catch (Exception e) {
-            System.err.println("Translation failed: " + e.getMessage());
             return text;
         }
     }
 
-    // Method mới trả về JsonNode thay vì Object
+    @Override
     public JsonNode translateJsonNode(JsonNode node, String from, String to) {
+        log.info("Translating JSON node from '{}' to '{}'", from, to);
         return translateJsonNodeInternal(node, from, to);
     }
 
-    // Method cũ để tương thích ngược
-    public Object translateObject(Object obj, String from, String to) {
-        try {
-            JsonNode node;
-            if (obj instanceof JsonNode) {
-                node = (JsonNode) obj;
-            } else {
-                String json = objectMapper.writeValueAsString(obj);
-                node = objectMapper.readTree(json);
-            }
-
-            JsonNode translatedNode = translateJsonNodeInternal(node, from, to);
-            return objectMapper.treeToValue(translatedNode, Object.class);
-        } catch (Exception e) {
-            System.err.println("Object translation failed: " + e.getMessage());
-            return obj;
-        }
-    }
-
     private JsonNode translateJsonNodeInternal(JsonNode node, String from, String to) {
+
         if (node == null) {
             return null;
         }
 
         if (node.isTextual()) {
             String originalText = node.asText();
-            // Chỉ translate nếu text không rỗng và có ý nghĩa
-            if (originalText != null && !originalText.trim().isEmpty() &&
-                    !isNonTranslatableText(originalText)) {
+            if (originalText != null && !originalText.trim().isEmpty() && !isNonTranslatableText(originalText)) {
                 String translatedText = translateText(originalText, from, to);
                 return new TextNode(translatedText);
             }
@@ -110,18 +91,19 @@ public class TranslationServiceImpl implements TranslationService {
         return node;
     }
 
-    // Helper method để kiểm tra text có nên translate không
     private boolean isNonTranslatableText(String text) {
         if (text == null || text.trim().isEmpty()) {
             return true;
         }
 
-        // Không translate các giá trị như email, URL, số, v.v.
         String trimmed = text.trim();
-        return trimmed.matches("^[0-9]+$") || // Chỉ số
+        return trimmed.matches("^[0-9]+$") ||                            // Numbers
                 trimmed.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$") || // Email
-                trimmed.matches("^https?://.*") || // URL
-                trimmed.matches("^[A-Z0-9_]+$") || // Constants/Enum values
-                trimmed.length() < 2; // Text quá ngắn
+                trimmed.matches("^https?://.*") ||                       // URL
+                trimmed.matches("^[A-Z0-9_]+$") ||                       // Uppercase ENUM
+                trimmed.matches("^\\d{4}-\\d{2}-\\d{2}$") ||             // Date in yyyy-MM-dd format
+                trimmed.matches("^\\d{4}-\\d{2}-\\d{2}T.*") ||           // ISO 8601 DateTime
+                trimmed.matches("^\\+?[0-9]{7,15}$") ||                  // phone number
+                trimmed.length() < 2;                                          // String too short
     }
 }
