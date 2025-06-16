@@ -17,7 +17,7 @@ const TranscriptTable = () => {
   
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 10,
+    pageSize: 5,
   });
   
   const t = useTranslations('student-management');
@@ -31,7 +31,7 @@ const TranscriptTable = () => {
     error: studentsError 
   } = useStudents({
     page: (pagination.current || 1) - 1,
-    pageSize: pagination.pageSize || 10,
+    pageSize: pagination.pageSize || 5,
     sortField: 'studentId',
     sortOrder: 'asc'
   });
@@ -44,7 +44,7 @@ const TranscriptTable = () => {
   } = useSearchStudents(
     debouncedSearchText,
     (pagination.current || 1) - 1,
-    pagination.pageSize || 10,
+    pagination.pageSize || 5,
     {
       enabled: debouncedSearchText.length > 0,
     }

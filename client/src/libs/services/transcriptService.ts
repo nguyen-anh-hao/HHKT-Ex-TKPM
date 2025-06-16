@@ -4,14 +4,14 @@ import { ClassResponse } from '@/interfaces/class/ClassResponse';
 import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
 
 import { getAllCourses } from '../api/courseApi'; // Changed from getCourses to getAllCourses
-import { getClasses } from '../api/classApi';
-import { getRegistrations } from '../api/registerApi';
+import { getAllClasses } from '../api/classApi';
+import { getAllRegistrations } from '../api/registerApi';
 
 export const fetchTranscript = async () => {
     try {
         const courses: CourseResponse[] = await getAllCourses(); // Now returns Course[] instead of paginated response
-        const classes: ClassResponse[] = await getClasses();
-        const registrations: RegisterResponse[] = await getRegistrations();
+        const classes: ClassResponse[] = await getAllClasses();
+        const registrations: RegisterResponse[] = await getAllRegistrations();
 
         return registrations.map((registration) => {
             const classInfo = classes.find((c) => c.id === registration.classId) as ClassResponse | undefined;

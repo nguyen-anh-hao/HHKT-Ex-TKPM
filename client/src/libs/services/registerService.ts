@@ -1,48 +1,87 @@
-import { RegisterRequest } from '@/interfaces/register/CreateRegisterRequest';
+import { getRegistrations, searchRegistrations, getAllRegistrations, postRegister, patchRegister, deleteRegister } from '@/libs/api/registerApi';
 import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
-import {
-    getRegistrations,
-    getRegistrationById,
-    postRegistration,
-    patchRegistration
-} from '@/libs/api/registerApi';
-import { cleanData } from '@/libs/utils/cleanData';
+import { PaginatedResponse } from '@/interfaces/common/PaginatedResponse';
 
-export const fetchRegistrations = async (): Promise<RegisterResponse[]> => {
-    try {
-        return await getRegistrations();
-    } catch (error) {
-        throw error;
-    }
+/**
+ * Fetches registrations with pagination support
+ */
+export const fetchRegistrations = async (
+  page: number = 0, 
+  pageSize: number = 10,
+  sortField: string = 'id',
+  sortOrder: string = 'asc'
+): Promise<PaginatedResponse<RegisterResponse>> => {
+  try {
+    const response = await getRegistrations(page, pageSize, `${sortField},${sortOrder}`);
+    
+    return {
+      data: response.content || [],
+      pagination: {
+        total: response.totalElements || 0,
+        page: response.number || page,
+        pageSize: response.size || pageSize,
+        totalPages: response.totalPages || 0
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching registrations:', error);
+    return {
+      data: [],
+      pagination: {
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0
+      }
+    };
+  }
 };
 
-export const fetchRegistrationById = async (id: number): Promise<RegisterResponse> => {
-    try {
-        return await getRegistrationById(id);
-    } catch (error) {
-        throw error;
-    }
+/**
+ * Searches for registrations by keyword with pagination
+ */
+export const searchRegistrationsService = async (
+  keyword: string,
+  page: number = 0,
+  pageSize: number = 10
+): Promise<PaginatedResponse<RegisterResponse>> => {
+  try {
+    const response = await searchRegistrations(keyword, page, pageSize);
+    
+    return {
+      data: response.content || [],
+      pagination: {
+        total: response.totalElements || 0,
+        page: response.number || page,
+        pageSize: response.size || pageSize,
+        totalPages: response.totalPages || 0
+      }
+    };
+  } catch (error) {
+    console.error('Error searching registrations:', error);
+    return {
+      data: [],
+      pagination: {
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0
+      }
+    };
+  }
 };
 
-export const createRegistration = async (value: RegisterRequest) => {
-    const requestData = cleanData(value) as unknown as RegisterRequest;
-    try {
-        const data = await postRegistration(requestData);
-        return data;
-    } catch (error) {
-        throw error;
-    }
+/**
+ * Fetches all registrations (legacy support)
+ */
+export const fetchAllRegistrations = async (): Promise<RegisterResponse[]> => {
+  try {
+    return await getAllRegistrations();
+  } catch (error) {
+    console.error('Error fetching all registrations:', error);
+    return [];
+  }
 };
 
-export const updateRegistration = async (
-    id: number,
-    value: Partial<RegisterRequest>
-) => {
-    const requestData = cleanData(value);
-    try {
-        const data = await patchRegistration(id, requestData);
-        return data;
-    } catch (error) {
-        throw error;
-    }
-};
+// Re-export other functions for backward compatibility
+export { postRegister as createRegister, patchRegister as updateRegister, deleteRegister };

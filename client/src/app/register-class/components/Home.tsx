@@ -9,7 +9,6 @@ import { useClasses } from '@/libs/hooks/class/useClassQuery';
 import {
     useCreateRegister,
     useUpdateRegister,
-    useFetchRegistrations
 } from '@/libs/hooks/register/useRegisterMutation';
 import RegisterTable from './RegisterTable';
 import RegisterModal from './RegisterModal';
@@ -29,9 +28,13 @@ const Home = () => {
         isResetModal: false
     });
 
-    // Queries
-    const { data: allClasses = [] } = useClasses();
-    const { data: registrations = [], isLoading } = useFetchRegistrations();
+    // Get all classes for dropdown selection
+    const { data: classesData } = useClasses({
+        page: 0,
+        pageSize: 1000,
+        sortField: 'classCode',
+        sortOrder: 'asc'
+    });
 
     // Mutations
     const createMutation = useCreateRegister();
@@ -69,7 +72,7 @@ const Home = () => {
                         id: data.id, 
                         value: { 
                             ...data, 
-                            grade: data.grade === null ? undefined : data.grade 
+                            grade: data.grade === undefined ? null : data.grade // Convert undefined to null
                         } 
                     },
                     {
@@ -86,7 +89,7 @@ const Home = () => {
                 createMutation.mutate(
                     { 
                         ...data, 
-                        grade: data.grade === null ? undefined : data.grade 
+                        grade: data.grade === undefined ? null : data.grade // Convert undefined to null
                     },
                     {
                         onSuccess: () => {
@@ -117,9 +120,8 @@ const Home = () => {
             </Button>
 
             <RegisterTable
-                registrations={registrations}
                 onEdit={handleEdit}
-                loading={isLoading}
+                // Removed registrations and loading props - now managed internally
             />
 
             <RegisterModal
@@ -127,7 +129,7 @@ const Home = () => {
                 onCancel={handleModalClose}
                 onSubmit={handleSubmit}
                 registrationData={state.selectedRegistration ?? undefined}
-                allClasses={allClasses}
+                allClasses={classesData?.data || []}
                 isResetModal={state.isResetModal}
                 setIsResetModal={(value: any) =>
                     setState(prev => ({ ...prev, isResetModal: value }))
