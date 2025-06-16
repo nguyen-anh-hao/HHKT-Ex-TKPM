@@ -132,7 +132,7 @@ const ReferencePage = () => {
             { type, id: updatedValues[index].key, value: newValue },
             {
                 onSuccess: () => {
-                    message.success(t('update-success'));
+                    message.success(tMessages('update-success', { entity: tCommon('status-rules').toLowerCase() }));
                 },
                 onError: (error: any) => {
                     message.error(t('update-error', { error: error.response.data.message }));

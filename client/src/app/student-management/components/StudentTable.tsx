@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { fetchReference } from '@/libs/services/referenceService';
 import { useTranslations } from 'next-intl';
+import { useSearchStudents } from '@/libs/hooks/student/useStudents';
+import { useDebounce } from 'use-debounce';
 
 interface StudentTableProps {
     students: Student[];
@@ -17,17 +19,21 @@ interface StudentTableProps {
 
 const StudentTable = ({ students, onEdit, onDelete, openModal, loading }: StudentTableProps) => {
     const [searchText, setSearchText] = useState('');
+    const [debouncedSearchText] = useDebounce(searchText, 500);
     const [facultyOptions, setFacultyOptions] = useState<{ text: string; value: string }[]>([]);
     const t = useTranslations('student-management');
     const tCommon = useTranslations('common');
 
     // Enhanced search functionality to include more fields
-    const filteredStudents = students.filter((student: Student) =>
-        student.studentId.toLowerCase().includes(searchText.toLowerCase()) ||
-        student.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
-        student.faculty.toLowerCase().includes(searchText.toLowerCase()) ||
-        String(student.intake).includes(searchText)
-    );
+    // const filteredStudents = students.filter((student: Student) =>
+    //     student.studentId.toLowerCase().includes(searchText.toLowerCase()) ||
+    //     student.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
+    //     student.faculty.toLowerCase().includes(searchText.toLowerCase()) ||
+    //     String(student.intake).includes(searchText)
+    // );
+
+    const { data: searchResults, isLoading: searchLoading } = useSearchStudents(debouncedSearchText);
+    const filteredStudents = debouncedSearchText ? searchResults : students;
     
     useEffect(() => {
         const fetchFacultyOptions = async () => {
@@ -116,7 +122,7 @@ const StudentTable = ({ students, onEdit, onDelete, openModal, loading }: Studen
                 columns={columns} 
                 dataSource={filteredStudents} 
                 rowKey='studentId'
-                loading={loading}
+                loading={loading || searchLoading}
                 pagination={{ 
                     showSizeChanger: true,
                     pageSizeOptions: ['10', '20', '50'],

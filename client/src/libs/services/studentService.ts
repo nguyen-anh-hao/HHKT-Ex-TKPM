@@ -1,4 +1,5 @@
 import { getStudentById, getStudents, postStudent, patchStudent, deleteStudent } from '@/libs/api/studentApi';
+import { searchStudents as apiSearchStudents } from '@/libs/api/studentApi';
 import { Student } from '@/interfaces/student/Student';
 import { cleanData } from '../utils/cleanData';
 import { transformStudentToPostRequest, transformStudentToPatchRequest, transformGetResponseToStudent } from '../utils/transform/studentTransform';
@@ -80,3 +81,25 @@ export const removeStudent = async (studentId: string): Promise<void> => {
         throw error;
     }
 };
+
+/**
+ * Searches for students by keyword
+ * @param keyword - The keyword to search for
+ * @returns A promise that resolves to an array of students matching the keyword
+ */
+export const searchStudents = async (keyword: string): Promise<Student[]> => {
+    try {
+        // Option 1: Use the API's search function (uncomment to use)
+        const students = await apiSearchStudents(keyword);
+        return students.map(transformGetResponseToStudent);
+        
+        // Option 2: Filter locally (current implementation)
+        // const students = await getStudents(0, 50); // Adjust page and size as needed
+        // return students
+        //     .map(transformGetResponseToStudent)
+        //     .filter(student => student.fullName.toLowerCase().includes(keyword.toLowerCase()));
+    } catch (error) {
+        console.error('Error searching students:', error);
+        throw error;
+    }
+}

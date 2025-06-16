@@ -15,9 +15,9 @@ export const getStudentById = async (studentId: string) => {
     }
 }
 
-export const getStudents = async () => {
+export const getStudents = async (page = 0, size = 50) => {
     try {
-        const response = await api.get<ApiSuccessResponse<StudentResponse[]>>(`/students?page=0&size=50&sort=studentId`);
+        const response = await api.get<ApiSuccessResponse<StudentResponse[]>>(`/students?page=${page}&size=${size}&sort=studentId`);
         return await translateArrayResponse(response.data.data as StudentResponse[], 'StudentResponse');
     } catch (error) {
         throw error;
@@ -48,6 +48,17 @@ export const deleteStudent = async (studentId: string) => {
     try {
         const response = await api.delete<ApiSuccessResponse<void>>(`/students/${studentId}`);
         return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const searchStudents = async (query: string) => {
+    try {
+        const response = await api.get<ApiSuccessResponse<StudentResponse[]>>(`/students/search`, {
+            params: { keyword: query },
+        });
+        return await translateArrayResponse(response.data.data as StudentResponse[], 'StudentResponse');
     } catch (error) {
         throw error;
     }

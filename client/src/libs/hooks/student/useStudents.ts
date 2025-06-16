@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { fetchStudentById, fetchStudents } from '@/libs/services/studentService';
+import { fetchStudentById, fetchStudents, searchStudents } from '@/libs/services/studentService';
 import { Student } from '@/interfaces/student/Student';
 
 // Query keys
@@ -38,3 +38,21 @@ export const useStudents = (
     ...options,
   });
 };
+
+/**
+ * Hook to search students by a query string
+ * @param query - The search query string
+ * @param options - Additional React Query options
+ */
+export const useSearchStudents = (
+  query: string,
+  options?: UseQueryOptions<Student[], Error>
+) => {
+  return useQuery<Student[], Error>({
+    queryKey: [STUDENTS_QUERY_KEY, 'search', query],
+    queryFn: ({ queryKey }) => searchStudents(queryKey[2] as string),
+    enabled: !!query, // Only run the query if we have a query string
+    staleTime: 2 * 60 * 1000,
+    ...options,
+  });
+}
