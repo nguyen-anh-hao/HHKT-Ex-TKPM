@@ -29,7 +29,10 @@
     "search-placeholder": "Tìm kiếm",
     "confirm-delete": "Bạn có chắc chắn muốn xóa?",
     "export": "Xuất dữ liệu",
-    "import": "Nhập dữ liệu"
+    "import": "Nhập dữ liệu",
+    "pagination": "{item} trong {items} mục",
+    "page": "trang",
+    "back": "Quay lại"
   },
   "validation": {
     "required": "{field} là bắt buộc!",
@@ -186,7 +189,10 @@
     "required-status": "Trạng thái là bắt buộc!",
     "save": "Lưu",
     "required-grade": "Điểm là bắt buộc!",
-    "check-info": "Vui lòng kiểm tra lại thông tin!"
+    "check-info": "Vui lòng kiểm tra lại thông tin!",
+    "COMPLETED": "Đã hoàn thành",
+    "REGISTERED": "Đã đăng ký",
+    "CANCELLED": "Đã hủy"
   },
   "reference-management": {
     "title": "Quản lý danh mục",

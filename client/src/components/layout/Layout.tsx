@@ -5,7 +5,6 @@ import { Button, Menu, Layout as AntdLayout, Typography } from 'antd';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import LanguageSelector from '../ui/LanguageSelector';

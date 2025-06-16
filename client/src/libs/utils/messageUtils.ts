@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 const translationCache = new Map<string, string>();
 
 const translateTextAsync = async (text: string): Promise<string> => {

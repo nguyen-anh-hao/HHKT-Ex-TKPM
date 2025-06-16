@@ -47,6 +47,9 @@ export default function TranscriptPage() {
     
     return (
         <div>
+            <Button style={{ marginBottom: 16 }} onClick={() => window.history.back()}>
+                {tCommon('back')}
+            </Button>
             <Card>
                 <div>
                     <Title level={3} style={{ textAlign: 'center' }}>

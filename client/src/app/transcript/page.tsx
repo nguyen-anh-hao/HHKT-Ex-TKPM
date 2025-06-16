@@ -122,7 +122,7 @@ const TranscriptTable = () => {
           total: tableData?.pagination?.total || 0,
           showSizeChanger: true,
           pageSizeOptions: ['5', '10', '20', '50'],
-          showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+          showTotal: (total, range) => tCommon('pagination', { item: `${range[0]}-${range[1]}`, items: total }),
         }}
         onChange={handleTableChange}
         onRow={(record : any) => ({
