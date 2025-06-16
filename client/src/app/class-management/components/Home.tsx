@@ -6,18 +6,19 @@ import { PlusOutlined } from '@ant-design/icons';
 import ClassTable from './ClassTable';
 import ClassModal from './ClassModal';
 import { Class } from '@/interfaces/class/Class';
-import { addClass as addClassState } from '../actions/ClassActions';
-import { useCreateClass } from '@/libs/hooks/class/useClassMutation';
+import { useCreateClass, useUpdateClass, useDeleteClass } from '@/libs/hooks/class/useClassMutation';
 import useReferenceStore from '@/libs/stores/referenceStore';
 import { useTranslations } from 'next-intl';
 
-const Home = ({ initialClasses }: { initialClasses: Class[] }) => {
-    const [classes, setClasses] = useState<Class[]>(initialClasses);
+const Home = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedClass, setSelectedClass] = useState<Class | null>(null);
     const [isResetModal, setIsResetModal] = useState(false);
 
-    const { mutate: createClass } = useCreateClass();
+    const { mutate: createClass, isPending: isCreating } = useCreateClass();
+    const { mutate: updateClass, isPending: isUpdating } = useUpdateClass();
+    const { mutate: deleteClass, isPending: isDeleting } = useDeleteClass();
+
     const fetchReference = useReferenceStore((state) => state.fetchReference);
     const t = useTranslations('class-management');
     const tCommon = useTranslations('common');
@@ -28,28 +29,55 @@ const Home = ({ initialClasses }: { initialClasses: Class[] }) => {
     }, [fetchReference]);
 
     const handleAddOrUpdateClass = (value: Class) => {
-        createClass(value, {
+        if (selectedClass) {
+            updateClass(
+                { ...value, id: selectedClass.id },
+                {
+                    onSuccess: () => {
+                        message.success(tMessages('update-success', { entity: tCommon('class').toLowerCase() }));
+                        setIsModalVisible(false);
+                        setSelectedClass(null);
+                        setIsResetModal(true);
+                    },
+                    onError: (error: any) => {
+                        const errorMessage = error.response?.data?.errors
+                            ? error.response.data.errors.map((e: any) => e.defaultMessage).join(' ')
+                            : error.response?.data?.message || error.message;
+                        message.error(`${tMessages('update-error', { entity: tCommon('class').toLowerCase() })}: ${errorMessage}`);
+                    },
+                }
+            );
+        } else {
+            createClass(value, {
+                onSuccess: () => {
+                    message.success(tMessages('create-success', { entity: tCommon('class').toLowerCase() }));
+                    setIsModalVisible(false);
+                },
+                onError: (error: any) => {
+                    const errorMessage = error.response?.data?.errors
+                        ? error.response.data.errors.map((e: any) => e.defaultMessage).join(' ')
+                        : error.response?.data?.message || error.message;
+                    message.error(`${tMessages('create-error', { entity: tCommon('class').toLowerCase() })}: ${errorMessage}`);
+                },
+            });
+        }
+    };
+
+    const handleDeleteClass = (id: number) => {
+        deleteClass(id, {
             onSuccess: () => {
-                message.success(tMessages('create-success', { entity: tCommon('class').toLowerCase() }));
-                setClasses(addClassState(classes, value));
-                setIsModalVisible(false);
+                message.success(tMessages('delete-success', { entity: tCommon('class').toLowerCase() }));
             },
             onError: (error: any) => {
-                message.error(
-                    `${tMessages('create-error', { entity: tCommon('class').toLowerCase() })}: ${error.response?.data?.errors?.map((e: any) => e.defaultMessage).join(' ') ||
-                        error.response?.data?.message}`
-                );
+                const errorMessage = error.response?.data?.errors
+                    ? error.response.data.errors.map((e: any) => e.defaultMessage).join(' ')
+                    : error.response?.data?.message || error.message;
+                message.error(`${tMessages('delete-error', { entity: tCommon('class').toLowerCase() })}: ${errorMessage}`);
             },
         });
     };
 
-    const handleDeleteClass = (id: number) => {
-        message.info(t('not-implemented'));
-        // Implementation would go here
-    };
-
     const handleEditClass = (classData: Class) => {
-        message.info(t('not-implemented'));
         setSelectedClass(classData);
         setIsModalVisible(true);
     };
@@ -65,15 +93,15 @@ const Home = ({ initialClasses }: { initialClasses: Class[] }) => {
                         setSelectedClass(null);
                         setIsModalVisible(true);
                     }}
+                    loading={isCreating}
                 >
                     {t('add-class')}
                 </Button>
             </div>
             <ClassTable
-                classes={classes}
-                openModal={setIsModalVisible}
                 onEdit={handleEditClass}
                 onDelete={handleDeleteClass}
+                openModal={setIsModalVisible}
             />
             <ClassModal
                 visible={isModalVisible}
@@ -85,7 +113,6 @@ const Home = ({ initialClasses }: { initialClasses: Class[] }) => {
                 classData={selectedClass || undefined}
                 isResetModal={isResetModal}
                 setIsResetModal={setIsResetModal}
-                allClasses={classes}
             />
         </div>
     );

@@ -11,7 +11,6 @@ interface ClassModalProps {
     onCancel: () => void;
     onSubmit: (value: any) => void;
     classData?: Class;
-    allClasses: Class[];
     isResetModal?: boolean;
     setIsResetModal?: any;
 }
@@ -21,7 +20,6 @@ const ClassModal = ({
     onCancel,
     onSubmit,
     classData,
-    allClasses,
     isResetModal,
     setIsResetModal,
 }: ClassModalProps) => {
