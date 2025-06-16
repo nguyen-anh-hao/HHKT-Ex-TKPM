@@ -5,6 +5,7 @@ import { cleanData } from '../utils/cleanData';
 import { transformStudentToPostRequest, transformStudentToPatchRequest, transformGetResponseToStudent } from '../utils/transform/studentTransform';
 import { StudentResponse } from '@/interfaces/student/StudentResponse';
 import { handleApiError } from '../utils/errorUtils';
+import { PaginatedResponse } from '@/interfaces/common/PaginatedResponse';
 
 /**
  * Fetches a student by ID
@@ -20,16 +21,39 @@ export const fetchStudentById = async (studentId: string): Promise<Student> => {
 };
 
 /**
- * Fetches all students
+ * Fetches students with pagination support
  */
-export const fetchStudents = async (): Promise<Student[]> => {
-    try {
-        const students = await getStudents();
-        return students.map(transformGetResponseToStudent);
-    } catch (error) {
-        console.error('Error fetching students:', error);
-        throw error;
-    }
+export const fetchStudents = async (
+  page: number = 0, 
+  pageSize: number = 10,
+  sortField: string = 'studentId',
+  sortOrder: string = 'asc'
+): Promise<PaginatedResponse<Student>> => {
+  try {
+    const response = await getStudents(page, pageSize, `${sortField},${sortOrder}`);
+    const students = (response.content || []).map(transformGetResponseToStudent);
+    
+    return {
+      data: students,
+      pagination: {
+        total: response.totalElements || 0,
+        page: response.number || page,
+        pageSize: response.size || pageSize,
+        totalPages: response.totalPages || 0
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    return {
+      data: [],
+      pagination: {
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0
+      }
+    };
+  }
 };
 
 /**
@@ -83,23 +107,36 @@ export const removeStudent = async (studentId: string): Promise<void> => {
 };
 
 /**
- * Searches for students by keyword
- * @param keyword - The keyword to search for
- * @returns A promise that resolves to an array of students matching the keyword
+ * Searches for students by keyword with pagination
  */
-export const searchStudents = async (keyword: string): Promise<Student[]> => {
-    try {
-        // Option 1: Use the API's search function (uncomment to use)
-        const students = await apiSearchStudents(keyword);
-        return students.map(transformGetResponseToStudent);
-        
-        // Option 2: Filter locally (current implementation)
-        // const students = await getStudents(0, 50); // Adjust page and size as needed
-        // return students
-        //     .map(transformGetResponseToStudent)
-        //     .filter(student => student.fullName.toLowerCase().includes(keyword.toLowerCase()));
-    } catch (error) {
-        console.error('Error searching students:', error);
-        throw error;
-    }
-}
+export const searchStudents = async (
+  keyword: string,
+  page: number = 0,
+  pageSize: number = 10
+): Promise<PaginatedResponse<Student>> => {
+  try {
+    const response = await apiSearchStudents(keyword, page, pageSize);
+    const students = (response.content || []).map(transformGetResponseToStudent);
+    
+    return {
+      data: students,
+      pagination: {
+        total: response.totalElements || 0,
+        page: response.number || page,
+        pageSize: response.size || pageSize,
+        totalPages: response.totalPages || 0
+      }
+    };
+  } catch (error) {
+    console.error('Error searching students:', error);
+    return {
+      data: [],
+      pagination: {
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0
+      }
+    };
+  }
+};

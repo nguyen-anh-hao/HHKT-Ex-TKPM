@@ -1,58 +1,72 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { fetchStudentById, fetchStudents, searchStudents } from '@/libs/services/studentService';
 import { Student } from '@/interfaces/student/Student';
+import { PaginatedResponse } from '@/interfaces/common/PaginatedResponse';
 
 // Query keys
 export const STUDENTS_QUERY_KEY = 'students';
 export const STUDENT_DETAIL_QUERY_KEY = 'student-detail';
+export const STUDENTS_SEARCH_QUERY_KEY = 'students-search';
+
+export interface PaginationParams {
+  page: number;
+  pageSize: number;
+  sortField?: string;
+  sortOrder?: string;
+}
 
 /**
  * Hook to fetch a single student by ID
- * @param studentId - The ID of the student to fetch
- * @param options - Additional React Query options
  */
 export const useStudent = (
   studentId: string, 
-  options?: UseQueryOptions<Student, Error>
+  options?: Partial<UseQueryOptions<Student, Error>>
 ) => {
   return useQuery<Student, Error>({
     queryKey: [STUDENT_DETAIL_QUERY_KEY, studentId],
     queryFn: () => fetchStudentById(studentId),
-    enabled: !!studentId, // Only run the query if we have a studentId
+    enabled: !!studentId,
     staleTime: 5 * 60 * 1000, // 5 minutes
     ...options,
   });
 };
 
 /**
- * Hook to fetch all students
- * @param options - Additional React Query options
+ * Hook for fetching students with pagination
  */
 export const useStudents = (
-  options?: UseQueryOptions<Student[], Error>
+  {
+    page = 0,
+    pageSize = 10,
+    sortField = 'studentId',
+    sortOrder = 'asc'
+  }: PaginationParams,
+  options?: Partial<UseQueryOptions<PaginatedResponse<Student>, Error>>
 ) => {
-  return useQuery<Student[], Error>({
-    queryKey: [STUDENTS_QUERY_KEY],
-    queryFn: fetchStudents,
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    ...options,
+  return useQuery<PaginatedResponse<Student>, Error>({
+    queryKey: [STUDENTS_QUERY_KEY, page, pageSize, sortField, sortOrder],
+    queryFn: () => fetchStudents(page, pageSize, sortField, sortOrder),
+    placeholderData: (previousData) => previousData,
+    retry: 1,
+    ...options
   });
 };
 
 /**
- * Hook to search students by a query string
- * @param query - The search query string
- * @param options - Additional React Query options
+ * Hook to search students with pagination
  */
 export const useSearchStudents = (
   query: string,
-  options?: UseQueryOptions<Student[], Error>
+  page = 0,
+  pageSize = 10,
+  options?: Partial<UseQueryOptions<PaginatedResponse<Student>, Error>>
 ) => {
-  return useQuery<Student[], Error>({
-    queryKey: [STUDENTS_QUERY_KEY, 'search', query],
-    queryFn: ({ queryKey }) => searchStudents(queryKey[2] as string),
-    enabled: !!query, // Only run the query if we have a query string
-    staleTime: 2 * 60 * 1000,
-    ...options,
+  return useQuery<PaginatedResponse<Student>, Error>({
+    queryKey: [STUDENTS_SEARCH_QUERY_KEY, query, page, pageSize],
+    queryFn: () => searchStudents(query, page, pageSize),
+    enabled: query.trim().length > 0,
+    placeholderData: (previousData) => previousData,
+    retry: 1,
+    ...options
   });
-}
+};
