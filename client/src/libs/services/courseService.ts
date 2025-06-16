@@ -6,8 +6,8 @@ import {
     deleteCourse
 } from '@/libs/api/courseApi';
 import { cleanData } from '@/libs/utils/cleanData';
-import { transformCourseToPostRequest } from '@/libs/utils/courseTransform';
-import { transformCourseToGetResponse } from '@/libs/utils/courseTransform';
+import { transformCourseToPostRequest } from '@/libs/utils/transform/courseTransform';
+import { transformCourseToGetResponse } from '@/libs/utils/transform/courseTransform';
 
 export const fetchCourses = async () => {
     try {

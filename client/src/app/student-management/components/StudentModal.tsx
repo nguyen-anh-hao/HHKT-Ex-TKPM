@@ -106,8 +106,8 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                         <Col span={12}>
                             <Form.Item label={t('gender')} name='gender' rules={[{ required: true, message: t('required-gender') }]}>
                                 <Select placeholder={t('select-gender')}>
-                                    <Option value='Nam'>{t('male')}</Option>
-                                    <Option value='Nữ'>{t('female')}</Option>
+                                    <Option value={t('male')}>{t('male')}</Option>
+                                    <Option value={t('female')}>{t('female')}</Option>
                                 </Select>
                             </Form.Item>
                         </Col>

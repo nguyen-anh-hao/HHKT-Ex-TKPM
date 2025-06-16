@@ -4,10 +4,13 @@ import { UpdateCourseRequest } from '@/interfaces/course/UpdateCourseRequest';
 import { ApiSuccessResponse } from '@/interfaces/ApiResponse';
 import api from './api';
 
+import { translateArrayResponse, translateRequest, translateResponse, translateArrayRequest } from '@/libs/utils/translate-helper';
+
 export const getCourses = async () => {
     try {
         const response = await api.get<ApiSuccessResponse<Course[]>>(`/courses?page=0&size=50&sort=createdAt`);
-        return response.data.data as Course[];
+        // return response.data.data as Course[];
+        return await translateArrayResponse(response.data.data as Course[], 'CourseResponse');
     } catch (error) {
         throw error;
     }
@@ -15,7 +18,8 @@ export const getCourses = async () => {
 
 export const postCourse = async (course: CreateCourseRequest) => { 
     try {
-        const response = await api.post<ApiSuccessResponse<Course>>(`/courses`, course);
+        const courseTranslated = await translateRequest(course, 'CreateCourseRequest');
+        const response = await api.post<ApiSuccessResponse<Course>>(`/courses`, courseTranslated);
         return response.data;
     } catch (error) {
         throw error;
@@ -24,7 +28,8 @@ export const postCourse = async (course: CreateCourseRequest) => {
 
 export const patchCourse = async (courseId: number, course: Partial<UpdateCourseRequest>) => {
     try {
-        const response = await api.patch<ApiSuccessResponse<Course>>(`/courses/${courseId}`, course);
+        const courseTranslated = await translateRequest(course, 'UpdateCourseRequest');
+        const response = await api.patch<ApiSuccessResponse<Course>>(`/courses/${courseId}`, courseTranslated);
         return response.data;
     } catch (error) {
         throw error;

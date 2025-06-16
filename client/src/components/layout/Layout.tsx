@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 import React from 'react';
-import LanguageSelector from './LanguageSelector';
+import LanguageSelector from '../ui/LanguageSelector';
 
 const { Header, Content, Sider } = AntdLayout;
 

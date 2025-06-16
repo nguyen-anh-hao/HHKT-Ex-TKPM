@@ -17,14 +17,18 @@ const createApiClient = (): AxiosInstance => {
     timeout: REQUEST_TIMEOUT,
     headers: {
       'Content-Type': 'application/json',
-      'Accept-Language': savedLocale,
     },
   });
 
   // Request interceptor
   instance.interceptors.request.use(
     (config) => {
-      // You could add auth tokens here if needed
+      if (config.method?.toLowerCase() === 'get') {
+        config.headers['Accept-Language'] = 'vi';
+      } else {
+        // config.headers['Accept-Language'] = savedLocale;
+        config.headers['Accept-Language'] = 'vi';
+      }
       return config;
     },
     (error) => Promise.reject(error)

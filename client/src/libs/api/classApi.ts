@@ -4,10 +4,12 @@ import { UpdateClassRequest } from '@/interfaces/class/UpdateClassRequest';
 import { ApiSuccessResponse } from '@/interfaces/ApiResponse';
 import api from './api';
 
+import { translateArrayResponse, translateRequest, translateResponse, translateArrayRequest } from '@/libs/utils/translate-helper';
+
 export const getClasses = async () => {
     try {
         const response = await api.get<ApiSuccessResponse<Class[]>>(`/classes?page=0&size=50&sort=createdAt`);
-        return response.data.data as Class[];
+        return await translateArrayResponse(response.data.data as Class[], 'ClassResponse');
     } catch (error) {
         throw error;
     }

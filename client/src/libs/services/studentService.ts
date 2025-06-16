@@ -1,7 +1,7 @@
 import { getStudentById, getStudents, postStudent, patchStudent, deleteStudent } from '@/libs/api/studentApi';
 import { Student } from '@/interfaces/student/Student';
 import { cleanData } from '../utils/cleanData';
-import { transformStudentToPostRequest, transformStudentToPatchRequest, transformGetResponseToStudent } from '../utils/studentTransform';
+import { transformStudentToPostRequest, transformStudentToPatchRequest, transformGetResponseToStudent } from '../utils/transform/studentTransform';
 import { StudentResponse } from '@/interfaces/student/StudentResponse';
 import { handleApiError } from '../utils/errorUtils';
 
@@ -56,6 +56,7 @@ export const createStudent = async (student: Student): Promise<StudentResponse> 
 export const updateStudent = async (student: Student): Promise<StudentResponse> => {
     try {
         const requestData = cleanData(transformStudentToPatchRequest(student));
+        console.log('Request data for updating student:', requestData);
         const { data } = await patchStudent(student.studentId, requestData);
         if (!data) {
             throw new Error('Failed to update student: response data is null');

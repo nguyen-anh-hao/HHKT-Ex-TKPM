@@ -1,9 +1,12 @@
 import api from './api';
+import { translateArrayResponse, translateRequest, translateResponse, translateArrayRequest } from '@/libs/utils/translate-helper';
 
 export const getReference = async (type: string) => {
     try {
         const response = await api.get(`/${type}`);
-        return response.data;
+        const translatedData = await translateArrayResponse(response.data.data, 'ReferenceResponse');
+        return translatedData;
+        // return await translateArrayResponse(response.data, 'ReferenceResponse');
     } catch (error) {
         throw error;
     }
@@ -17,14 +20,14 @@ export const postReference = async (type: string, value: any) => {
         'email-domains': 'domain',
         'lecturers': 'lecturerName',
         'courses': 'courseName',
-
     };
 
     const key = payloadMap[type];
     const payload = key ? { [key]: value } : {};
 
     try {
-        const response = await api.post(`/${type}`, payload);
+        const payloadTranslated = await translateRequest(payload, 'CreateReferenceRequest');
+        const response = await api.post(`/${type}`, payloadTranslated);
         return response.data;
     } catch (error) {
         throw error;
@@ -45,7 +48,8 @@ export const putReference = async (type: string, id: number, value: any) => {
     const payload = key ? { [key]: value } : {};
 
     try {
-        const response = await api.put(`/${type}/${id}`, payload);
+        const payloadTranslated = await translateRequest(payload, 'UpdateReferenceRequest');
+        const response = await api.put(`/${type}/${id}`, payloadTranslated);
         return response.data;
     } catch (error) {
         throw error;

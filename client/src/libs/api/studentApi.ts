@@ -2,13 +2,14 @@ import { StudentResponse } from '../../interfaces/student/StudentResponse';
 import { CreateStudentRequest } from '../../interfaces/student/CreateStudentRequest';
 import { UpdateStudentRequest } from '../../interfaces/student/UpdateStudentRequest';
 import { ApiSuccessResponse } from '@/interfaces/ApiResponse';
+import { translateArrayResponse, translateRequest, translateResponse, translateArrayRequest } from '@/libs/utils/translate-helper';
 
 import api from './api';
 
 export const getStudentById = async (studentId: string) => {
     try {
         const response = await api.get<ApiSuccessResponse<StudentResponse>>(`/students/${studentId}`);
-        return response.data.data as StudentResponse;
+        return await translateResponse(response.data.data as StudentResponse, 'StudentResponse');
     } catch (error) {
         throw error;
     }
@@ -16,8 +17,8 @@ export const getStudentById = async (studentId: string) => {
 
 export const getStudents = async () => {
     try {
-        const response = await api.get<ApiSuccessResponse<StudentResponse[]>>(`/students?page=0&size=50&sort=createdAt`);
-        return response.data.data as StudentResponse[];
+        const response = await api.get<ApiSuccessResponse<StudentResponse[]>>(`/students?page=0&size=50&sort=studentId`);
+        return await translateArrayResponse(response.data.data as StudentResponse[], 'StudentResponse');
     } catch (error) {
         throw error;
     }
@@ -25,7 +26,8 @@ export const getStudents = async () => {
 
 export const postStudent = async (student: Partial<CreateStudentRequest>) => {
     try {
-        const response = await api.post<ApiSuccessResponse<StudentResponse>>(`/students`, student);
+        const request = await translateRequest(student as CreateStudentRequest, 'CreateStudentRequest');
+        const response = await api.post<ApiSuccessResponse<StudentResponse>>(`/students`, request);
         return response.data;
     } catch (error) {
         throw error;
@@ -34,7 +36,8 @@ export const postStudent = async (student: Partial<CreateStudentRequest>) => {
 
 export const patchStudent = async (studentId: string, student: Partial<UpdateStudentRequest>) => {
     try { 
-        const response = await api.patch<ApiSuccessResponse<StudentResponse>>(`/students/${studentId}`, student);
+        const request = await translateRequest(student as UpdateStudentRequest, 'UpdateStudentRequest');
+        const response = await api.patch<ApiSuccessResponse<StudentResponse>>(`/students/${studentId}`, request);
         return response.data;
     } catch (error) {
         throw error;

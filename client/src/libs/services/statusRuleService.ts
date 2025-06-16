@@ -3,7 +3,7 @@ import { getStatusRules, postStatusRule, putStatusRule, deleteStatusRule } from 
 export const fetchStatusRules = async () => {
     try {
         const response = await getStatusRules();
-        return await response.data;
+        return await response;
     } catch (error) {
         throw error;
     }
