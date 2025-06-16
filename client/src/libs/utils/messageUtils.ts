@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import { message } from 'antd';
 
 const translationCache = new Map<string, string>();
 
@@ -51,5 +52,54 @@ const translateTextAsync = async (text: string): Promise<string> => {
         console.warn("⚠️ API dịch lỗi:", error);
         translationCache.set(text, text); // fallback không dịch
         return text;
+    }
+};
+
+// Hook vào Ant Design message methods
+const originalMethods = {
+    success: message.success,
+    error: message.error,
+    warning: message.warning,
+    info: message.info,
+};
+
+// Override các methods để tự động translate
+message.success = (content: any, ...args: any[]) => {
+    if (typeof content === 'string') {
+        translateTextAsync(content).then(translatedContent => {
+            (originalMethods.success as any)(translatedContent, ...args);
+        });
+    } else {
+        return (originalMethods.success as any)(content, ...args);
+    }
+};
+
+message.error = (content: any, ...args: any[]) => {
+    if (typeof content === 'string') {
+        translateTextAsync(content).then(translatedContent => {
+            (originalMethods.error as any)(translatedContent, ...args);
+        });
+    } else {
+        return (originalMethods.error as any)(content, ...args);
+    }
+};
+
+message.warning = (content: any, ...args: any[]) => {
+    if (typeof content === 'string') {
+        translateTextAsync(content).then(translatedContent => {
+            (originalMethods.warning as any)(translatedContent, ...args);
+        });
+    } else {
+        return (originalMethods.warning as any)(content, ...args);
+    }
+};
+
+message.info = (content: any, ...args: any[]) => {
+    if (typeof content === 'string') {
+        translateTextAsync(content).then(translatedContent => {
+            (originalMethods.info as any)(translatedContent, ...args);
+        });
+    } else {
+        return (originalMethods.info as any)(content, ...args);
     }
 };
