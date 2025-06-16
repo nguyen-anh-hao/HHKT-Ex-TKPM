@@ -1,72 +1,142 @@
-import { Table, Button, Popconfirm, Input, Tag } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, Popconfirm, Input, Tag, Space, message } from 'antd';
+import { EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
-import { SortOrder } from 'antd/es/table/interface';
 import { fetchReference } from '@/libs/services/referenceService';
 import { Course } from '@/interfaces/course/Course';
 import { useTranslations } from 'next-intl';
+import { useSearchCourses, useCourses } from '@/libs/hooks/course/useCourseQuery';
+import { useDebounce } from 'use-debounce';
+import type { TablePaginationConfig } from 'antd/es/table';
+import type { SorterResult } from 'antd/es/table/interface';
 
 interface CourseTableProps {
-    courses: Course[];
     onEdit: (course: Course) => void;
     onDelete: (id: number) => void;
     openModal?: (visible: boolean) => void;
-    loading?: boolean;
 }
 
-const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTableProps) => {
+const CourseTable = ({ onEdit, onDelete, openModal }: CourseTableProps) => {
     const [searchText, setSearchText] = useState('');
+    const [debouncedSearchText] = useDebounce(searchText, 500);
     const [facultyMap, setFacultyMap] = useState<Record<number, string>>({});
-    const [courseCodeMap, setCourseCodeMap] = useState<Record<number, string>>({});
     const t = useTranslations('course-management');
     const tCommon = useTranslations('common');
+    
+    const [pagination, setPagination] = useState<TablePaginationConfig>({
+        current: 1,
+        pageSize: 5,
+    });
+    const [sortField, setSortField] = useState<string>('courseCode');
+    const [sortOrder, setSortOrder] = useState<string>('asc');
 
+    // Fetch courses data with pagination
+    const { 
+        data: coursesData, 
+        isLoading: coursesLoading,
+        error: coursesError
+    } = useCourses({
+        page: (pagination.current || 1) - 1,
+        pageSize: pagination.pageSize || 5,
+        sortField,
+        sortOrder
+    });
+
+    // Search courses with pagination
+    const { 
+        data: searchResults, 
+        isLoading: searchLoading,
+        error: searchError
+    } = useSearchCourses(
+        debouncedSearchText,
+        (pagination.current || 1) - 1,
+        pagination.pageSize || 5,
+        {
+            enabled: debouncedSearchText.length > 0,
+        }
+    );
+
+    // Determine data source and loading state
+    const tableData = debouncedSearchText ? searchResults : coursesData;
+    const loading = debouncedSearchText ? searchLoading : coursesLoading;
+
+    // Update pagination when data changes
+    useEffect(() => {
+        if (tableData?.pagination) {
+            setPagination(prev => ({
+                ...prev,
+                total: tableData.pagination.total
+            }));
+        }
+    }, [tableData]);
+
+    // Load faculty options
     useEffect(() => {
         const fetchFacultyOptions = async () => {
-            const response = await fetchReference('faculties');
-            const map: Record<number, string> = {};
-            response.forEach((f: any) => {
-                map[f.id] = f.facultyName;
-            });
-            setFacultyMap(map);
+            try {
+                const response = await fetchReference('faculties');
+                const map: Record<number, string> = {};
+                response.forEach((f: any) => {
+                    map[f.id] = f.facultyName;
+                });
+                setFacultyMap(map);
+            } catch (error) {
+                console.error('Error fetching faculty options:', error);
+            }
         };
 
         fetchFacultyOptions();
+    }, []);
 
-        // Tạo map từ id => courseCode
-        const map: Record<number, string> = {};
-        courses.forEach((course: Course) => {
-            map[course.courseId] = course.courseCode;
-        });
-        setCourseCodeMap(map);
+    // Handle errors
+    useEffect(() => {
+        if (coursesError && !debouncedSearchText) {
+            message.error('Failed to load courses. Please try again.');
+        }
+    }, [coursesError, debouncedSearchText]);
 
-    }, [courses]);
+    useEffect(() => {
+        if (searchError && debouncedSearchText) {
+            message.error('Search failed. Please try again.');
+        }
+    }, [searchError, debouncedSearchText]);
 
-    const filteredCourses = courses.filter((course: Course) =>
-        course.courseCode.toLowerCase().includes(searchText.toLowerCase()) ||
-        course.courseName.toLowerCase().includes(searchText.toLowerCase())
-    );
+    // Handle table changes (pagination, sorting)
+    const handleTableChange = (
+        newPagination: TablePaginationConfig,
+        filters: Record<string, any>,
+        sorter: SorterResult<Course> | SorterResult<Course>[]
+    ) => {
+        // Handle sorting
+        if (!Array.isArray(sorter) && sorter.field) {
+            setSortField(sorter.field as string);
+            setSortOrder(sorter.order === 'descend' ? 'desc' : 'asc');
+        }
+
+        // Update pagination
+        setPagination(prev => ({
+            ...prev,
+            current: newPagination.current || prev.current,
+            pageSize: newPagination.pageSize || prev.pageSize
+        }));
+    };
+
+    // Handle search input changes
+    const handleSearch = (value: string) => {
+        setSearchText(value);
+        setPagination(prev => ({ ...prev, current: 1 }));
+    };
 
     const columns = [
         {
             title: t('course-code'),
             dataIndex: 'courseCode',
-            sorter: (a: Course, b: Course) => a.courseCode.localeCompare(b.courseCode),
-            defaultSortOrder: 'ascend' as SortOrder,
-            sortDirections: ['ascend', 'descend'] as SortOrder[],
         },
         { title: t('course-name'), dataIndex: 'courseName' },
         { title: t('credits'), dataIndex: 'credits' },
         {
             title: t('faculty'),
-            dataIndex: 'faculty',
-            // render: (facultyId: number) => facultyMap[facultyId] || 'Không xác định',
-        },
-        {
-            title: t('prerequisite-courses'),
-            dataIndex: 'prerequisiteCourseId',
-            render: (courseId: number | null) =>
-                courseId && courseCodeMap[courseId] ? courseCodeMap[courseId] : t('no-prerequisite'),
+            dataIndex: 'facultyName',
+            render: (facultyName: string) => facultyName || 'N/A',
         },
         {
             title: t('description'),
@@ -85,9 +155,8 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
         {
             title: tCommon('actions'),
             render: (_: any, record: Course) => (
-                <>
+                <Space>
                     <Button
-                        style={{ marginRight: 8, marginBottom: 8 }}
                         icon={<EditOutlined />}
                         onClick={() => {
                             onEdit(record);
@@ -106,24 +175,49 @@ const CourseTable = ({ courses, onEdit, onDelete, openModal, loading }: CourseTa
                             {tCommon('delete')}
                         </Button>
                     </Popconfirm>
-                </>
+                </Space>
             ),
         },
     ];
+
+    // Show error state
+    if ((coursesError && !debouncedSearchText) || (searchError && debouncedSearchText)) {
+        return (
+            <div>
+                <p>{tCommon('error')}</p>
+                <Button onClick={() => window.location.reload()}>{tCommon('retry')}</Button>
+            </div>
+        );
+    }
 
     return (
         <div>
             <Input.Search
                 placeholder={t('search-placeholder')}
                 allowClear
-                onChange={(e) => setSearchText(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 style={{
                     marginBottom: 16,
                     width: 300,
                     float: 'right'
                 }}
+                prefix={<SearchOutlined />}
             />
-            <Table columns={columns} dataSource={filteredCourses} rowKey='courseId' loading={loading} />
+            <Table 
+                columns={columns} 
+                dataSource={tableData?.data || []} 
+                rowKey='courseId' 
+                loading={loading}
+                pagination={{ 
+                    current: pagination.current,
+                    pageSize: pagination.pageSize,
+                    total: tableData?.pagination?.total || 0,
+                    showSizeChanger: true,
+                    pageSizeOptions: ['5', '10', '20', '50'],
+                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                }}
+                onChange={handleTableChange}
+            />
         </div>
     );
 };

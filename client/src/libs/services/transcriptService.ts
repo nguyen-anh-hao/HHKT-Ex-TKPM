@@ -3,13 +3,13 @@ import { CourseResponse } from '@/interfaces/course/CourseResponse';
 import { ClassResponse } from '@/interfaces/class/ClassResponse';
 import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
 
-import { getCourses } from '../api/courseApi';
+import { getAllCourses } from '../api/courseApi'; // Changed from getCourses to getAllCourses
 import { getClasses } from '../api/classApi';
 import { getRegistrations } from '../api/registerApi';
 
 export const fetchTranscript = async () => {
     try {
-        const courses: CourseResponse[] = await getCourses();
+        const courses: CourseResponse[] = await getAllCourses(); // Now returns Course[] instead of paginated response
         const classes: ClassResponse[] = await getClasses();
         const registrations: RegisterResponse[] = await getRegistrations();
 

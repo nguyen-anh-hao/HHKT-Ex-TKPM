@@ -47,7 +47,7 @@ const StudentTable = ({
     error: studentsError
   } = useStudents({
     page: (pagination.current || 1) - 1,
-    pageSize: pagination.pageSize || 10,
+    pageSize: pagination.pageSize || 5, // Fixed: Match the default pageSize
     sortField,
     sortOrder
   }, { 
@@ -62,7 +62,7 @@ const StudentTable = ({
   } = useSearchStudents(
     debouncedSearchText,
     (pagination.current || 1) - 1,
-    pagination.pageSize || 10,
+    pagination.pageSize || 5, // Fixed: Match the default pageSize
     {
       enabled: useInternalData && debouncedSearchText.length > 0,
     }

@@ -13,7 +13,6 @@ interface CourseModalProps {
     onCancel: () => void;
     onSubmit: (value: any) => void;
     course?: Course;
-    allCourses: Course[];
     isResetModal?: boolean;
     setIsResetModal?: any;
 }
@@ -23,7 +22,6 @@ const CourseModal = ({
     onCancel,
     onSubmit,
     course,
-    allCourses,
     isResetModal,
     setIsResetModal,
 }: CourseModalProps) => {
@@ -126,13 +124,8 @@ const CourseModal = ({
 
                 <Form.Item label={t('prerequisite')} name="prerequisiteCourseId">
                     <Select placeholder={t('select-prerequisite')} allowClear>
-                        {allCourses
-                            .filter((c) => c.courseId && (!course || c.courseId !== course.courseId))
-                            .map((c) => (
-                                <Option key={c.courseId} value={c.courseId}>
-                                    {c.courseCode} - {c.courseName}
-                                </Option>
-                            ))}
+                        {/* Note: Prerequisites will need to be fetched separately if needed */}
+                        <Option value={null}>{t('no-prerequisite')}</Option>
                     </Select>
                 </Form.Item>
 

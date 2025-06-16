@@ -1,23 +1,37 @@
-import { useMutation } from '@tanstack/react-query';
-import * as courseService from '@/libs/services/courseService';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { postCourse, patchCourse, deleteCourse } from '@/libs/api/courseApi';
+import { Course } from '@/interfaces/course/Course';
+import { COURSES_QUERY_KEY } from './useCourseQuery';
 
 export const useCreateCourse = () => {
-    const { mutate, error, isPending } = useMutation({
-        mutationFn: courseService.createCourse,
-    });
-    return { mutate, error, isPending };
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (course: Course) => postCourse(course),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [COURSES_QUERY_KEY] });
+    },
+  });
 };
 
 export const useUpdateCourse = () => {
-    const { mutate, error, isPending } = useMutation({
-        mutationFn: courseService.updateCourse,
-    });
-    return { mutate, error, isPending };
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (course: Course) => patchCourse(course.courseId, course),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [COURSES_QUERY_KEY] });
+    },
+  });
 };
 
 export const useDeleteCourse = () => {
-    const { mutate, error, isPending } = useMutation({
-        mutationFn: courseService.removeCourse,
-    });
-    return { mutate, error, isPending };
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (courseId: number) => deleteCourse(courseId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [COURSES_QUERY_KEY] });
+    },
+  });
 };
