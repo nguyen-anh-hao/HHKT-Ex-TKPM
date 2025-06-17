@@ -15,7 +15,6 @@ public class LecturerMapper {
                 .phone(lecturer.getPhone())
                 .facultyId(lecturer.getFaculty().getId())
                 .facultyName(lecturer.getFaculty().getFacultyName())
-                .classes(lecturer.getClasses() != null ? lecturer.getClasses().stream().map(ClassMapper::mapFromDomainToClassSummaryResponse).toList() : null)
                 .createdAt(lecturer.getCreatedAt())
                 .updatedAt(lecturer.getUpdatedAt())
                 .createdBy(lecturer.getCreatedBy())

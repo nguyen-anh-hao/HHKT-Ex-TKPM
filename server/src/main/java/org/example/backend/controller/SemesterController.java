@@ -12,9 +12,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
@@ -27,7 +30,7 @@ public class SemesterController {
     @GetMapping("")
     public APIResponse getSemesters(@PageableDefault(size = 10, page = 0) Pageable pageable) {
 
-        log.info("Fetching semesters");
+        log.info("Received request to get all semesters");
 
         Page<SemesterResponse> semesterResponsePage = semesterService.getAllSemesters(pageable);
 
@@ -44,7 +47,7 @@ public class SemesterController {
     @GetMapping("/{semesterId}")
     public APIResponse getSemesterById(@PathVariable Integer semesterId) {
 
-        log.info("Fetching semester by id: {}", semesterId);
+        log.info("Received request to get semester with ID: {}", semesterId);
 
         SemesterResponse semesterResponse = semesterService.getSemesterById(semesterId);
 
@@ -60,7 +63,7 @@ public class SemesterController {
     @PostMapping("")
     public APIResponse addSemester(@RequestBody @Valid SemesterRequest semesterRequest) {
 
-        log.info("Adding semester: {}", semesterRequest.getSemester());
+        log.info("Received request to add a new semester: {}", semesterRequest);
 
         SemesterResponse addedSemester = semesterService.addSemester(semesterRequest);
 

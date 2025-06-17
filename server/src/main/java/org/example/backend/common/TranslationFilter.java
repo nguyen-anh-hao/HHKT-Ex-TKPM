@@ -41,15 +41,8 @@ public class TranslationFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         try {
-            String language = httpRequest.getHeader("Accept-Language");
-            if (!StringUtils.hasText(language)) {
-                language = DEFAULT_LANGUAGE;
-            }
-
-            if (!language.equals("en") && !language.equals("vi")) {
-                httpResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                return;
-            }
+            String language = extractLanguage(httpRequest);
+            log.debug("Extracted language: {}", language);
 
             CURRENT_LANGUAGE.set(language);
 
@@ -101,6 +94,32 @@ public class TranslationFilter implements Filter {
         } finally {
             CURRENT_LANGUAGE.remove();
         }
+    }
+
+    private String extractLanguage(HttpServletRequest request) {
+        String acceptLanguage = request.getHeader("Accept-Language");
+
+        if (!StringUtils.hasText(acceptLanguage)) {
+            return DEFAULT_LANGUAGE;
+        }
+
+        log.debug("Raw Accept-Language header: {}", acceptLanguage);
+
+        String[] languages = acceptLanguage.split(",");
+
+        for (String lang : languages) {
+            String cleanLang = lang.split(";")[0].trim().toLowerCase();
+
+            String primaryLang = cleanLang.split("-")[0];
+
+            if ("en".equals(primaryLang)) {
+                return "en";
+            } else if ("vi".equals(primaryLang)) {
+                return "vi";
+            }
+        }
+
+        return DEFAULT_LANGUAGE;
     }
 
     private boolean isJsonRequest(HttpServletRequest request) {

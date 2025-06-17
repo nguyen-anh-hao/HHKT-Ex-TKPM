@@ -3,13 +3,16 @@ package org.example.backend.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.domain.ClassRegistrationHistory;
 import org.example.backend.dto.request.ClassRegistrationHistoryRequest;
 import org.example.backend.dto.response.APIResponse;
 import org.example.backend.dto.response.ClassRegistrationHistoryResponse;
 import org.example.backend.service.IClassRegistrationHistoryService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
@@ -20,13 +23,14 @@ public class ClassRegistrationHistoryController {
 
     @GetMapping("/")
     public String get() {
+        log.info("Received request to get Class Registration History");
         return "Hello World!";
     }
 
     @PostMapping("")
     public APIResponse addClassRegistrationHistory(@RequestBody @Valid ClassRegistrationHistoryRequest classRegistrationHistoryRequest) {
 
-        log.info("Request: {}", classRegistrationHistoryRequest);
+        log.info("Received request to add Class Registration History: {}", classRegistrationHistoryRequest);
 
         ClassRegistrationHistoryResponse classRegistrationHistoryResponse = classRegistrationHistoryService.addClassRegistrationHistory(classRegistrationHistoryRequest);
 

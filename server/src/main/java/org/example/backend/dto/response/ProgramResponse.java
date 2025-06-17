@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -13,7 +12,6 @@ import java.util.List;
 public class ProgramResponse {
     private Integer id;
     private String programName;
-    private List<StudentResponse> students;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
