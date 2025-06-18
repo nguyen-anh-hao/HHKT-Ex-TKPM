@@ -9,7 +9,7 @@
     "class-management": "Quản lý lớp học",
     "course-megistration": "Đăng ký học phần",
     "transcript": "Bảng điểm sinh viên",
-    "enroll-class":"Đăng ký học phần",
+    "register-class":"Đăng ký học phần",
     "reference-management": "Quản lý danh mục"
 
   },
@@ -145,10 +145,12 @@
     "loading-courses": "Đang tải dữ liệu khóa học...",
     "error-loading-courses": "Lỗi khi tải khóa học",
     "actions": "Hành động",
-    "confirm-delete": "Bạn có chắc chắn muốn xóa khóa học này?"
+    "confirm-delete": "Bạn có chắc chắn muốn xóa khóa học này?",
+    "prerequisite-courses": "Học phần tiên quyết",
+    "no-prerequisite": "Không có"
   },
-  "enroll-class": {
-    "enroll-class": "Đăng ký lớp học",
+  "register-class": {
+    "register-class": "Đăng ký lớp học",
     "add-enrollment": "Thêm đăng ký",
     "edit-enrollment": "Sửa đăng ký",
     "student-id": "MSSV",
@@ -178,7 +180,7 @@
     "edit": "Sửa"
   },
   "reference-management": {
-    "title": "Quản lý tham chiếu",
+    "title": "Quản lý danh mục",
     "faculties": "Khoa",
     "programs": "Chương trình",
     "student-statuses": "Trạng thái sinh viên",

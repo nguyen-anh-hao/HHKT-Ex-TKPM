@@ -3,7 +3,6 @@ package org.example.backend.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.backend.common.LanguageInterceptor;
 import org.example.backend.common.RegistrationStatus;
 import org.example.backend.domain.Class;
 import org.example.backend.domain.Course;
@@ -17,7 +16,6 @@ import org.example.backend.repository.IClassRepository;
 import org.example.backend.repository.ICourseRepository;
 import org.example.backend.repository.IFacultyRepository;
 import org.example.backend.service.ICourseService;
-import org.example.backend.service.ITranslationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,10 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -40,7 +35,6 @@ public class CourseServiceImpl implements ICourseService {
     private final IFacultyRepository facultyRepository;
     private final IClassRepository classRepository;
     private final IClassRegistrationRepository classRegistrationRepository;
-    private final ITranslationService translationService;
 
     @Override
     @Transactional
@@ -90,27 +84,7 @@ public class CourseServiceImpl implements ICourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
-        String currentLanguage = LanguageInterceptor.CURRENT_LANGUAGE.get();
-        if ("vi".equals(currentLanguage)) {
-            return CourseMapper.mapFromCourseDomainToCourseResponse(course);
-        } else {
-            // Get translation for course
-            Map<String, String> translations = translationService.getTranslation("Course", courseId, currentLanguage);
-
-            // Get translation for faculty
-            Map<String, String> facultyTranslations = translationService.getTranslation(
-                    "Faculty", course.getFaculty().getId(), currentLanguage);
-
-            // Get translation for prerequisite course
-            Map<String, String> prerequisiteCourseTranslations = new HashMap<>();
-            if (course.getPrerequisiteCourse() != null) {
-                prerequisiteCourseTranslations = translationService.getTranslation(
-                        "Course", course.getPrerequisiteCourse().getId(), currentLanguage);
-            }
-
-            return CourseMapper.mapFromCourseDomainToCourseResponseWithTranslation(
-                    course, translations, facultyTranslations, prerequisiteCourseTranslations);
-        }
+        return CourseMapper.mapFromCourseDomainToCourseResponse(course);
     }
 
     @Override
@@ -118,44 +92,7 @@ public class CourseServiceImpl implements ICourseService {
         log.info("Getting all courses");
         Page<Course> coursePage = courseRepository.findAll(pageable);
 
-        String currentLanguage = LanguageInterceptor.CURRENT_LANGUAGE.get();
-        if ("vi".equals(currentLanguage)) {
-            return coursePage.map(CourseMapper::mapFromCourseDomainToCourseResponse);
-        } else {
-            // Get translations for courses
-            List<Integer> courseIds = coursePage.getContent().stream()
-                    .map(Course::getId)
-                    .toList();
-            Map<Integer, Map<String, String>> courseTranslations = translationService
-                    .getTranslations("Course", courseIds, currentLanguage);
-
-            // Get translations for faculty
-            List<Integer> facultyIds = coursePage.getContent().stream()
-                    .map(course -> course.getFaculty().getId())
-                    .distinct()
-                    .toList();
-            Map<Integer, Map<String, String>> facultyTranslations = translationService
-                    .getTranslations("Faculty", facultyIds, currentLanguage);
-
-            // Get translations for prerequisite courses
-            List<Integer> prerequisiteCourseIds = coursePage.getContent().stream()
-                    .filter(course -> course.getPrerequisiteCourse() != null)
-                    .map(course -> course.getPrerequisiteCourse().getId())
-                    .distinct()
-                    .toList();
-            Map<Integer, Map<String, String>> prerequisiteCourseTranslations =
-                    prerequisiteCourseIds.isEmpty() ? Collections.emptyMap() :
-                            translationService.getTranslations("Course", prerequisiteCourseIds, currentLanguage);
-
-            return coursePage.map(course -> CourseMapper.mapFromCourseDomainToCourseResponseWithTranslation(
-                    course,
-                    courseTranslations.getOrDefault(course.getId(), Collections.emptyMap()),
-                    facultyTranslations.getOrDefault(course.getFaculty().getId(), Collections.emptyMap()),
-                    course.getPrerequisiteCourse() != null ?
-                            prerequisiteCourseTranslations.getOrDefault(course.getPrerequisiteCourse().getId(), Collections.emptyMap()) :
-                            Collections.emptyMap()
-            ));
-        }
+        return coursePage.map(CourseMapper::mapFromCourseDomainToCourseResponse);
     }
 
     @Override
@@ -219,7 +156,7 @@ public class CourseServiceImpl implements ICourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
-       // Check if course was created within the last 30 minutes
+        // Check if course was created within the last 30 minutes
         log.info("Checking if course was created within the last 30 minutes: {}", courseId);
         if (Duration.between(course.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant(), Instant.now()).toMinutes() > 30) {
             log.error("Cannot delete course {} - it was created more than 30 minutes ago.", courseId);

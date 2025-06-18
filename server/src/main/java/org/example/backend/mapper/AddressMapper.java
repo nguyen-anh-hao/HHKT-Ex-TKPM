@@ -30,18 +30,4 @@ public class AddressMapper {
                 .country(address.getCountry())
                 .build();
     }
-
-    public static AddressResponse mapToResponseWithTranslation(
-            Address address,
-            Map<String, String> translations) {
-
-        return AddressResponse.builder()
-                .addressType(translations.getOrDefault("addressType", address.getAddressType()))
-                .houseNumberStreetName(address.getHouseNumberStreetName())
-                .wardCommune(translations.getOrDefault("wardCommune", address.getWardCommune()))
-                .district(translations.getOrDefault("district", address.getDistrict()))
-                .cityProvince(translations.getOrDefault("cityProvince", address.getCityProvince()))
-                .country(translations.getOrDefault("country", address.getCountry()))
-                .build();
-    }
 }

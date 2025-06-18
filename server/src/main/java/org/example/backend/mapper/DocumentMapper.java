@@ -34,20 +34,4 @@ public class DocumentMapper {
                 .hasChip(document.getHasChip())
                 .build();
     }
-
-    public static DocumentResponse mapToResponseWithTranslation(
-            Document document,
-            Map<String, String> translations) {
-
-        return DocumentResponse.builder()
-                .documentType(translations.getOrDefault("documentType", document.getDocumentType()))
-                .documentNumber(document.getDocumentNumber())
-                .issuedDate(document.getIssuedDate())
-                .expiredDate(document.getExpiredDate())
-                .issuedBy(translations.getOrDefault("issuedBy", document.getIssuedBy()))
-                .issuedCountry(document.getIssuedCountry())
-                .note(translations.getOrDefault("note", document.getNote()))
-                .hasChip(document.getHasChip())
-                .build();
-    }
 }

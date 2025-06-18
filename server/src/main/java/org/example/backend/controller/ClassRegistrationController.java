@@ -13,7 +13,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/class-registrations")
@@ -26,7 +32,7 @@ public class ClassRegistrationController {
     @GetMapping("")
     public APIResponse getAllClassRegistrations(@PageableDefault(size = 3, page = 0) Pageable pageable) {
 
-        log.info("getAllClassRegistrations() called");
+        log.info("Received request to get all class registrations");
 
         Page<ClassRegistrationResponse> classRegistrationResponsePage = classRegistrationService
                 .getAllClassRegistrations(pageable);
@@ -42,7 +48,7 @@ public class ClassRegistrationController {
     @GetMapping("/{id}")
     public APIResponse getClassRegistrationById(@PathVariable Integer id) {
 
-        log.info("get class registration by id: {}", id);
+        log.info("Received request to get class registration with id: {}", id);
 
         ClassRegistrationResponse classRegistrationResponse = classRegistrationService
                 .getClassRegistrationById(id);
@@ -57,7 +63,7 @@ public class ClassRegistrationController {
     @PostMapping("")
     public APIResponse createClassRegistration(@RequestBody @Valid ClassRegistrationRequest classRegistrationRequest) {
 
-        log.info("create class registration with request: {}", classRegistrationRequest);
+        log.info("Received request to create class registration with request: {}", classRegistrationRequest);
 
         ClassRegistrationResponse classRegistrationResponse = classRegistrationService
                 .addClassRegistration(classRegistrationRequest);
@@ -73,7 +79,7 @@ public class ClassRegistrationController {
     public APIResponse updateClassRegistration(@PathVariable Integer id,
                                                @RequestBody @Valid ClassRegistrationUpdateRequest classRegistrationUpdateRequest) {
 
-        log.info("update class registration with id: {} and request: {}", id, classRegistrationUpdateRequest);
+        log.info("Received request to update class registration with id: {} and request: {}", id, classRegistrationUpdateRequest);
 
         ClassRegistrationResponse classRegistrationResponse = classRegistrationService.
                 updateClassRegistration(id, classRegistrationUpdateRequest);

@@ -1,7 +1,7 @@
 'use client'
 
 import CoursePage from './components/Home';
-import { useCourses } from '@/libs/hooks/useCourseQuery';
+import { useCourses } from '@/libs/hooks/course/useCourseQuery';
 import { useTranslations } from 'next-intl';
 
 export default function CourseManagementPage() {

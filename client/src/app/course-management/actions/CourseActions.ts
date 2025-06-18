@@ -1,4 +1,4 @@
-import { Course } from '../../../interfaces/Course';
+import { Course } from '../../../interfaces/course/Course';
 
 export const addCourse = (courses: Course[], newCourse: Course): Course[] => {
     return [...courses, newCourse];

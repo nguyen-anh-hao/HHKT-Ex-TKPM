@@ -1,8 +1,8 @@
 import { getStudentById, getStudents, postStudent, patchStudent, deleteStudent } from '@/libs/api/studentApi';
-import { Student } from '../../interfaces/Student';
+import { Student } from '../../interfaces/student/Student';
 import { cleanData } from '../utils/cleanData';
 import { transformStudentToPostRequest, transformStudentToPatchRequest, transformGetResponseToStudent } from '../utils/studentTransform';
-import { StudentResponse } from '../../interfaces/StudentResponse';
+import { StudentResponse } from '../../interfaces/student/StudentResponse';
 
 export const fetchStudentById = async (studentId: string) => {
     try {

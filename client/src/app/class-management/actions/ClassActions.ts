@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { Class } from '../../../interfaces/ClassResponse';
+import { Class } from '../../../interfaces/class/ClassResponse';
 
 export const addClass = (classes: Class[], newClass: Class): Class[] => {
     if (classes.some(cls => cls.classCode === newClass.classCode)) {
