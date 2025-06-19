@@ -28,7 +28,7 @@ public class TranslationServiceImpl implements TranslationService {
         this.objectMapper.registerModule(new JavaTimeModule());
     }
 
-    private String translateText(String text, String from, String to) {
+    public String translateText(String text, String from, String to) {
         if (text == null || text.trim().isEmpty()) {
             return text;
         }
