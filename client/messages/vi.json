@@ -12,6 +12,7 @@
     "transcript": "Bảng điểm sinh viên",
     "register-class": "Đăng ký học phần",
     "reference-management": "Quản lý danh mục",
+    "semester-management": "Quản lý học kỳ",
 
     "student": "Sinh viên",
     "category": "Danh mục",
@@ -233,5 +234,34 @@
     "course-code": "Mã khóa học",
     "course-name": "Tên khóa học",
     "credits": "Số tín chỉ"
+  },
+  "semester-management": {
+    "title": "Quản lý học kỳ",
+    "add-semester": "Thêm học kỳ",
+    "edit-semester": "Sửa học kỳ",
+    "semester-number": "Học kỳ",
+    "academic-year": "Năm học",
+    "start-date": "Ngày bắt đầu",
+    "end-date": "Ngày kết thúc",
+    "last-cancel-date": "Hạn chót hủy lớp",
+    "semester-1": "Học kỳ 1",
+    "semester-2": "Học kỳ 2",
+    "semester-3": "Học kỳ 3",
+    "status": "Trạng thái",
+    "ongoing": "Đang diễn ra",
+    "upcoming": "Sắp tới",
+    "completed": "Đã kết thúc",
+    "search-placeholder": "Tìm kiếm theo năm học hoặc học kỳ",
+    "required-semester-number": "Học kỳ là bắt buộc!",
+    "required-academic-year": "Năm học là bắt buộc!",
+    "required-start-date": "Ngày bắt đầu là bắt buộc!",
+    "required-end-date": "Ngày kết thúc là bắt buộc!",
+    "required-last-cancel-date": "Hạn chót hủy lớp là bắt buộc!",
+    "invalid-academic-year-format": "Năm học phải có định dạng YYYY-YYYY!",
+    "invalid-academic-year-consecutive": "Các năm học phải liên tiếp nhau!",
+    "last-cancel-date-after-start": "Hạn chót hủy lớp phải sau ngày bắt đầu!",
+    "last-cancel-date-before-end": "Hạn chót hủy lớp phải trước ngày kết thúc!",
+    "semester-number-range": "Học kỳ phải từ 1 đến 3!",
+    "check-info": "Vui lòng kiểm tra thông tin học kỳ!"
   }
 }

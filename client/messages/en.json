@@ -12,6 +12,7 @@
     "transcript": "Student Transcript",
     "reference-management": "Reference Management",
     "register-class": "Register Class",
+    "semester-management": "Semester Management",
 
     "student": "Student",
     "category": "Reference",
@@ -233,5 +234,34 @@
     "course-code": "Course Code",
     "course-name": "Course Name",
     "credits": "Credits"
+  },
+  "semester-management": {
+    "title": "Semester Management",
+    "add-semester": "Add Semester",
+    "edit-semester": "Edit Semester",
+    "semester-number": "Semester Number",
+    "academic-year": "Academic Year",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "last-cancel-date": "Last Date to Cancel Class",
+    "semester-1": "Semester 1",
+    "semester-2": "Semester 2",
+    "semester-3": "Semester 3",
+    "status": "Status",
+    "ongoing": "Ongoing",
+    "upcoming": "Upcoming",
+    "completed": "Completed",
+    "search-placeholder": "Search by academic year or semester",
+    "required-semester-number": "Semester number is required!",
+    "required-academic-year": "Academic year is required!",
+    "required-start-date": "Start date is required!",
+    "required-end-date": "End date is required!",
+    "required-last-cancel-date": "Last cancellation date is required!",
+    "invalid-academic-year-format": "Academic year must be in format YYYY-YYYY!",
+    "invalid-academic-year-consecutive": "Academic years must be consecutive!",
+    "last-cancel-date-after-start": "Last cancellation date must be after start date!",
+    "last-cancel-date-before-end": "Last cancellation date must be before end date!",
+    "semester-number-range": "Semester number must be between 1 and 3!",
+    "check-info": "Please check semester information!"
   }
 }
