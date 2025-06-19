@@ -149,9 +149,9 @@ const RegisterModal = ({
                     rules={[{ required: true, message: t('required-status') }]}
                 >
                     <Select onChange={(value) => setStatus(value)}>
-                        <Option value="REGISTERED">REGISTERED</Option>
-                        <Option value="COMPLETED">COMPLETED</Option>
-                        <Option value="CANCELLED">CANCELLED</Option>
+                        <Option value="REGISTERED">{t("REGISTERED")}</Option>
+                        <Option value="COMPLETED">{t("COMPLETED")}</Option>
+                        <Option value="CANCELLED">{t("CANCELLED")}</Option>
                     </Select>
                 </Form.Item>
 

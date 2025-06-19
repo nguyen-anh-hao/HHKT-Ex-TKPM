@@ -137,32 +137,32 @@ const ClassTable = ({ onEdit, onDelete, openModal }: ClassTableProps) => {
         { title: t('max-students'), dataIndex: 'maxStudents' },
         { title: t('schedule'), dataIndex: 'schedule' },
         { title: t('room'), dataIndex: 'room' },
-        {
-            title: tCommon('actions'),
-            render: (_: any, record: Class) => (
-                <Space>
-                    <Button
-                        icon={<EditOutlined />}
-                        onClick={() => {
-                            onEdit(record);
-                            openModal?.(true);
-                        }}
-                    >
-                        {tCommon('edit')}
-                    </Button>
-                    <Popconfirm
-                        title={t('confirm-delete')}
-                        onConfirm={() => onDelete(record.id)}
-                        okText={tCommon('delete')}
-                        cancelText={tCommon('cancel')}
-                    >
-                        <Button icon={<DeleteOutlined />} danger>
-                            {tCommon('delete')}
-                        </Button>
-                    </Popconfirm>
-                </Space>
-            ),
-        },
+        // {
+        //     title: tCommon('actions'),
+        //     render: (_: any, record: Class) => (
+        //         <Space>
+        //             <Button
+        //                 icon={<EditOutlined />}
+        //                 onClick={() => {
+        //                     onEdit(record);
+        //                     openModal?.(true);
+        //                 }}
+        //             >
+        //                 {tCommon('edit')}
+        //             </Button>
+        //             <Popconfirm
+        //                 title={t('confirm-delete')}
+        //                 onConfirm={() => onDelete(record.id)}
+        //                 okText={tCommon('delete')}
+        //                 cancelText={tCommon('cancel')}
+        //             >
+        //                 <Button icon={<DeleteOutlined />} danger>
+        //                     {tCommon('delete')}
+        //                 </Button>
+        //             </Popconfirm>
+        //         </Space>
+        //     ),
+        // },
     ];
 
     // Show error state

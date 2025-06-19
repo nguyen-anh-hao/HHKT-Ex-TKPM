@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Course } from '../../../interfaces/course/Course';
 import { useFaculties } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
+import { useCourses } from '@/libs/hooks/course/useCourseQuery';
 
 const { Option } = Select;
 
@@ -28,6 +29,7 @@ const CourseModal = ({
     const [courseForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const { data: facultyOptions } = useFaculties();
+    const { data: allCourses, isLoading: isCoursesLoading } = useCourses({ page: 0, pageSize: 1000 }); // lấy tất cả khóa học
     const t = useTranslations('course-management');
     const tCommon = useTranslations('common');
 
@@ -40,7 +42,11 @@ const CourseModal = ({
 
     useEffect(() => {
         if (course) {
-            courseForm.setFieldsValue(course);
+            // Gán lại đúng giá trị faculty cho field "faculty"
+            courseForm.setFieldsValue({
+                ...course,
+                faculty: course.facultyName || '', // Ưu tiên faculty (id hoặc value), fallback facultyName nếu có
+            });
             setIsEdit(true);
         } else {
             // courseForm.resetFields();
@@ -123,9 +129,20 @@ const CourseModal = ({
                 </Form.Item>
 
                 <Form.Item label={t('prerequisite')} name="prerequisiteCourseId">
-                    <Select placeholder={t('select-prerequisite')} allowClear>
-                        {/* Note: Prerequisites will need to be fetched separately if needed */}
-                        <Option value={null}>{t('no-prerequisite')}</Option>
+                    <Select
+                        placeholder={t('select-prerequisite')}
+                        allowClear
+                        loading={isCoursesLoading}
+                        showSearch
+                        optionFilterProp="children"
+                    >
+                        {allCourses?.data
+                            ?.filter((c: Course) => !course || c.courseId !== course.courseId)
+                            .map((c: Course) => (
+                                <Option key={c.courseId} value={c.courseId}>
+                                    {c.courseCode} - {c.courseName}
+                                </Option>
+                            ))}
                     </Select>
                 </Form.Item>
 

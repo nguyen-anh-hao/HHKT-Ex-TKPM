@@ -67,6 +67,7 @@ const ExportModal = ({ visible, onCancel }: ExportModalProps) => {
                             options={[
                                 { value: '.json', label: '.JSON' },
                                 { value: '.xlsx', label: '.XLSX' },
+                                { value: '.pdf', label: '.PDF' },
                             ]}
                         />
                     </div>
