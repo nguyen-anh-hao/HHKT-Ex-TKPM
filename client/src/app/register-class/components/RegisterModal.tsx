@@ -57,24 +57,10 @@ const RegisterModal = ({
         form
             .validateFields()
             .then((value) => {
-                const selectedClass = allClasses.find(cls => cls.classCode === value.classCode);
-
-                if (!selectedClass) {
-                    message.error(t('class-not-found'));
-                    return;
-                }
-
-                const selectedClassIndex = allClasses.findIndex(cls => cls.classCode === value.classCode);
-
-                if (selectedClassIndex === -1) {
-                    message.error(t('class-not-found'));
-                    return;
-                }
-
+                // classId is now directly used from the form
                 const finalValue = {
                     ...(registrationData || {}),
                     ...value,
-                    classId: selectedClassIndex + 1,
                 }
 
                 onSubmit(finalValue);
@@ -131,12 +117,12 @@ const RegisterModal = ({
 
                 <Form.Item
                     label={t('class-code')}
-                    name="classCode"
+                    name="classId"
                     rules={[{ required: true, message: t('required-class-code') }]}
                 >
                     <Select disabled={isEdit} placeholder={t('select-class')}>
                         {allClasses.map((cls) => (
-                            <Option key={cls.classCode} value={cls.classCode}>
+                            <Option key={cls.id} value={cls.id}>
                                 {cls.classCode} - {cls.courseName}
                             </Option>
                         ))}

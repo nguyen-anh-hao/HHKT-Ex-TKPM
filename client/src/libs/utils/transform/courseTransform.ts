@@ -9,7 +9,7 @@ export const transformCourseToGetResponse = (response: any) => {
         courseCode: response.courseCode,
         courseName: response.courseName,
         credits: response.credits,
-        faculty: response.facultyId, // Map facultyId to faculty for UI
+        facultyId: response.facultyId, // Keep as facultyId consistently
         description: response.description,
         prerequisiteCourseId: response.prerequisiteCourseId,
         isActive: response.isActive,
@@ -17,7 +17,6 @@ export const transformCourseToGetResponse = (response: any) => {
 }
 
 export const transformCourseToPostRequest = (request: Course): CreateCourseRequest => {
-    // faculty is facultyId
     return {
         courseCode: request.courseCode,
         courseName: request.courseName,

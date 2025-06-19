@@ -45,8 +45,18 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
     useEffect(() => {
         if (student) {
             const documents = student.documents || [];
+            
+            // Find the correct IDs for dropdown selections based on labels
+            const facultyId = facultyOptions?.find(f => f.label === student.faculty)?.key;
+            const programId = programOptions?.find(p => p.label === student.program)?.key;
+            const statusId = studentStatusOptions?.find(s => s.label === student.studentStatus)?.key;
+            
             studentForm.setFieldsValue({
                 ...student,
+                // Use IDs for select fields if available, otherwise fallback to original values
+                faculty: facultyId || student.faculty,
+                program: programId || student.program,
+                studentStatus: statusId || student.studentStatus,
                 dob: moment(student.dob),
                 issuedDate: student.issuedDate ? moment(student.issuedDate) : null,
                 expiredDate: student.expiredDate ? moment(student.expiredDate) : null,
@@ -58,11 +68,11 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
             setIsEdit(false);
             setDocumentType(null);
         }
-    }, [student, studentForm]);
+    }, [student, studentForm, facultyOptions, programOptions, studentStatusOptions]);
 
     const renderOptions = (options?: { key: number; value: string; label: string }[]) =>
         options?.map((option) => (
-            <Option key={option.key} value={option.value}>
+            <Option key={option.key} value={option.key}>
                 {option.label}
             </Option>
         )) ?? null;
@@ -75,7 +85,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
         return options?.map((option) => {
             const rule = (statusRules as Rule[])?.find((rule: Rule) => rule.currentStatusName === oldStatus && rule.allowedTransitionName === option.label);
             return (
-                <Option key={option.key} value={option.value} disabled={!rule}>
+                <Option key={option.key} value={option.key} disabled={!rule && option.label !== oldStatus}>
                     {option.label}
                 </Option>
             );
@@ -398,8 +408,15 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                 type='primary'
                 onClick={() => {
                     studentForm.validateFields()
-                        .then((value) => {
-                            onSubmit(value);
+                        .then((values) => {
+                            // Convert select values from IDs to names
+                            const formattedValues = {
+                                ...values,
+                                faculty: facultyOptions?.find(f => f.key === values.faculty)?.label || values.faculty,
+                                program: programOptions?.find(p => p.key === values.program)?.label || values.program,
+                                studentStatus: studentStatusOptions?.find(s => s.key === values.studentStatus)?.label || values.studentStatus
+                            };
+                            onSubmit(formattedValues);
                             if (!isEdit) {
                                 if (isResetModal) {
                                     studentForm.resetFields();

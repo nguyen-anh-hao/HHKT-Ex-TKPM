@@ -108,16 +108,18 @@ const Home = () => {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">{t('register-class')}</h1>
-            <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={handleAdd}
-                className="mb-4"
-            >
-                {t('add-enrollment')}
-            </Button>
+        <div>
+            <h1>{t('register-class')}</h1>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={handleAdd}
+                    className="mb-4"
+                >
+                    {t('add-enrollment')}
+                </Button>
+            </div>
 
             <RegisterTable
                 onEdit={handleEdit}

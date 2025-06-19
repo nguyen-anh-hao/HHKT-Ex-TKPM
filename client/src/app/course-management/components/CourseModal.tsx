@@ -44,7 +44,7 @@ const CourseModal = ({
         if (course) {
             courseForm.setFieldsValue({
                 ...course,
-                facultyId: course.facultyId,
+                facultyId: course.facultyId, // Keep using facultyId
             });
             setIsEdit(true);
         } else {
@@ -126,8 +126,18 @@ const CourseModal = ({
                     <Input type="number" min={1} />
                 </Form.Item>
 
-                <Form.Item label={t('faculty')} name='facultyId' rules={[{ required: true, message: t('required-faculty') }]}>
-                    <Select>{renderOptions(facultyOptions)}</Select>
+                <Form.Item 
+                    label={t('faculty')} 
+                    name='facultyId' 
+                    rules={[{ required: true, message: t('required-faculty') }]}
+                >
+                    <Select>
+                        {facultyOptions?.map(option => (
+                            <Option key={option.key} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
                 </Form.Item>
 
                 <Form.Item label={t('description')} name="description">

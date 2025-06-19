@@ -8,8 +8,10 @@ export const useFaculties = () => {
             const data = await fetchReference('faculties');
             return data.map((option: any) => ({
                 key: option.id,
-                value: option.id, // Use id for value
+                value: option.id, // Use id as value consistently
                 label: option.facultyName,
+                // Include the original name for reference
+                facultyName: option.facultyName
             }));
         },
     });
@@ -24,8 +26,10 @@ export const usePrograms = () => {
             const data = await fetchReference('programs');
             return data.map((option: any) => ({
                 key: option.id,
-                value: option.programName,
+                value: option.id, // Use id as value consistently
                 label: option.programName,
+                // Include the original name for reference
+                programName: option.programName
             }));
         },
     });
@@ -40,8 +44,10 @@ export const useStudentStatuses = () => {
             const data = await fetchReference('student-statuses');
             return data.map((option: any) => ({
                 key: option.id,
-                value: option.studentStatusName,
+                value: option.id, // Use id as value consistently
                 label: option.studentStatusName,
+                // Include the original name for reference
+                studentStatusName: option.studentStatusName
             }));
         },
     });
@@ -56,11 +62,12 @@ export const useEmailDomains = () => {
             const data = await fetchReference('email-domains');
             return data.map((option: any) => ({
                 key: option.id,
-                value: option.domain,
+                value: option.id, // Use id as value consistently
+                label: option.domain,
+                domain: option.domain
             }));
         },
     });
-
 
     return { data, error, isLoading };
 }
@@ -70,34 +77,32 @@ export const useLecturers = () => {
         queryKey: ['lecturers'],
         queryFn: async () => {
             const data = await fetchReference('lecturers');
-            // console.log('Raw lecturers:', data);
             return data.map((option: any) => ({
-                    key: option.id,
-                    value: option.fullName,
-                    label: option.fullName,
-                }));
+                key: option.id,
+                value: option.id, // Use id as value consistently
+                label: option.fullName,
+                fullName: option.fullName
+            }));
         },
     });
-    // console.log('noRaw lecturers:', data);
+    
     return { data, error, isLoading };
 };
-
 
 export const useCourses = () => {
     const { data, error, isLoading } = useQuery({
         queryKey: ['courses'],
         queryFn: async () => {
             const data = await fetchReference('courses');
-            // console.log('Raw courses:', data);
             return data.map((option: any) => ({
-                    key: option.courseId,
-                    value: option.courseName,
-                    label: option.courseName,
-                    code: option.courseCode,
-                }));
+                key: option.courseId,
+                value: option.courseId, // Use courseId as value consistently
+                label: `${option.courseCode} - ${option.courseName}`,
+                courseCode: option.courseCode,
+                courseName: option.courseName
+            }));
         },
     });
 
-    // console.log('noRaw courses:', data);
     return { data, error, isLoading };
 };

@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { fetchReference } from '../services/referenceService';
 
-type Faculty= { id: number; name: string; };
-type Program= { id: number; name: string; };
-type StudentStatus= { id: number; name: string; };
+// Update types to match the actual API response format
+type Faculty = { id: number; facultyName: string; };
+type Program = { id: number; programName: string; };
+type StudentStatus = { id: number; studentStatusName: string; };
 
 type ReferenceStore = {
     faculties: Faculty[];

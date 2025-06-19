@@ -76,10 +76,13 @@ export const transformStudentToPostRequest = (request: Student): Partial<CreateS
     ] : [];
 
     const { faculties, programs, studentStatuses } = useReferenceStore.getState();
+    
+    // Find by name, but use ID for the actual request
     const faculty = faculties.find((faculty: any) => faculty.facultyName === request.faculty);
     const program = programs.find((program: any) => program.programName === request.program);
     const studentStatus = studentStatuses.find((status: any) => status.studentStatusName === request.studentStatus);
 
+    // Get the actual IDs or use default value of 1
     const facultyId = faculty ? faculty.id : 1;
     const programId = program ? program.id : 1;
     const studentStatusId = studentStatus ? studentStatus.id : 1;

@@ -50,13 +50,8 @@ const ClassModal = ({
         classForm
             .validateFields()
             .then((value) => {
-                const finalValue = {
-                    ...value,
-                    courseId: courseOptions?.find((course: any) => course.value === value.courseName)?.key,
-                    lecturerId: lecturerOptions?.find((lecturer: any) => lecturer.value === value.lecturerName)?.key,
-                };
-
-                onSubmit(finalValue);
+                // No need for manual mapping when using IDs directly
+                onSubmit(value);
             })
             .catch(() => {
                 message.error(t('check-info'));
@@ -95,22 +90,41 @@ const ClassModal = ({
                     </Select>
                 </Form.Item>
 
-                <Form.Item label={t('lecturer')} name='lecturerName' rules={[{ required: true, message: t('required-lecturer') }]}>
-                    <Select>{renderOptions(lecturerOptions)} </Select>
+                <Form.Item 
+                    label={t('lecturer')} 
+                    name='lecturerId' 
+                    rules={[{ required: true, message: t('required-lecturer') }]}
+                >
+                    <Select>
+                        {lecturerOptions?.map(option => (
+                            <Option key={option.key} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
                 </Form.Item>
 
-                <Form.Item label={t('course')} name='courseName' rules={[{ required: true, message: t('required-course') }]}>
+                <Form.Item 
+                    label={t('course')} 
+                    name='courseId' 
+                    rules={[{ required: true, message: t('required-course') }]}
+                >
                     <Select onChange={(value) => {
                         const selectedCourse = courseOptions?.find((course: any) => course.value === value);
                         if (selectedCourse) {
                             classForm.setFieldsValue({
-                                courseCode: selectedCourse.code,
+                                courseCode: selectedCourse.courseCode,
                             });
                         }
-                    }
-                    }>{renderOptions(courseOptions)}</Select>
+                    }}>
+                        {courseOptions?.map(option => (
+                            <Option key={option.key} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
                 </Form.Item>
-
+                
                 <Form.Item name="courseCode" label={t('course-code')}>
                     <Input disabled />
                 </Form.Item>
