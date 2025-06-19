@@ -15,6 +15,7 @@ public class ClassRegistrationMapper {
                 .studentName(classRegistration.getStudent().getFullName())
                 .classId(classRegistration.getAClass().getId())
                 .classCode(classRegistration.getAClass().getClassCode())
+                .grade(classRegistration.getGrade())
                 .createdDate(classRegistration.getCreatedAt())
                 .updatedDate(classRegistration.getUpdatedAt())
                 .createdBy(classRegistration.getCreatedBy())

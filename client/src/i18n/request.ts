@@ -5,7 +5,7 @@ export default getRequestConfig(async () => {
     // Provide a static locale, fetch a user setting,
     // read from `cookies()`, `headers()`, etc.
     const cookieStore = cookies();
-    const locale = (await cookieStore).get('NEXT_LOCALE')?.value || 'en';
+    const locale = (await cookieStore).get('NEXT_LOCALE')?.value || 'vi';
 
     return {
         locale,

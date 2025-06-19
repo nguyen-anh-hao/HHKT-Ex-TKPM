@@ -14,6 +14,7 @@ type ReferenceListProps = {
 
 const ReferenceList: React.FC<ReferenceListProps> = ({ title, values, onChange, onDelete, onAdd }) => {
     const t = useTranslations('reference-management');
+    const tCommon = useTranslations('common');
 
     return (
         <div style={{ textAlign: 'center' }}>
@@ -25,12 +26,12 @@ const ReferenceList: React.FC<ReferenceListProps> = ({ title, values, onChange, 
                         onChange={(e) => onChange(index, e.target.value)}
                     />
                     <Popconfirm
-                        title={t('confirm-delete')}
+                        title={tCommon('confirm-delete')}
                         onConfirm={() => { onDelete(key); }}
-                        okText={t('delete')}
-                        cancelText={t('cancel')}
+                        okText={tCommon('delete')}
+                        cancelText={tCommon('cancel')}
                     >
-                        <Button danger>{t('delete')}</Button>
+                        <Button danger>{tCommon('delete')}</Button>
                     </Popconfirm>
                 </Space>
             ))}

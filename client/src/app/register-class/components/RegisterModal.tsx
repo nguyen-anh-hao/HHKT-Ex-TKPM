@@ -3,7 +3,7 @@
 import { Form, Input, Modal, Button, Select, message, InputNumber } from 'antd';
 import { useEffect, useState } from 'react';
 import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
-import { Class } from '@/interfaces/class/ClassResponse';
+import { Class } from '@/interfaces/class/Class';
 import { fetchStudentById } from '@/libs/services/studentService';
 import { useTranslations } from 'next-intl';
 
@@ -34,6 +34,7 @@ const RegisterModal = ({
     const [status, setStatus] = useState('REGISTERED');
     const [student, setStudent] = useState('');
     const t = useTranslations('register-class');
+    const tCommon = useTranslations('common');
 
     useEffect(() => {
         if (registrationData) {
@@ -171,7 +172,7 @@ const RegisterModal = ({
             </Form>
 
             <Button type="primary" onClick={handleSubmit}>
-                {t('save')}
+                {tCommon('save')}
             </Button>
         </Modal>
     );

@@ -1,37 +1,50 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import * as registerService from '@/libs/services/registerService';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { postRegister, patchRegister, deleteRegister } from '@/libs/api/registerApi';
 import { RegisterResponse } from '@/interfaces/register/RegisterResponse';
-import { RegisterRequest } from '@/interfaces/register/CreateRegisterRequest';
+import { REGISTRATIONS_QUERY_KEY } from './useRegisterQuery';
+import { useRegistrations } from './useRegisterQuery';
 
-
+/**
+ * Hook for creating a new registration
+ */
 export const useCreateRegister = () => {
-    const { mutate, error, isPending, isSuccess } = useMutation<RegisterResponse, Error, RegisterRequest>({
-        mutationFn: registerService.createRegistration,
-    });
-    return { mutate, error, isPending, isSuccess };
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (registerData: RegisterResponse) => postRegister(registerData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [REGISTRATIONS_QUERY_KEY] });
+    },
+  });
 };
 
+/**
+ * Hook for updating an existing registration
+ */
 export const useUpdateRegister = () => {
-    const { mutate, error, isPending, isSuccess } = useMutation<RegisterResponse, Error, { id: number; value: Partial<RegisterRequest> }>({
-        mutationFn: ({ id, value }) => registerService.updateRegistration(id, value),
-    });
-    return { mutate, error, isPending, isSuccess };
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ id, value }: { id: number; value: RegisterResponse }) => patchRegister(id, value),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [REGISTRATIONS_QUERY_KEY] });
+    },
+  });
 };
 
-
-export const useFetchRegistrations = () => {
-    const { data, error, isLoading } = useQuery<RegisterResponse[], Error>({
-        queryKey: ['registrations'],
-        queryFn: registerService.fetchRegistrations,
-    });
-    return { data, error, isLoading };
+/**
+ * Hook for deleting a registration
+ */
+export const useDeleteRegister = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (registerId: number) => deleteRegister(registerId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [REGISTRATIONS_QUERY_KEY] });
+    },
+  });
 };
 
-
-export const useFetchRegistrationById = (id: number) => {
-    const { data, error, isLoading } = useQuery<RegisterResponse, Error>({
-        queryKey: ['registration', id],
-        queryFn: () => registerService.fetchRegistrationById(id),
-    });
-    return { data, error, isLoading };
-};
+// Alias for backward compatibility with existing code
+export const useFetchRegistrations = useRegistrations;
