@@ -9,11 +9,10 @@ type ReferenceListProps = {
     values: { key: number, value: string }[];
     onChange: (index: number, newValue: string) => void;
     onDelete: (id: number) => void;
-    onAdd: () => void;
+    editable?: boolean;
 };
 
-const ReferenceList: React.FC<ReferenceListProps> = ({ title, values, onChange, onDelete, onAdd }) => {
-    const t = useTranslations('reference-management');
+const ReferenceList: React.FC<ReferenceListProps> = ({ title, values, onChange, onDelete, editable }) => {
     const tCommon = useTranslations('common');
 
     return (
@@ -23,7 +22,8 @@ const ReferenceList: React.FC<ReferenceListProps> = ({ title, values, onChange, 
                 <Space key={key} style={{ display: 'flex', marginBottom: '8px' }}>
                     <Input
                         value={value}
-                        onChange={(e) => onChange(index, e.target.value)}
+                        onChange={editable ? (e) => onChange(index, e.target.value) : undefined}
+                        disabled={!editable}
                     />
                     <Popconfirm
                         title={tCommon('confirm-delete')}
@@ -35,9 +35,7 @@ const ReferenceList: React.FC<ReferenceListProps> = ({ title, values, onChange, 
                     </Popconfirm>
                 </Space>
             ))}
-            <Button style={{ marginTop: 16 }} type='primary' onClick={onAdd}>
-                {t('add-item')} {title}
-            </Button>
+            {/* Removed per-category Add button */}
         </div>
     );
 };

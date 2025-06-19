@@ -6,7 +6,9 @@ import moment from 'moment';
 import { useState, useEffect, use } from 'react';
 import { Student } from '../../../interfaces/student/Student';
 import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/reference/useReferences';
+import { useStatusRules } from '@/libs/hooks/statusRule/useStatusRules';
 import { useTranslations } from 'next-intl';
+import { set } from 'zod';
 
 const { Option } = Select;
 
@@ -18,6 +20,12 @@ interface StudentModalProps {
     isResetModal?: boolean;
     setIsResetModal?: any;
     isSubmitting?: boolean;
+}
+
+interface Rule {
+    id: number;
+    currentStatusName: string;
+    allowedTransitionName: string;
 }
 
 const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setIsResetModal, isSubmitting }: StudentModalProps) => {
@@ -32,6 +40,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
     const { data: programOptions } = usePrograms();
     const { data: studentStatusOptions } = useStudentStatuses();
     const { data: emailDomainOptions } = useEmailDomains();
+    const { data: statusRules } = useStatusRules();
 
     useEffect(() => {
         if (student) {
@@ -57,6 +66,21 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                 {option.label}
             </Option>
         )) ?? null;
+
+    const renderStatusOptions = (options?: { key: number; value: string; label: string }[]) => {
+        const oldStatus = student?.studentStatus || '';
+        if (isEdit && !options?.some((option) => option.label === oldStatus)) {
+            options = [...(options || []), { key: -1, value: oldStatus, label: oldStatus }];
+        }
+        return options?.map((option) => {
+            const rule = (statusRules as Rule[])?.find((rule: Rule) => rule.currentStatusName === oldStatus && rule.allowedTransitionName === option.label);
+            return (
+                <Option key={option.key} value={option.value} disabled={!rule}>
+                    {option.label}
+                </Option>
+            );
+        });
+    };
 
     const tabItems = [
         {
@@ -130,7 +154,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                         </Col>
                         <Col span={6}>
                             <Form.Item label={t('state')} name='studentStatus' rules={[{ required: true, message: t('required-state') }]}>
-                                <Select>{renderOptions(studentStatusOptions)}</Select>
+                                <Select>{renderStatusOptions(studentStatusOptions)}</Select>
                             </Form.Item>
                         </Col>
                     </Row>

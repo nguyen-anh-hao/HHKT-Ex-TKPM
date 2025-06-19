@@ -32,7 +32,11 @@
     "import": "Import Data",
     "pagination": "{item} of {items} items",
     "page": "page",
-    "back": "Back"
+    "back": "Back",
+    "all": "all",
+
+    "unsaved-changes": "You have unsaved changes.",
+    "all-saved": "All changes saved successfully."
   },
   "validation": {
     "required": "{field} is required!",
@@ -50,7 +54,8 @@
     "import-success": "File {fileName} uploaded successfully",
     "import-error": "Failed to upload file {fileName}",
     "export-error": "Failed to export file",
-    "upload-error": "An error occurred while uploading"
+    "upload-error": "An error occurred while uploading",
+    "no-changes": "No changes detected"
   },
   "student-management": {
     "student-management": "Student Management",

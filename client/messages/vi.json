@@ -32,7 +32,11 @@
     "import": "Nhập dữ liệu",
     "pagination": "{item} trong {items} mục",
     "page": "trang",
-    "back": "Quay lại"
+    "back": "Quay lại",
+    "all": "tất cả",
+
+    "unsaved-changes": "Bạn có thay đổi chưa được lưu.",
+    "all-saved": "Tất cả thay đổi đã được lưu thành công."
   },
   "validation": {
     "required": "{field} là bắt buộc!",
@@ -50,7 +54,8 @@
     "import-success": "Tệp {fileName} tải lên thành công",
     "import-error": "Tệp {fileName} tải lên thất bại",
     "export-error": "Xuất tệp tin thất bại",
-    "upload-error": "Đã xảy ra lỗi khi tải lên"
+    "upload-error": "Đã xảy ra lỗi khi tải lên",
+    "no-changes": "Không có thay đổi nào được phát hiện"
   },
   "student-management": {
     "student-management": "Quản lý sinh viên",

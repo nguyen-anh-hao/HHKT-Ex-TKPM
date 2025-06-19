@@ -119,15 +119,17 @@ export default function Home() {
         onEdit={setSelectedStudent}
         onDelete={handleDeleteStudent}
       />
-      <StudentModal
-        visible={isModalVisible}
-        onCancel={() => { setIsModalVisible(false); setSelectedStudent(null); }}
-        onSubmit={handleAddOrUpdateStudent}
-        student={selectedStudent || undefined}
-        isResetModal={isResetModal}
-        setIsResetModal={setIsResetModal}
-        isSubmitting={isCreating || isUpdating}
-      />
+      {isModalVisible && (
+        <StudentModal
+          visible={isModalVisible}
+          onCancel={() => { setIsModalVisible(false); setSelectedStudent(null); }}
+          onSubmit={handleAddOrUpdateStudent}
+          student={selectedStudent || undefined}
+          isResetModal={isResetModal}
+          setIsResetModal={setIsResetModal}
+          isSubmitting={isCreating || isUpdating}
+        />
+      )}
       <ImportModal
         visible={isImportModalVisible}
         onCancel={() => setIsImportModalVisible(false)}
