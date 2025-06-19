@@ -8,7 +8,7 @@ export const useFaculties = () => {
             const data = await fetchReference('faculties');
             return data.map((option: any) => ({
                 key: option.id,
-                value: option.facultyName,
+                value: option.id, // Use id for value
                 label: option.facultyName,
             }));
         },

@@ -42,14 +42,15 @@ const CourseModal = ({
 
     useEffect(() => {
         if (course) {
-            // Gán lại đúng giá trị faculty cho field "faculty"
             courseForm.setFieldsValue({
                 ...course,
-                faculty: course.facultyName || '', // Ưu tiên faculty (id hoặc value), fallback facultyName nếu có
+                facultyId: course.facultyId,
             });
             setIsEdit(true);
         } else {
-            // courseForm.resetFields();
+            courseForm.setFieldsValue({
+                isActive: true, // luôn mặc định là true khi tạo mới
+            });
             setIsEdit(false);
         }
     }, [course, courseForm]);
@@ -58,6 +59,9 @@ const CourseModal = ({
         courseForm
             .validateFields()
             .then((value) => {
+                if (!isEdit && typeof value.isActive === "undefined") {
+                    value.isActive = true;
+                }
                 if (course) {
                     if (!course.courseId) {
                         message.error(t('missing-course-id'));
@@ -75,6 +79,8 @@ const CourseModal = ({
 
                     if (isResetModal) {
                         courseForm.resetFields();
+                        // Đặt lại isActive về true sau khi reset
+                        courseForm.setFieldsValue({ isActive: true });
                         setIsResetModal(false);
                     }
                 }
@@ -120,7 +126,7 @@ const CourseModal = ({
                     <Input type="number" min={1} />
                 </Form.Item>
 
-                <Form.Item label={t('faculty')} name='faculty' rules={[{ required: true, message: t('required-faculty') }]}>
+                <Form.Item label={t('faculty')} name='facultyId' rules={[{ required: true, message: t('required-faculty') }]}>
                     <Select>{renderOptions(facultyOptions)}</Select>
                 </Form.Item>
 
