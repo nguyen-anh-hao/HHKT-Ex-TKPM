@@ -2,6 +2,7 @@ import { Table, Button, Popconfirm, Input, Space, message } from 'antd';
 import { EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { fetchReference } from '@/libs/services/referenceService';
+import { fetchAllSemesters } from '@/libs/services/semesterService';
 import { Class } from '@/interfaces/class/Class';
 import { useTranslations } from 'next-intl';
 import { useSearchClasses, useClasses } from '@/libs/hooks/class/useClassQuery';
@@ -19,6 +20,7 @@ const ClassTable = ({ onEdit, onDelete, openModal }: ClassTableProps) => {
     const [searchText, setSearchText] = useState('');
     const [debouncedSearchText] = useDebounce(searchText, 500);
     const [facultyMap, setFacultyMap] = useState<Record<number, string>>({});
+    const [semesterMap, setSemesterMap] = useState<Record<number, string>>({});
     const t = useTranslations('class-management');
     const tCommon = useTranslations('common');
     
@@ -87,6 +89,24 @@ const ClassTable = ({ onEdit, onDelete, openModal }: ClassTableProps) => {
         fetchFacultyOptions();
     }, []);
 
+    // Load semester options
+    useEffect(() => {
+        const fetchSemesterOptions = async () => {
+            try {
+                const response = await fetchAllSemesters();
+                const map: Record<number, string> = {};
+                response.forEach((s: any) => {
+                    map[s.id] = `${t('semester')} ${s.semester} - ${s.academicYear}`;
+                });
+                setSemesterMap(map);
+            } catch (error) {
+                console.error('Error fetching semester options:', error);
+            }
+        };
+
+        fetchSemesterOptions();
+    }, []);
+
     // Handle errors
     useEffect(() => {
         if (classesError && !debouncedSearchText) {
@@ -132,37 +152,38 @@ const ClassTable = ({ onEdit, onDelete, openModal }: ClassTableProps) => {
             dataIndex: 'classCode',
         },
         { title: t('course-code'), dataIndex: 'courseCode' },
+        { title: t('semester'), dataIndex: 'semesterId', render: (semester: any) => semesterMap[semester]},
         { title: t('course-name'), dataIndex: 'courseName' },
         { title: t('lecturer'), dataIndex: 'lecturerName' },
         { title: t('max-students'), dataIndex: 'maxStudents' },
         { title: t('schedule'), dataIndex: 'schedule' },
         { title: t('room'), dataIndex: 'room' },
-        {
-            title: tCommon('actions'),
-            render: (_: any, record: Class) => (
-                <Space>
-                    <Button
-                        icon={<EditOutlined />}
-                        onClick={() => {
-                            onEdit(record);
-                            openModal?.(true);
-                        }}
-                    >
-                        {tCommon('edit')}
-                    </Button>
-                    <Popconfirm
-                        title={t('confirm-delete')}
-                        onConfirm={() => onDelete(record.id)}
-                        okText={tCommon('delete')}
-                        cancelText={tCommon('cancel')}
-                    >
-                        <Button icon={<DeleteOutlined />} danger>
-                            {tCommon('delete')}
-                        </Button>
-                    </Popconfirm>
-                </Space>
-            ),
-        },
+        // {
+        //     title: tCommon('actions'),
+        //     render: (_: any, record: Class) => (
+        //         <Space>
+        //             <Button
+        //                 icon={<EditOutlined />}
+        //                 onClick={() => {
+        //                     onEdit(record);
+        //                     openModal?.(true);
+        //                 }}
+        //             >
+        //                 {tCommon('edit')}
+        //             </Button>
+        //             <Popconfirm
+        //                 title={t('confirm-delete')}
+        //                 onConfirm={() => onDelete(record.id)}
+        //                 okText={tCommon('delete')}
+        //                 cancelText={tCommon('cancel')}
+        //             >
+        //                 <Button icon={<DeleteOutlined />} danger>
+        //                     {tCommon('delete')}
+        //                 </Button>
+        //             </Popconfirm>
+        //         </Space>
+        //     ),
+        // },
     ];
 
     // Show error state

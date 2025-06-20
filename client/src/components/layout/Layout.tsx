@@ -1,6 +1,6 @@
 'use client'
 
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined, FileTextOutlined, ApartmentOutlined, BookOutlined, SwapOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, TeamOutlined, SettingOutlined, FileTextOutlined, ApartmentOutlined, BookOutlined, SwapOutlined, CalendarOutlined } from '@ant-design/icons';
 import { Button, Menu, Layout as AntdLayout, Typography } from 'antd';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -23,9 +23,10 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
         { key: '3', icon: <ApartmentOutlined />, label: t('reference-management'), route: '/reference-management' },
         { key: '4', icon: <SettingOutlined />, label: t('status-rules-configuration'), route: '/status-rules-configuration' },
         { key: '5', icon: <BookOutlined />, label: t('course-management'), route: '/course-management' },
-        { key: '6', icon: <TeamOutlined />, label: t('class-management'), route: '/class-management' },
-        { key: '7', icon: <SwapOutlined />, label: t('register-class'), route: '/register-class' },
-        { key: '8', icon: <FileTextOutlined />, label: t('transcript'), route: '/transcript' },
+        { key: '6', icon: <CalendarOutlined />, label: t('semester-management'), route: '/semester-management' },
+        { key: '7', icon: <TeamOutlined />, label: t('class-management'), route: '/class-management' },
+        { key: '8', icon: <SwapOutlined />, label: t('register-class'), route: '/register-class' },
+        { key: '9', icon: <FileTextOutlined />, label: t('transcript'), route: '/transcript' },
     ];
 
     const handleMenuClick = (e: any) => {

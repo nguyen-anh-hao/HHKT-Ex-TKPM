@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Course } from '../../../interfaces/course/Course';
 import { useFaculties } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
+import { useCourses } from '@/libs/hooks/course/useCourseQuery';
 
 const { Option } = Select;
 
@@ -28,6 +29,7 @@ const CourseModal = ({
     const [courseForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const { data: facultyOptions } = useFaculties();
+    const { data: allCourses, isLoading: isCoursesLoading } = useCourses({ page: 0, pageSize: 1000 }); // lấy tất cả khóa học
     const t = useTranslations('course-management');
     const tCommon = useTranslations('common');
 
@@ -40,10 +42,15 @@ const CourseModal = ({
 
     useEffect(() => {
         if (course) {
-            courseForm.setFieldsValue(course);
+            courseForm.setFieldsValue({
+                ...course,
+                facultyId: course.facultyId, // Keep using facultyId
+            });
             setIsEdit(true);
         } else {
-            // courseForm.resetFields();
+            courseForm.setFieldsValue({
+                isActive: true, // luôn mặc định là true khi tạo mới
+            });
             setIsEdit(false);
         }
     }, [course, courseForm]);
@@ -52,6 +59,9 @@ const CourseModal = ({
         courseForm
             .validateFields()
             .then((value) => {
+                if (!isEdit && typeof value.isActive === "undefined") {
+                    value.isActive = true;
+                }
                 if (course) {
                     if (!course.courseId) {
                         message.error(t('missing-course-id'));
@@ -69,6 +79,8 @@ const CourseModal = ({
 
                     if (isResetModal) {
                         courseForm.resetFields();
+                        // Đặt lại isActive về true sau khi reset
+                        courseForm.setFieldsValue({ isActive: true });
                         setIsResetModal(false);
                     }
                 }
@@ -114,8 +126,18 @@ const CourseModal = ({
                     <Input type="number" min={1} />
                 </Form.Item>
 
-                <Form.Item label={t('faculty')} name='faculty' rules={[{ required: true, message: t('required-faculty') }]}>
-                    <Select>{renderOptions(facultyOptions)}</Select>
+                <Form.Item 
+                    label={t('faculty')} 
+                    name='facultyId' 
+                    rules={[{ required: true, message: t('required-faculty') }]}
+                >
+                    <Select>
+                        {facultyOptions?.map(option => (
+                            <Option key={option.key} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
                 </Form.Item>
 
                 <Form.Item label={t('description')} name="description">
@@ -123,9 +145,20 @@ const CourseModal = ({
                 </Form.Item>
 
                 <Form.Item label={t('prerequisite')} name="prerequisiteCourseId">
-                    <Select placeholder={t('select-prerequisite')} allowClear>
-                        {/* Note: Prerequisites will need to be fetched separately if needed */}
-                        <Option value={null}>{t('no-prerequisite')}</Option>
+                    <Select
+                        placeholder={t('select-prerequisite')}
+                        allowClear
+                        loading={isCoursesLoading}
+                        showSearch
+                        optionFilterProp="children"
+                    >
+                        {allCourses?.data
+                            ?.filter((c: Course) => !course || c.courseId !== course.courseId)
+                            .map((c: Course) => (
+                                <Option key={c.courseId} value={c.courseId}>
+                                    {c.courseCode} - {c.courseName}
+                                </Option>
+                            ))}
                     </Select>
                 </Form.Item>
 

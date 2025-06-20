@@ -77,11 +77,11 @@ const Home = () => {
                     },
                     {
                         onSuccess: () => {
-                            message.success(tMessages('update-success', { entity: tCommon('class').toLowerCase() }));
+                            message.success(tMessages('update-success', { entity: tCommon('registration').toLowerCase() }));
                             handleModalClose();
                         },
                         onError: (error) => {
-                            message.error(`${tMessages('update-error', { entity: tCommon('class').toLowerCase() })}: ${error.message}`);
+                            message.error(`${tMessages('update-error', { entity: tCommon('registration').toLowerCase() })}: ${error.message}`);
                         }
                     }
                 );
@@ -93,11 +93,11 @@ const Home = () => {
                     },
                     {
                         onSuccess: () => {
-                            message.success(tMessages('create-success', { entity: tCommon('class').toLowerCase() }));
+                            message.success(tMessages('create-success', { entity: tCommon('registration').toLowerCase() }));
                             handleModalClose();
                         },
                         onError: (error) => {
-                            message.error(`${tMessages('create-error', { entity: tCommon('class').toLowerCase() })}: ${error.message}`);
+                            message.error(`${tMessages('create-error', { entity: tCommon('registration').toLowerCase() })}: ${error.message}`);
                         }
                     }
                 );
@@ -108,16 +108,18 @@ const Home = () => {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">{t('register-class')}</h1>
-            <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={handleAdd}
-                className="mb-4"
-            >
-                {t('add-enrollment')}
-            </Button>
+        <div>
+            <h1>{t('register-class')}</h1>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={handleAdd}
+                    className="mb-4"
+                >
+                    {t('add-enrollment')}
+                </Button>
+            </div>
 
             <RegisterTable
                 onEdit={handleEdit}

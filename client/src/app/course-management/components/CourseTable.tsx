@@ -8,6 +8,8 @@ import { useSearchCourses, useCourses } from '@/libs/hooks/course/useCourseQuery
 import { useDebounce } from 'use-debounce';
 import type { TablePaginationConfig } from 'antd/es/table';
 import type { SorterResult } from 'antd/es/table/interface';
+import type { ColumnType } from 'antd/es/table';
+
 
 interface CourseTableProps {
     onEdit: (course: Course) => void;
@@ -19,6 +21,7 @@ const CourseTable = ({ onEdit, onDelete, openModal }: CourseTableProps) => {
     const [searchText, setSearchText] = useState('');
     const [debouncedSearchText] = useDebounce(searchText, 500);
     const [facultyMap, setFacultyMap] = useState<Record<number, string>>({});
+    const [prerequisiteMap, setPrerequisiteMap] = useState<Record<number, string>>({});
     const t = useTranslations('course-management');
     const tCommon = useTranslations('common');
     
@@ -87,6 +90,19 @@ const CourseTable = ({ onEdit, onDelete, openModal }: CourseTableProps) => {
         fetchFacultyOptions();
     }, []);
 
+    // Lấy tất cả khóa học để map id -> tên (dùng hook đúng chuẩn)
+    const { data: allCourses } = useCourses({ page: 0, pageSize: 1000 });
+
+    useEffect(() => {
+        if (allCourses?.data) {
+            const map: Record<number, string> = {};
+            allCourses.data.forEach((c: Course) => {
+                map[c.courseId] = `${c.courseCode} - ${c.courseName}`;
+            });
+            setPrerequisiteMap(map);
+        }
+    }, [allCourses]);
+
     // Handle errors
     useEffect(() => {
         if (coursesError && !debouncedSearchText) {
@@ -126,22 +142,43 @@ const CourseTable = ({ onEdit, onDelete, openModal }: CourseTableProps) => {
         setPagination(prev => ({ ...prev, current: 1 }));
     };
 
-    const columns = [
+    const columns: ColumnType<Course>[] = [
         {
             title: t('course-code'),
             dataIndex: 'courseCode',
+            width: 80,
         },
-        { title: t('course-name'), dataIndex: 'courseName' },
-        { title: t('credits'), dataIndex: 'credits' },
+        { 
+            title: t('course-name'), 
+            dataIndex: 'courseName',
+            width: 100,
+        },
+        { 
+            title: t('credits'), 
+            dataIndex: 'credits',
+            width: 60,
+            align: 'center' as const,
+        },
         {
             title: t('faculty'),
             dataIndex: 'facultyName',
             render: (facultyName: string) => facultyName || 'N/A',
+            width: 120,
+        },
+        {
+            title: t('prerequisite'),
+            dataIndex: 'prerequisiteCourseId',
+            render: (prerequisiteCourseId: number | null) =>
+                prerequisiteCourseId
+                    ? prerequisiteMap[prerequisiteCourseId] || t('no-prerequisite')
+                    : t('no-prerequisite'),
+            width: 140,
         },
         {
             title: t('description'),
             dataIndex: 'description',
             ellipsis: true,
+            width: 140,
         },
         {
             title: t('active'),
@@ -151,9 +188,13 @@ const CourseTable = ({ onEdit, onDelete, openModal }: CourseTableProps) => {
                     {isActive ? t('active') : t('inactive')}
                 </Tag>
             ),
+            width: 90,
+            align: 'center' as const,
         },
         {
             title: tCommon('actions'),
+            width: 120,
+            fixed: 'right',
             render: (_: any, record: Course) => (
                 <Space>
                     <Button
@@ -208,6 +249,7 @@ const CourseTable = ({ onEdit, onDelete, openModal }: CourseTableProps) => {
                 dataSource={tableData?.data || []} 
                 rowKey='courseId' 
                 loading={loading}
+                scroll={{ x: 1200 }}
                 pagination={{ 
                     current: pagination.current,
                     pageSize: pagination.pageSize,

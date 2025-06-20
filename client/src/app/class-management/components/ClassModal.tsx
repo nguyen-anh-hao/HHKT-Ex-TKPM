@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Class } from '../../../interfaces/class/Class';
 import { useLecturers, useCourses } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
+import { useSemesters } from '@/libs/hooks/semester/useSemesters';
 
 const { Option } = Select;
 
@@ -27,15 +28,9 @@ const ClassModal = ({
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const { data: lecturerOptions } = useLecturers();
     const { data: courseOptions } = useCourses();
+    const { data: semesterOptions } = useSemesters({ page: 0, pageSize: 1000, sortField: 'id', sortOrder: 'asc'});
     const t = useTranslations('class-management');
     const tCommon = useTranslations('common');
-
-    const renderOptions = (options?: { key: number; value: string; label: string }[]) =>
-        options?.map((option) => (
-            <Option key={option.key} value={option.value}>
-                {option.label}
-            </Option>
-        )) ?? null;
 
     useEffect(() => {
         if (classData) {
@@ -50,13 +45,8 @@ const ClassModal = ({
         classForm
             .validateFields()
             .then((value) => {
-                const finalValue = {
-                    ...value,
-                    courseId: courseOptions?.find((course: any) => course.value === value.courseName)?.key,
-                    lecturerId: lecturerOptions?.find((lecturer: any) => lecturer.value === value.lecturerName)?.key,
-                };
-
-                onSubmit(finalValue);
+                // No need for manual mapping when using IDs directly
+                onSubmit(value);
             })
             .catch(() => {
                 message.error(t('check-info'));
@@ -89,31 +79,52 @@ const ClassModal = ({
                     rules={[{ required: true, message: t('required-semester') }]}
                 >
                     <Select placeholder={t('select-semester')}>
-                        <Option value={1}>{t('semester-1')}</Option>
-                        <Option value={2}>{t('semester-2')}</Option>
-                        <Option value={3}>{t('semester-3')}</Option>
+                        {semesterOptions?.data?.map((semester: any) => (
+                            <Option key={semester.id} value={semester.id}>
+                                {t('semester')} {semester.semester} - {semester.academicYear}
+                            </Option>
+                        ))}
                     </Select>
                 </Form.Item>
 
-                <Form.Item label={t('lecturer')} name='lecturerName' rules={[{ required: true, message: t('required-lecturer') }]}>
-                    <Select>{renderOptions(lecturerOptions)} </Select>
+                <Form.Item 
+                    label={t('lecturer')} 
+                    name='lecturerId' 
+                    rules={[{ required: true, message: t('required-lecturer') }]}
+                >
+                    <Select>
+                        {lecturerOptions?.map(option => (
+                            <Option key={option.key} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
                 </Form.Item>
 
-                <Form.Item label={t('course')} name='courseName' rules={[{ required: true, message: t('required-course') }]}>
+                <Form.Item 
+                    label={t('course')} 
+                    name='courseId' 
+                    rules={[{ required: true, message: t('required-course') }]}
+                >
                     <Select onChange={(value) => {
                         const selectedCourse = courseOptions?.find((course: any) => course.value === value);
                         if (selectedCourse) {
                             classForm.setFieldsValue({
-                                courseCode: selectedCourse.code,
+                                courseCode: selectedCourse.courseCode,
                             });
                         }
-                    }
-                    }>{renderOptions(courseOptions)}</Select>
+                    }}>
+                        {courseOptions?.map(option => (
+                            <Option key={option.key} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
                 </Form.Item>
-
-                <Form.Item name="courseCode" label={t('course-code')}>
+                
+                {/* <Form.Item name="courseCode" label={t('course-code')}>
                     <Input disabled />
-                </Form.Item>
+                </Form.Item> */}
 
                 <Form.Item
                     label={t('max-students')}

@@ -12,6 +12,7 @@
     "transcript": "Bảng điểm sinh viên",
     "register-class": "Đăng ký học phần",
     "reference-management": "Quản lý danh mục",
+    "semester-management": "Quản lý học kỳ",
 
     "student": "Sinh viên",
     "category": "Danh mục",
@@ -19,6 +20,8 @@
     "course": "Khóa học",
     "class": "Lớp học",
     "reference": "Danh mục",
+    "semester": "Học kỳ",
+    "registration": "Bản đăng ký",
 
     "actions": "Hành động",
     "add": "Thêm",
@@ -32,7 +35,11 @@
     "import": "Nhập dữ liệu",
     "pagination": "{item} trong {items} mục",
     "page": "trang",
-    "back": "Quay lại"
+    "back": "Quay lại",
+    "all": "tất cả",
+
+    "unsaved-changes": "Bạn có thay đổi chưa được lưu.",
+    "all-saved": "Tất cả thay đổi đã được lưu thành công."
   },
   "validation": {
     "required": "{field} là bắt buộc!",
@@ -47,10 +54,12 @@
     "update-error": "Cập nhật {entity} thất bại",
     "delete-success": "Xóa {entity} thành công",
     "delete-error": "Xóa {entity} thất bại",
+    "submit-error": "Đã xảy ra lỗi khi gửi dữ liệu {entity}",
     "import-success": "Tệp {fileName} tải lên thành công",
     "import-error": "Tệp {fileName} tải lên thất bại",
     "export-error": "Xuất tệp tin thất bại",
-    "upload-error": "Đã xảy ra lỗi khi tải lên"
+    "upload-error": "Đã xảy ra lỗi khi tải lên",
+    "no-changes": "Không có thay đổi nào được phát hiện"
   },
   "student-management": {
     "student-management": "Quản lý sinh viên",
@@ -175,6 +184,7 @@
     "edit-enrollment": "Sửa đăng ký",
     "student-id": "MSSV",
     "student-name": "Họ tên",
+    "student-info": "Thông tin sinh viên",
     "class-code": "Mã lớp",
     "select-class": "Chọn mã lớp",
     "status": "Trạng thái",
@@ -187,6 +197,7 @@
     "required-student-id": "MSSV là bắt buộc!",
     "required-class-code": "Mã lớp là bắt buộc!",
     "required-status": "Trạng thái là bắt buộc!",
+    "student-not-found": "Không tìm thấy sinh viên với MSSV này!",
     "save": "Lưu",
     "required-grade": "Điểm là bắt buộc!",
     "check-info": "Vui lòng kiểm tra lại thông tin!",
@@ -228,5 +239,34 @@
     "course-code": "Mã khóa học",
     "course-name": "Tên khóa học",
     "credits": "Số tín chỉ"
+  },
+  "semester-management": {
+    "title": "Quản lý học kỳ",
+    "add-semester": "Thêm học kỳ",
+    "edit-semester": "Sửa học kỳ",
+    "semester-number": "Học kỳ",
+    "academic-year": "Năm học",
+    "start-date": "Ngày bắt đầu",
+    "end-date": "Ngày kết thúc",
+    "last-cancel-date": "Hạn chót hủy lớp",
+    "semester-1": "Học kỳ 1",
+    "semester-2": "Học kỳ 2",
+    "semester-3": "Học kỳ 3",
+    "status": "Trạng thái",
+    "ongoing": "Đang diễn ra",
+    "upcoming": "Sắp tới",
+    "completed": "Đã kết thúc",
+    "search-placeholder": "Tìm kiếm theo năm học hoặc học kỳ",
+    "required-semester-number": "Học kỳ là bắt buộc!",
+    "required-academic-year": "Năm học là bắt buộc!",
+    "required-start-date": "Ngày bắt đầu là bắt buộc!",
+    "required-end-date": "Ngày kết thúc là bắt buộc!",
+    "required-last-cancel-date": "Hạn chót hủy lớp là bắt buộc!",
+    "invalid-academic-year-format": "Năm học phải có định dạng YYYY-YYYY!",
+    "invalid-academic-year-consecutive": "Các năm học phải liên tiếp nhau!",
+    "last-cancel-date-after-start": "Hạn chót hủy lớp phải sau ngày bắt đầu!",
+    "last-cancel-date-before-end": "Hạn chót hủy lớp phải trước ngày kết thúc!",
+    "semester-number-range": "Học kỳ phải từ 1 đến 3!",
+    "check-info": "Vui lòng kiểm tra thông tin học kỳ!"
   }
 }

@@ -33,6 +33,7 @@ const RegisterModal = ({
     const [isEdit, setIsEdit] = useState(false);
     const [status, setStatus] = useState('REGISTERED');
     const [student, setStudent] = useState('');
+    const [studentId, setStudentId] = useState('');
     const t = useTranslations('register-class');
     const tCommon = useTranslations('common');
 
@@ -40,6 +41,8 @@ const RegisterModal = ({
         if (registrationData) {
             form.setFieldsValue(registrationData);
             setStatus(registrationData.status);
+            setStudentId(registrationData.studentId);
+            setStudent(registrationData.studentName);
             setIsEdit(true);
         } else {
             // form.resetFields();
@@ -48,33 +51,16 @@ const RegisterModal = ({
         }
     }, [registrationData, form]);
 
-    useEffect(() => {
-        if (student)
-            form.setFieldsValue({ studentName: student });
-    }, [student, form]);
-
     const handleSubmit = () => {
         form
             .validateFields()
             .then((value) => {
-                const selectedClass = allClasses.find(cls => cls.classCode === value.classCode);
-
-                if (!selectedClass) {
-                    message.error(t('class-not-found'));
-                    return;
-                }
-
-                const selectedClassIndex = allClasses.findIndex(cls => cls.classCode === value.classCode);
-
-                if (selectedClassIndex === -1) {
-                    message.error(t('class-not-found'));
-                    return;
-                }
-
+                // classId is now directly used from the form
                 const finalValue = {
                     ...(registrationData || {}),
                     ...value,
-                    classId: selectedClassIndex + 1,
+                    studentId: studentId,
+                    studentName: student
                 }
 
                 onSubmit(finalValue);
@@ -102,41 +88,70 @@ const RegisterModal = ({
         >
             <Form form={form} layout="vertical">
                 <Form.Item
-                    label={t('student-id')}
-                    name="studentId"
-                    rules={[{ required: true, message: t('required-student-id') }]}
+                    label={t('student-info')}
+                    required
                 >
-                    <Input
-                        disabled={isEdit}
-                        onChange={async (e) => {
-                            const studentId = e.target.value;
-                            if (studentId) {
-                                try {
-                                    const studentData = await fetchStudentById(studentId);
-                                    setStudent(studentData.fullName);
-                                } catch (error) {
-                                    // console.error('Error fetching student:', error);
+                    <Input.Group compact>
+                        <Form.Item
+                            name="studentId"
+                            noStyle
+                            rules={[
+                                { required: true, message: t('required-student-id') },
+                                {
+                                    validator: async (_, value) => {
+                                        if (!value) return Promise.resolve();
+                                        try {
+                                            const studentData = await fetchStudentById(value);
+                                            if (!studentData || !studentData.fullName) {
+                                                return Promise.reject(new Error(t('student-not-found')));
+                                            }
+                                            return Promise.resolve();
+                                        } catch {
+                                            return Promise.reject(new Error(t('student-not-found')));
+                                        }
+                                    }
                                 }
-                            }
-                        }}
-                    />
-                </Form.Item>
-
-                <Form.Item
-                    label={t('student-name')}
-                    name="studentName"
-                >
-                    <Input disabled />
+                            ]}
+                        >
+                            <Input
+                                style={{ width: '30%' }}
+                                placeholder={t('student-id')}
+                                disabled={isEdit}
+                                onChange={async (e) => {
+                                    const newStudentId = e.target.value;
+                                    setStudentId(newStudentId);
+                                    form.setFieldsValue({ studentId: newStudentId });
+                                    if (newStudentId) {
+                                        try {
+                                            const studentData = await fetchStudentById(newStudentId);
+                                            setStudent(studentData.fullName);
+                                        } catch (error) {
+                                            setStudent('');
+                                        }
+                                    } else {
+                                        setStudent('');
+                                    }
+                                }}
+                                value={studentId}
+                            />
+                        </Form.Item>
+                        <Input
+                            style={{ width: '70%' }}
+                            placeholder={t('student-name')}
+                            value={student ? `${studentId} - ${student}` : ''}
+                            disabled
+                        />
+                    </Input.Group>
                 </Form.Item>
 
                 <Form.Item
                     label={t('class-code')}
-                    name="classCode"
+                    name="classId"
                     rules={[{ required: true, message: t('required-class-code') }]}
                 >
                     <Select disabled={isEdit} placeholder={t('select-class')}>
                         {allClasses.map((cls) => (
-                            <Option key={cls.classCode} value={cls.classCode}>
+                            <Option key={cls.id} value={cls.id}>
                                 {cls.classCode} - {cls.courseName}
                             </Option>
                         ))}
@@ -149,9 +164,9 @@ const RegisterModal = ({
                     rules={[{ required: true, message: t('required-status') }]}
                 >
                     <Select onChange={(value) => setStatus(value)}>
-                        <Option value="REGISTERED">REGISTERED</Option>
-                        <Option value="COMPLETED">COMPLETED</Option>
-                        <Option value="CANCELLED">CANCELLED</Option>
+                        <Option value="REGISTERED">{t("REGISTERED")}</Option>
+                        <Option value="COMPLETED">{t("COMPLETED")}</Option>
+                        <Option value="CANCELLED">{t("CANCELLED")}</Option>
                     </Select>
                 </Form.Item>
 

@@ -9,7 +9,7 @@ export const transformCourseToGetResponse = (response: any) => {
         courseCode: response.courseCode,
         courseName: response.courseName,
         credits: response.credits,
-        faculty: response.facultyName,
+        facultyId: response.facultyId, // Keep as facultyId consistently
         description: response.description,
         prerequisiteCourseId: response.prerequisiteCourseId,
         isActive: response.isActive,
@@ -17,17 +17,11 @@ export const transformCourseToGetResponse = (response: any) => {
 }
 
 export const transformCourseToPostRequest = (request: Course): CreateCourseRequest => {
-    const { faculties } = useReferenceStore.getState();
-    const faculty = faculties.find((faculty: any) => faculty.facultyName === request.faculty);
-    if (!faculty) {
-        throw new Error(`Faculty not found for name: ${request.faculty}`);
-    }
-    const facultyId = faculty.id;
     return {
         courseCode: request.courseCode,
         courseName: request.courseName,
         credits: request.credits,
-        facultyId: facultyId,
+        facultyId: request.facultyId, // Use facultyId directly
         description: request.description || null,
         prerequisiteCourseId: request.prerequisiteCourseId || null,
         isActive: request.isActive,
@@ -35,16 +29,12 @@ export const transformCourseToPostRequest = (request: Course): CreateCourseReque
 }
 
 export const transformCourseToPatchRequest = (request: Course): Partial<UpdateCourseRequest> => {
-    const { faculties } = useReferenceStore.getState();
-    const faculty = faculties.find((faculty: any) => faculty.facultyName === request.faculty);
-    const facultyId = faculty ? faculty.id : 1;
-
     return {
         courseId: request.courseId,
         courseCode: request.courseCode,
         courseName: request.courseName,
         credits: request.credits,
-        facultyId: facultyId,
+        facultyId: request.facultyId, // Use facultyId directly
         description: request.description || null,
         prerequisiteCourseId: request.prerequisiteCourseId || null,
         isActive: request.isActive,

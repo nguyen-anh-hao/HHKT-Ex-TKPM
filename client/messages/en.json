@@ -12,6 +12,7 @@
     "transcript": "Student Transcript",
     "reference-management": "Reference Management",
     "register-class": "Register Class",
+    "semester-management": "Semester Management",
 
     "student": "Student",
     "category": "Reference",
@@ -19,6 +20,8 @@
     "course": "Course",
     "class": "Class",
     "reference": "Reference",
+    "semester": "Semester",
+    "registration": "Registration",
 
     "actions": "Actions",
     "add": "Add",
@@ -32,7 +35,11 @@
     "import": "Import Data",
     "pagination": "{item} of {items} items",
     "page": "page",
-    "back": "Back"
+    "back": "Back",
+    "all": "all",
+
+    "unsaved-changes": "You have unsaved changes.",
+    "all-saved": "All changes saved successfully."
   },
   "validation": {
     "required": "{field} is required!",
@@ -47,10 +54,12 @@
     "update-error": "Failed to update {entity}",
     "delete-success": "{entity} deleted successfully",
     "delete-error": "Failed to delete {entity}",
+    "submit-error": "Failed to submit data for {entity}",
     "import-success": "File {fileName} uploaded successfully",
     "import-error": "Failed to upload file {fileName}",
     "export-error": "Failed to export file",
-    "upload-error": "An error occurred while uploading"
+    "upload-error": "An error occurred while uploading",
+    "no-changes": "No changes detected"
   },
   "student-management": {
     "student-management": "Student Management",
@@ -175,6 +184,7 @@
     "edit-enrollment": "Edit Enrollment",
     "student-id": "Student ID",
     "student-name": "Student Name",
+    "student-info": "Student Information",
     "class-code": "Class Code",
     "select-class": "Select class code",
     "status": "Status",
@@ -187,6 +197,7 @@
     "required-student-id": "Student ID is required!",
     "required-class-code": "Class code is required!",
     "required-status": "Status is required!",
+    "student-not-found": "Student not found!",
     "save": "Save",
     "required-grade": "Grade is required!",
     "check-info": "Please check your information!",
@@ -228,5 +239,34 @@
     "course-code": "Course Code",
     "course-name": "Course Name",
     "credits": "Credits"
+  },
+  "semester-management": {
+    "title": "Semester Management",
+    "add-semester": "Add Semester",
+    "edit-semester": "Edit Semester",
+    "semester-number": "Semester Number",
+    "academic-year": "Academic Year",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "last-cancel-date": "Last Date to Cancel Class",
+    "semester-1": "Semester 1",
+    "semester-2": "Semester 2",
+    "semester-3": "Semester 3",
+    "status": "Status",
+    "ongoing": "Ongoing",
+    "upcoming": "Upcoming",
+    "completed": "Completed",
+    "search-placeholder": "Search by academic year or semester",
+    "required-semester-number": "Semester number is required!",
+    "required-academic-year": "Academic year is required!",
+    "required-start-date": "Start date is required!",
+    "required-end-date": "End date is required!",
+    "required-last-cancel-date": "Last cancellation date is required!",
+    "invalid-academic-year-format": "Academic year must be in format YYYY-YYYY!",
+    "invalid-academic-year-consecutive": "Academic years must be consecutive!",
+    "last-cancel-date-after-start": "Last cancellation date must be after start date!",
+    "last-cancel-date-before-end": "Last cancellation date must be before end date!",
+    "semester-number-range": "Semester number must be between 1 and 3!",
+    "check-info": "Please check semester information!"
   }
 }
