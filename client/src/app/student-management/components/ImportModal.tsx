@@ -3,7 +3,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import { useState } from 'react';
 import type { RcFile, UploadRequestOption } from 'rc-upload/lib/interface';
-import { uploadFile } from '@/libs/services/fileService';
+import { uploadFile } from '@/libs/services/studentsFileService';
 import { useTranslations } from 'next-intl';
 
 const BASE_URL = 'http://localhost:9000/api';
@@ -17,6 +17,9 @@ const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
     const [fileName, setFileName] = useState<string>('');
     const [uploading, setUploading] = useState(false);
     const t = useTranslations('student-management');
+    const tMessages = useTranslations('messages');
+    const tCommon = useTranslations('common');
+    const tValidation = useTranslations('validation');
 
     const handleUpload = async (options: UploadRequestOption) => {
         const { file, onSuccess, onError } = options;
@@ -25,19 +28,21 @@ const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
 
         try {
             setUploading(true);
-            setFileName('');
             const result = await uploadFile(realFile);
+            
             if (result.status !== 200) {
-                const errorMessage = result.data?.message || result.statusText || 'Unknown error';
-                message.error(t('import-error', { fileName: realFile.name, error: errorMessage }));
+                const errorMessage = result.data?.message || result.statusText || tMessages('upload-error');
+                message.error(`${tMessages('import-error', { fileName: realFile.name })}: ${errorMessage}`);
+                onError?.(new Error(errorMessage));
                 return;
             }
-            message.success(t('import-success', { fileName: realFile.name }));
+            
+            message.success(tMessages('import-success', { fileName: realFile.name }));
             onSuccess?.(result, new XMLHttpRequest());
-            onCancel();
+            setTimeout(() => onCancel(), 1000); // Close after success with delay
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || t('upload-error');
-            message.error(t('import-error', { fileName: realFile.name, error: errorMessage }));
+            const errorMessage = error.response?.data?.message || tMessages('upload-error');
+            message.error(`${tMessages('import-error', { fileName: realFile.name })}: ${errorMessage}`);
             onError?.(new Error(errorMessage));
         } finally {
             setUploading(false);
@@ -49,13 +54,18 @@ const ImportModal = ({ visible, onCancel }: ImportModalProps) => {
             title={t('import-title')}
             open={visible}
             onCancel={onCancel}
-            footer={null}
+            footer={[
+                <Button key="cancel" onClick={onCancel}>
+                    {tCommon('cancel')}
+                </Button>
+            ]}
         >
             <Form layout='vertical'>
                 <Form.Item style={{ marginTop: 32, marginBottom: 24, display: 'flex', justifyContent: 'center' }}>
                     <Upload
                         customRequest={handleUpload}
                         showUploadList={false}
+                        accept=".json"
                         beforeUpload={(file) => {
                             const isValidType = file.type === 'application/json';
                             if (!isValidType) {

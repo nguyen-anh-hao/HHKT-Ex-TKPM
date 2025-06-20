@@ -7,9 +7,6 @@ import { useState, useEffect, use } from 'react';
 import { Student } from '../../../interfaces/student/Student';
 import { useFaculties, usePrograms, useStudentStatuses, useEmailDomains } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
-// import { Controller, useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { studentSchema, StudentSchema } from '@/libs/validators/studentSchema';
 
 const { Option } = Select;
 
@@ -20,23 +17,21 @@ interface StudentModalProps {
     student?: Student;
     isResetModal?: boolean;
     setIsResetModal?: any;
+    isSubmitting?: boolean;
 }
 
-const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setIsResetModal }: StudentModalProps) => {
+const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setIsResetModal, isSubmitting }: StudentModalProps) => {
     const [studentForm] = Form.useForm();
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [documentType, setDocumentType] = useState<string | null>(null);
     const t = useTranslations('student-management');
+    const tCommon = useTranslations('common');
+    const tValidation = useTranslations('validation');
 
     const { data: facultyOptions } = useFaculties();
     const { data: programOptions } = usePrograms();
     const { data: studentStatusOptions } = useStudentStatuses();
     const { data: emailDomainOptions } = useEmailDomains();
-
-    // const { control, handleSubmit, formState: { errors } } = useForm<StudentSchema>({
-    //     resolver: zodResolver(studentSchema),
-    //     mode: "onBlur",
-    // });
 
     useEffect(() => {
         if (student) {
@@ -44,14 +39,15 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
             studentForm.setFieldsValue({
                 ...student,
                 dob: moment(student.dob),
-                issuedDate: moment(student.issuedDate),
-                expiredDate: moment(student.expiredDate),
+                issuedDate: student.issuedDate ? moment(student.issuedDate) : null,
+                expiredDate: student.expiredDate ? moment(student.expiredDate) : null,
             });
             setDocumentType(documents[0]?.documentType || null);
             setIsEdit(true);
         } else {
-            // studentForm.resetFields();
+            studentForm.resetFields();
             setIsEdit(false);
+            setDocumentType(null);
         }
     }, [student, studentForm]);
 
@@ -74,7 +70,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                 label={t('mssv')}
                                 name='studentId'
                                 rules={[
-                                    { required: true, message: t('required-mssv') },
+                                    { required: true, message: tValidation('required', { field: t('mssv') }) },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (isEdit) {
@@ -83,30 +79,20 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                             if (!value || !student || value !== student.studentId) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error(t('duplicate-mssv')));
+                                            return Promise.reject(new Error(tValidation('duplicate', { field: t('mssv') })));
                                         },
                                     }),
                                 ]}
-                                >
-                                {/* validateStatus={errors.studentId ? 'error' : ''}
-                                    help={errors.studentId?.message}  
-                                <Controller
-                                    name='studentId'
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            disabled={!!student}
-                                            prefix={<UserOutlined />}
-                                            placeholder='Nhập mã số sinh viên'
-                                        />
-                                    )}
-                                /> */}
+                            >
                                 <Input prefix={<UserOutlined />} disabled={!!student} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label={t('full-name')} name='fullName' rules={[{ required: true, message: t('required-fullname') }]}>
+                            <Form.Item 
+                                label={t('full-name')} 
+                                name='fullName' 
+                                rules={[{ required: true, message: tValidation('required', { field: t('full-name') }) }]}
+                            >
                                 <Input />
                             </Form.Item>
                         </Col>
@@ -120,8 +106,8 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                         <Col span={12}>
                             <Form.Item label={t('gender')} name='gender' rules={[{ required: true, message: t('required-gender') }]}>
                                 <Select placeholder={t('select-gender')}>
-                                    <Option value='Nam'>{t('male')}</Option>
-                                    <Option value='Nữ'>{t('female')}</Option>
+                                    <Option value={t('male')}>{t('male')}</Option>
+                                    <Option value={t('female')}>{t('female')}</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -205,14 +191,18 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                 label={t('phone')}
                                 name='phone'
                                 rules={[
-                                    { required: true, message: t('required-phone') },
+                                    { required: true, message: tValidation('required', { field: t('phone') }) },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             const countryCode = getFieldValue('phoneCountry');
+                                            if (!value || !countryCode) return Promise.resolve();
+                                            
+                                            // Make phone number validation more user-friendly
+                                            // Just check for basic format based on country code
                                             const regexMap: Record<string, RegExp> = {
-                                                VN: /^\+84[0-9]{9}$/,
-                                                US: /^\+1[2-9][0-9]{9}$/,
-                                                UK: /^\+44[0-9]{10}$/,
+                                                VN: /^\+?84[0-9]{9}$/,
+                                                US: /^\+?1[2-9][0-9]{9}$/,
+                                                UK: /^\+?44[0-9]{10}$/,
                                                 AU: /^\+61[2-478][0-9]{8}$/,
                                                 JP: /^\+81[1-9][0-9]{9}$/,
                                                 DE: /^\+49[1-9][0-9]{10}$/,
@@ -231,15 +221,19 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                                                 CA: /^\+1[2-9][0-9]{9}$/,
                                             };
 
-                                            if (!value || !countryCode || regexMap[countryCode]?.test(value)) {
+                                            const regex = regexMap[countryCode];
+                                            // Allow with or without + prefix
+                                            const normalizedValue = value.startsWith('+') ? value : `+${value}`;
+                                            
+                                            if (!regex || regex.test(normalizedValue)) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error(t('invalid-phone')));
+                                            return Promise.reject(new Error(tValidation('invalid', { field: t('phone') })));
                                         },
                                     }),
                                 ]}
                             >
-                                <Input prefix={<PhoneOutlined />} />
+                                <Input prefix={<PhoneOutlined />} placeholder="+84xxxxxxxxx" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -390,14 +384,15 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
                             };
                         })
                         .catch((error) => {
-                            message.error(t('check-info'));
+                            message.error(tValidation('check-info'));
                         });
                 }}
+                loading={isSubmitting}
             >
-                {t('save')}
+                {tCommon('save')}
             </Button>
         </Modal>
     );
 };
 
-export default StudentModal
+export default StudentModal;

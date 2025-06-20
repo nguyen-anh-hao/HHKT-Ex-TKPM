@@ -1,13 +1,15 @@
 package org.example.backend.controller;
 
+import org.example.backend.config.TestConfig;
 import org.example.backend.dto.request.EmailDomainRequest;
 import org.example.backend.dto.response.EmailDomainResponse;
 import org.example.backend.service.impl.EmailDomainServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EmailDomainController.class)
-@AutoConfigureDataJpa
+@MockBean(JpaMetamodelMappingContext.class)
+@Import(TestConfig.class)
 public class EmailDomainControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -33,9 +36,10 @@ public class EmailDomainControllerTest {
     @MockBean
     private EmailDomainServiceImpl service;
 
+
     @Test
     public void shouldGetAllEmailDomains() throws Exception {
-        List< EmailDomainResponse> emailDomains = List.of(
+        List<EmailDomainResponse> emailDomains = List.of(
                 EmailDomainResponse.builder().id(1).domain("example.com").build(),
                 EmailDomainResponse.builder().id(2).domain("example.org").build()
         );
@@ -70,8 +74,8 @@ public class EmailDomainControllerTest {
         when(service.createDomain(any(EmailDomainRequest.class))).thenReturn(emailDomain);
 
         mockMvc.perform(post("/api/email-domains")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"domain\": \"example.com\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"domain\": \"example.com\"}"))
                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.domain").value("example.com"));
@@ -84,8 +88,8 @@ public class EmailDomainControllerTest {
         when(service.updateDomain(eq(1), any(EmailDomainRequest.class))).thenReturn(emailDomain);
 
         mockMvc.perform(put("/api/email-domains/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"domain\": \"example.com\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"domain\": \"example.com\"}"))
                 .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.domain").value("example.com"));

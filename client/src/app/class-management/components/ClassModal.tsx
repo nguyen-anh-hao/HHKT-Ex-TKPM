@@ -1,6 +1,6 @@
 import { Form, Input, Modal, Button, Select, message } from 'antd';
 import { useEffect, useState } from 'react';
-import { Class } from '../../../interfaces/class/ClassResponse';
+import { Class } from '../../../interfaces/class/Class';
 import { useLecturers, useCourses } from '@/libs/hooks/reference/useReferences';
 import { useTranslations } from 'next-intl';
 
@@ -11,7 +11,6 @@ interface ClassModalProps {
     onCancel: () => void;
     onSubmit: (value: any) => void;
     classData?: Class;
-    allClasses: Class[];
     isResetModal?: boolean;
     setIsResetModal?: any;
 }
@@ -21,7 +20,6 @@ const ClassModal = ({
     onCancel,
     onSubmit,
     classData,
-    allClasses,
     isResetModal,
     setIsResetModal,
 }: ClassModalProps) => {
@@ -30,6 +28,7 @@ const ClassModal = ({
     const { data: lecturerOptions } = useLecturers();
     const { data: courseOptions } = useCourses();
     const t = useTranslations('class-management');
+    const tCommon = useTranslations('common');
 
     const renderOptions = (options?: { key: number; value: string; label: string }[]) =>
         options?.map((option) => (
@@ -134,7 +133,7 @@ const ClassModal = ({
             </Form>
 
             <Button type="primary" onClick={handleSubmit}>
-                {t('save')}
+                {tCommon('save')}
             </Button>
         </Modal>
     );

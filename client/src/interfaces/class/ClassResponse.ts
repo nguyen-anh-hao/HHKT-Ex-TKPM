@@ -1,10 +1,11 @@
-export interface Class {
-    classId: number;
+export interface ClassResponse {
+    id: number;
     classCode: string;
     courseId: number;
     courseCode?: string;
     courseName?: string;
     semesterId: number;
+    semesterName?: string;
     academicYear?: string;
     semester?: number;
     lecturerId?: number | null;

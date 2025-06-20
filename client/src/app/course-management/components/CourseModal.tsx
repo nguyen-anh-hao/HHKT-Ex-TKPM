@@ -13,7 +13,6 @@ interface CourseModalProps {
     onCancel: () => void;
     onSubmit: (value: any) => void;
     course?: Course;
-    allCourses: Course[];
     isResetModal?: boolean;
     setIsResetModal?: any;
 }
@@ -23,7 +22,6 @@ const CourseModal = ({
     onCancel,
     onSubmit,
     course,
-    allCourses,
     isResetModal,
     setIsResetModal,
 }: CourseModalProps) => {
@@ -31,6 +29,7 @@ const CourseModal = ({
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const { data: facultyOptions } = useFaculties();
     const t = useTranslations('course-management');
+    const tCommon = useTranslations('common');
 
     const renderOptions = (options?: { key: number; value: string; label: string }[]) =>
         options?.map((option) => (
@@ -55,7 +54,7 @@ const CourseModal = ({
             .then((value) => {
                 if (course) {
                     if (!course.courseId) {
-                        message.error('Không thể cập nhật vì thiếu courseId!');
+                        message.error(t('missing-course-id'));
                         return;
                     }
 
@@ -125,13 +124,8 @@ const CourseModal = ({
 
                 <Form.Item label={t('prerequisite')} name="prerequisiteCourseId">
                     <Select placeholder={t('select-prerequisite')} allowClear>
-                        {allCourses
-                            .filter((c) => c.courseId && (!course || c.courseId !== course.courseId))
-                            .map((c) => (
-                                <Option key={c.courseId} value={c.courseId}>
-                                    {c.courseCode} - {c.courseName}
-                                </Option>
-                            ))}
+                        {/* Note: Prerequisites will need to be fetched separately if needed */}
+                        <Option value={null}>{t('no-prerequisite')}</Option>
                     </Select>
                 </Form.Item>
 
@@ -141,7 +135,7 @@ const CourseModal = ({
             </Form>
 
             <Button type="primary" onClick={handleSubmit}>
-                {t('save')}
+                {tCommon('save')}
             </Button>
         </Modal>
     );

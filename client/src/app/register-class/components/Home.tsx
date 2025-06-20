@@ -9,13 +9,15 @@ import { useClasses } from '@/libs/hooks/class/useClassQuery';
 import {
     useCreateRegister,
     useUpdateRegister,
-    useFetchRegistrations
 } from '@/libs/hooks/register/useRegisterMutation';
 import RegisterTable from './RegisterTable';
 import RegisterModal from './RegisterModal';
 
 const Home = () => {
     const t = useTranslations('register-class');
+    const tCommon = useTranslations('common');
+    const tMessages = useTranslations('messages');
+    
     const [state, setState] = useState<{
         isModalVisible: boolean;
         selectedRegistration: RegisterResponse | null;
@@ -26,9 +28,13 @@ const Home = () => {
         isResetModal: false
     });
 
-    // Queries
-    const { data: allClasses = [] } = useClasses();
-    const { data: registrations = [], isLoading } = useFetchRegistrations();
+    // Get all classes for dropdown selection
+    const { data: classesData } = useClasses({
+        page: 0,
+        pageSize: 1000,
+        sortField: 'classCode',
+        sortOrder: 'asc'
+    });
 
     // Mutations
     const createMutation = useCreateRegister();
@@ -66,16 +72,16 @@ const Home = () => {
                         id: data.id, 
                         value: { 
                             ...data, 
-                            grade: data.grade === null ? undefined : data.grade 
+                            grade: data.grade === undefined ? null : data.grade // Convert undefined to null
                         } 
                     },
                     {
                         onSuccess: () => {
-                            message.success(t('update-success'));
+                            message.success(tMessages('update-success', { entity: tCommon('class').toLowerCase() }));
                             handleModalClose();
                         },
                         onError: (error) => {
-                            message.error(error.message || t('update-error'));
+                            message.error(`${tMessages('update-error', { entity: tCommon('class').toLowerCase() })}: ${error.message}`);
                         }
                     }
                 );
@@ -83,21 +89,21 @@ const Home = () => {
                 createMutation.mutate(
                     { 
                         ...data, 
-                        grade: data.grade === null ? undefined : data.grade 
+                        grade: data.grade === undefined ? null : data.grade // Convert undefined to null
                     },
                     {
                         onSuccess: () => {
-                            message.success(t('create-success'));
+                            message.success(tMessages('create-success', { entity: tCommon('class').toLowerCase() }));
                             handleModalClose();
                         },
                         onError: (error) => {
-                            message.error(error.message || t('create-error'));
+                            message.error(`${tMessages('create-error', { entity: tCommon('class').toLowerCase() })}: ${error.message}`);
                         }
                     }
                 );
             }
         } catch (error) {
-            message.error(error instanceof Error ? error.message : t('error'));
+            message.error(error instanceof Error ? error.message : tCommon('error'));
         }
     };
 
@@ -114,9 +120,8 @@ const Home = () => {
             </Button>
 
             <RegisterTable
-                registrations={registrations}
                 onEdit={handleEdit}
-                loading={isLoading}
+                // Removed registrations and loading props - now managed internally
             />
 
             <RegisterModal
@@ -124,7 +129,7 @@ const Home = () => {
                 onCancel={handleModalClose}
                 onSubmit={handleSubmit}
                 registrationData={state.selectedRegistration ?? undefined}
-                allClasses={allClasses}
+                allClasses={classesData?.data || []}
                 isResetModal={state.isResetModal}
                 setIsResetModal={(value: any) =>
                     setState(prev => ({ ...prev, isResetModal: value }))

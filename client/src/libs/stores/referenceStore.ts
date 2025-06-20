@@ -19,9 +19,9 @@ const useReferenceStore = create<ReferenceStore>((set) => ({
 
     fetchReference: async () => {
         try {
-            const faculties = await fetchReference('faculties');
-            const programs = await fetchReference('programs');
-            const studentStatuses = await fetchReference('student-statuses');
+            const faculties = (await fetchReference('faculties')) as Faculty[];
+            const programs = (await fetchReference('programs')) as Program[];
+            const studentStatuses = (await fetchReference('student-statuses')) as StudentStatus[];
             set({ faculties, programs, studentStatuses });
         } catch (error) {
             // console.error('Failed to fetch reference data:', error);

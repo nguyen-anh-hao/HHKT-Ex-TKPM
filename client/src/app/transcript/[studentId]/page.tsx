@@ -2,22 +2,22 @@
 
 import { Card, Table, Button, Typography, Descriptions } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-import { downloadTranscript } from '@/libs/services/transcriptService';
+import { downloadTranscript } from '@/libs/services/transcriptFileService';
 import { useStudent } from '@/libs/hooks/student/useStudents';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { Transcript } from '@/interfaces/Transcript';
+import { useTranscripts } from '@/libs/hooks/transcript/useTransripts';
 
 const { Title } = Typography;
 
-const mockTranscript = [
-    { id: 'CS101', name: 'Lập trình căn bản', credits: 3, grade: 8.0 },
-    { id: 'CS102', name: 'Cấu trúc dữ liệu', credits: 4, grade: 7.5 },
-    { id: 'MATH01', name: 'Toán rời rạc', credits: 3, grade: 9.0 },
-];
-
-const calculateGPA = () => {
-    const totalCredits = mockTranscript.reduce((sum, course) => sum + course.credits, 0);
-    const totalPoints = mockTranscript.reduce((sum, course) => sum + course.credits * course.grade, 0);
+const calculateGPA = (transcript: Transcript[]) => {
+    if (!transcript || transcript.length === 0) return '0.00';
+    
+    const validCourses = transcript.filter(course => course.grade != null && course.grade !== 0);
+    const totalCredits = validCourses.reduce((sum, course) => sum + course.credits, 0);
+    if (totalCredits === 0) return '0.00';
+    const totalPoints = validCourses.reduce((sum, course) => sum + course.credits * (course.grade ?? 0), 0);
     return (totalPoints / totalCredits).toFixed(2);
 };
 
@@ -28,6 +28,12 @@ export default function TranscriptPage() {
     const t = useTranslations('transcript');
     const tCommon = useTranslations('common');
     const tStudent = useTranslations('student-management');
+    const tRegister = useTranslations('register-class');
+    const tCourse = useTranslations('course-management');
+    const tClass = useTranslations('class-management');
+
+    const { data: allTranscripts } = useTranscripts();
+    const transcriptData = allTranscripts?.filter(item => item.studentId === studentId);
 
     const handleExportPDF = async () => {
         const response = await downloadTranscript(studentId);
@@ -37,8 +43,13 @@ export default function TranscriptPage() {
     }
 
     if (isLoading) return <p>{tCommon('loading')}</p>;
-    if (error) return <p>{tCommon('error')}</p>;    return (
+    if (error) return <p>{tCommon('error')}</p>;    
+    
+    return (
         <div>
+            <Button style={{ marginBottom: 16 }} onClick={() => window.history.back()}>
+                {tCommon('back')}
+            </Button>
             <Card>
                 <div>
                     <Title level={3} style={{ textAlign: 'center' }}>
@@ -56,26 +67,32 @@ export default function TranscriptPage() {
                     <Table
                         bordered
                         pagination={false}
-                        dataSource={mockTranscript}
-                        rowKey="id"
+                        dataSource={transcriptData}
+                        rowKey={(record) => `${record.courseCode}-${record.classCode}`}
                         columns={[
-                            { title: t('course-code'), dataIndex: 'id' },
-                            { title: t('course-name'), dataIndex: 'name' },
-                            { title: t('credits'), dataIndex: 'credits' },
-                            { title: t('grade'), dataIndex: 'grade' },
+                            { title: tClass('semester'), dataIndex: 'semester' },
+                            { title: tClass('academic-year'), dataIndex: 'academicYear' },
+                            { title: tCourse('course-code'), dataIndex: 'courseCode' },
+                            { title: tCourse('course-name'), dataIndex: 'courseName' },
+                            { title: tCourse('credits'), dataIndex: 'credits' },
+                            { title: tRegister('class-code'), dataIndex: 'classCode' },
+                            { title: tRegister('grade'), dataIndex: 'grade' },
                         ]}
                         summary={() => (
                             <Table.Summary.Row>
-                                <Table.Summary.Cell index={0} colSpan={3}>
-                                    <b>GPA</b>
+                                <Table.Summary.Cell index={0} colSpan={6}>
+                                    <div style={{ textAlign: 'right', width: '100%' }}>
+                                        <b>GPA</b>
+                                    </div>
                                 </Table.Summary.Cell>
-                                <Table.Summary.Cell index={3}>
-                                    <b>{calculateGPA()}</b>
+                                <Table.Summary.Cell index={7}>
+                                    <b>{calculateGPA(transcriptData ?? [])}</b>
                                 </Table.Summary.Cell>
                             </Table.Summary.Row>
                         )}
                     />
-                </div>                <div style={{ marginTop: 24, textAlign: 'right' }}>
+                </div>                
+                <div style={{ marginTop: 24, textAlign: 'right' }}>
                     <Button type="primary" icon={<DownloadOutlined />} onClick={handleExportPDF}>
                         {t('export')}
                     </Button>

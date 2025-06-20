@@ -1,5 +1,6 @@
 package org.example.backend.controller;
 
+import org.example.backend.config.TestConfig;
 import org.example.backend.dto.request.ProgramRequest;
 import org.example.backend.dto.response.ProgramResponse;
 import org.example.backend.service.impl.ProgramServiceImpl;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProgramController.class)
 @MockBean(JpaMetamodelMappingContext.class)
+@Import(TestConfig.class)
 public class ProgramControllerTest {
     @Autowired
     private MockMvc mockMvc;

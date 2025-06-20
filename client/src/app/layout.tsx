@@ -6,6 +6,7 @@ import { ConfigProvider } from 'antd';
 import Layout from '../components/layout/Layout';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale } from 'next-intl/server';
+import MessageProvider from '@/components/ui/MessageProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -31,7 +32,9 @@ export default async function RootLayout({
             //   },
             // }}
             >
-              <Layout>{children}</Layout>
+              <MessageProvider>
+                <Layout>{children}</Layout>
+              </MessageProvider>
             </ConfigProvider>
           </AntdRegistry>
         </NextIntlClientProvider>
