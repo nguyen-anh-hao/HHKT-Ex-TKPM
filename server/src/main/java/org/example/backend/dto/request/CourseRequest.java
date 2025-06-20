@@ -8,11 +8,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CourseRequest {
 
     @Schema(description = "Course code", example = "CS101", requiredMode = Schema.RequiredMode.REQUIRED)

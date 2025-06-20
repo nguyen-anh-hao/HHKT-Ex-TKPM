@@ -88,6 +88,7 @@ public class ClassController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "application/json"))
     })
+    @ResponseStatus(HttpStatus.CREATED)
     public APIResponse addClass(@RequestBody @Valid ClassRequest classRequest) {
         log.info("Received request to add class: {}", classRequest.getClassCode());
 
