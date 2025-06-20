@@ -1,5 +1,12 @@
 package org.example.backend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dto.request.StudentRequest;
@@ -12,6 +19,7 @@ import org.example.backend.service.export.ExportService;
 import org.example.backend.service.export.ExportServiceFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +41,18 @@ public class FileTransferController {
     private final IStudentService studentService;
 
     @GetMapping("/export")
+    @Operation(
+            summary = "Export student data",
+            description = "Export student data in a given file format (e.g., csv, xlsx)"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "File exported successfully",
+                    content = @Content(mediaType = "application/octet-stream")),
+            @ApiResponse(responseCode = "400", description = "Invalid export type",
+                    content = @Content(mediaType = "application/json"))
+    })
     public ResponseEntity<byte[]> exportData(
+            @Parameter(description = "Type of export file (e.g., csv, xlsx)", required = true)
             @RequestParam String type,
             @RequestParam(required = false) String fileName,
             Pageable pageable
@@ -61,6 +80,22 @@ public class FileTransferController {
     }
 
     @PostMapping("/import")
+    @Operation(
+            summary = "Import student data",
+            description = "Import student data from an uploaded file in a supported format (e.g., csv, xlsx)"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data imported successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = APIResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid file type or content",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @Parameters({
+            @Parameter(name = "type", description = "Type of file to import (e.g., csv, xlsx)", required = true, example = "csv"),
+            @Parameter(name = "file", description = "File to upload", required = true,
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
+    })
     public ResponseEntity<APIResponse> importData(
             @RequestParam String type,
             @RequestParam("file") MultipartFile file

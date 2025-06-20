@@ -1,5 +1,12 @@
 package org.example.backend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +36,25 @@ public class StudentStatusRuleController {
     private final IStudentStatusRuleService studentStatusRuleService;
 
     @GetMapping("/{id}")
-    public APIResponse getStudentStatusRuleById(@PathVariable Integer id) {
+    @Operation(
+            summary = "Get a student status rule by ID",
+            description = "Retrieve a specific student status rule by its unique ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the student status rule",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentStatusRuleResponse.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "Student status rule not found",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    public APIResponse getStudentStatusRuleById(
+            @Parameter(description = "Unique ID of the student status rule", required = true)
+            @PathVariable Integer id) {
         log.info("Received request to get student status rule by ID: {}", id);
         StudentStatusRuleResponse studentStatusRule = studentStatusRuleService.getStudentStatusRuleById(id);
 
@@ -48,6 +73,24 @@ public class StudentStatusRuleController {
     }
 
     @GetMapping("")
+    @Operation(
+            summary = "Get all student status rules with pagination",
+            description = "Retrieve a paginated list of all student status rules."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of student status rules",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = StudentStatusRuleResponse.class))
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "No student status rules found",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
     public APIResponse getAllStudentStatusRules(@PageableDefault(size = 3, page = 0) Pageable pageable) {
         log.info("Received request to get all student status rules with pagination: {}", pageable);
 
@@ -62,6 +105,21 @@ public class StudentStatusRuleController {
     }
 
     @PostMapping("")
+    @Operation(
+            summary = "Add a new student status rule",
+            description = "Create a new student status rule with the provided details.",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Successfully created the student status rule",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = StudentStatusRuleResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Invalid input data",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
     public APIResponse addStudentStatusRule(@RequestBody @Valid StudentStatusRuleRequest request) {
         log.info("Adding new student status rule: {}", request);
         StudentStatusRuleResponse studentStatusRule = studentStatusRuleService.addStudentStatusRule(request);
@@ -74,7 +132,28 @@ public class StudentStatusRuleController {
     }
 
     @PutMapping("/{id}")
-    public APIResponse updateStudentStatusRule(@PathVariable Integer id, @Valid @RequestBody StudentStatusRuleRequest request) {
+    @Operation(
+            summary = "Update a student status rule",
+            description = "Update an existing student status rule with the provided details.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully updated the student status rule",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = StudentStatusRuleResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Student status rule not found",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Invalid input data",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
+    public APIResponse updateStudentStatusRule(
+            @Parameter(description = "Unique ID of the student status rule to update", required = true)
+            @PathVariable Integer id,
+
+            @Valid @RequestBody StudentStatusRuleRequest request) {
         log.info("Updating student status rule with ID: {}, Request: {}", id, request);
         StudentStatusRuleResponse studentStatusRule = studentStatusRuleService.updateStudentStatusRule(id, request);
 
@@ -86,7 +165,25 @@ public class StudentStatusRuleController {
     }
 
     @DeleteMapping("/{id}")
-    public APIResponse deleteStudentStatusRule(@PathVariable Integer id) {
+    @Operation(
+            summary = "Delete a student status rule",
+            description = "Delete an existing student status rule by its unique ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully deleted the student status rule",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = APIResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Student status rule not found",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = APIResponse.class)
+                            )
+                    )
+            }
+    )
+    public APIResponse deleteStudentStatusRule(
+            @Parameter(description = "Unique ID of the student status rule to delete", required = true)
+            @PathVariable Integer id) {
         log.info("Deleting student status rule with ID: {}", id);
 
         // Check if the student status rule exists

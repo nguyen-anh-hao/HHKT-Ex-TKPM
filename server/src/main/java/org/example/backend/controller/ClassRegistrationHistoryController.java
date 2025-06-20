@@ -1,5 +1,10 @@
 package org.example.backend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +26,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClassRegistrationHistoryController {
     private final IClassRegistrationHistoryService classRegistrationHistoryService;
 
-    @GetMapping("/")
-    public String get() {
-        log.info("Received request to get Class Registration History");
-        return "Hello World!";
-    }
-
     @PostMapping("")
+    @Operation(summary = "Add a class registration history", description = "Add a new class registration history record")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Class registration history created successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ClassRegistrationHistoryResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "application/json"))
+    })
     public APIResponse addClassRegistrationHistory(@RequestBody @Valid ClassRegistrationHistoryRequest classRegistrationHistoryRequest) {
 
         log.info("Received request to add Class Registration History: {}", classRegistrationHistoryRequest);
