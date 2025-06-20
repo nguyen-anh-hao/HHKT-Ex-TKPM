@@ -1,5 +1,6 @@
 {
   "common": {
+    "student-management-system": "Hệ thống quản lý sinh viên",
     "language": "Ngôn ngữ",
     "loading": "Đang tải",
     "error": "Có lỗi xảy ra",

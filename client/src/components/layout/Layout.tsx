@@ -45,8 +45,9 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
         <QueryClientProvider client={queryClient}>
             <AntdLayout style={{ minHeight: '100vh' }}>
                 <Sider width={250} trigger={null} collapsible collapsed={collapsed} style={{ background: '#FFFFFF' }}>
-                    <Typography.Title level={4} style={{ textAlign: 'center', height: '80px', lineHeight: '80px', margin: 0 }}>
-                        <TeamOutlined />
+                    <Typography.Title level={5} style={{ textAlign: 'center', height: '80px', lineHeight: '80px', margin: 0 }}>
+                        <TeamOutlined style={{ marginRight: 8 }} />
+                        {collapsed ? '' : t('student-management-system')}
                     </Typography.Title>
                     <Menu
                         mode='inline'

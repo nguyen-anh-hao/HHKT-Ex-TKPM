@@ -1,5 +1,6 @@
 {
   "common": {
+    "student-management-system": "Student Management System",
     "language": "Language",
     "loading": "Loading",
     "error": "An error occurred",
