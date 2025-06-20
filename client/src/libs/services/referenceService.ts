@@ -6,7 +6,7 @@ type ReferenceType = 'faculties' | 'programs' | 'student-statuses' | 'email-doma
 export const fetchReference = async (type: ReferenceType) => {
     try {
          const data = await getReference(`${type}?size=1000`);
-        return data.data;
+        return data;
     } catch (error) {
         throw error;
     }

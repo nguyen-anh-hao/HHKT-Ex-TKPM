@@ -13,6 +13,9 @@ const ReferencePage = () => {
     const { mutate: updateReference } = useUpdateReference();
     const { mutate: deleteReference } = useDeleteReference();
     const t = useTranslations('reference-management');
+    const tCommon = useTranslations('common');
+    const tMessages = useTranslations('messages');
+    const tValidation = useTranslations('validation');
 
     const facultiesQuery = useFaculties();
     const programsQuery = usePrograms();
@@ -66,10 +69,10 @@ const ReferencePage = () => {
             { id, type },
             {
                 onSuccess: () => {
-                    message.success(t('delete-success'));
+                    message.success(tMessages('delete-success', { entity: t(type) }));
                 },
                 onError: (error: any) => {
-                    message.error(t('delete-error', { error: error.response.data.message }));
+                    message.error(`${tMessages('delete-error', { entity: t(type) })}: ${error.response.data.message}`);
                 },
             }
         );
@@ -82,15 +85,15 @@ const ReferencePage = () => {
 
     const handleOk = () => {
         if (!newItemValue) {
-            message.error(t('required-item-name'));
+            message.error(tValidation('required', { field: t('item-name') }));
             return;
         }
         createReference(
             { type: currentType!, value: newItemValue },
             {
                 onSuccess: (response) => {
-                    message.success(t('add-success'));
-                    const newItem = { key: response.id, value: newItemValue };
+                    message.success(tMessages('create-success', { entity: t(currentType!) }));
+                    const newItem = { key: response.id, value: newItemValue, label: newItemValue };
                     if (currentType === 'faculties') {
                         setFacultyValues([...facultyValues, newItem]);
                     } else if (currentType === 'programs') {
@@ -104,7 +107,7 @@ const ReferencePage = () => {
                     setIsModalVisible(false);
                 },
                 onError: (error: any) => {
-                    message.error(t('add-error', { error: error.response.data.message }));
+                    message.error(`${tMessages('create-error', { entity: t(currentType!) })}: ${error.response.data.message}`);
                 },
             }
         );
@@ -129,7 +132,7 @@ const ReferencePage = () => {
             { type, id: updatedValues[index].key, value: newValue },
             {
                 onSuccess: () => {
-                    message.success(t('update-success'));
+                    message.success(tMessages('update-success', { entity: tCommon('status-rules').toLowerCase() }));
                 },
                 onError: (error: any) => {
                     message.error(t('update-error', { error: error.response.data.message }));

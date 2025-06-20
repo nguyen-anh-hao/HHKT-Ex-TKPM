@@ -1,9 +1,10 @@
 import api from "./api";
+import { translateArrayResponse, translateRequest, translateResponse, translateArrayRequest } from '@/libs/utils/translate-helper';
 
 export const getStatusRules = async () => {
     try {
         const response = await api.get("/student-status-rules?page=0&size=1000");
-        return response.data;
+        return translateArrayResponse(response.data.data, 'StatusRuleResponse');
     } catch (error) {
         throw error;
     }

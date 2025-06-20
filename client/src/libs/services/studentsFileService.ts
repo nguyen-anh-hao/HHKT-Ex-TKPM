@@ -1,4 +1,4 @@
-import { getFile, postFile } from '../api/fileApi';
+import { getFile, postFile } from '../api/studentsFileApi';
 
 export const uploadFile = async (file: File) => {
     try {

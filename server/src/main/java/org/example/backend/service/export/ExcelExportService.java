@@ -20,26 +20,17 @@ import java.util.function.Function;
 @Service
 public class ExcelExportService implements ExportService {
 
-    @RequiredArgsConstructor
-    public static class Column<T> {
-        @Getter
-        private final String header;
-        private final Function<T, String> valueExtractor;
-
-        public String extractValue(T item) {
-            return valueExtractor.apply(item);
-        }
-    }
-
     @Override
     public byte[] exportData(List<?> data) throws IOException {
         if (data.isEmpty()) {
             Workbook workbook = new XSSFWorkbook();
+            workbook.createSheet("Data Export");
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             workbook.write(out);
             workbook.close();
             return out.toByteArray();
         }
+
 
         if (data.get(0) instanceof StudentResponse) {
             List<Column<StudentResponse>> columns = defaultStudentResponseColumns();
@@ -125,5 +116,16 @@ public class ExcelExportService implements ExportService {
     @Override
     public MediaType getMediaType() {
         return MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    }
+
+    @RequiredArgsConstructor
+    public static class Column<T> {
+        @Getter
+        private final String header;
+        private final Function<T, String> valueExtractor;
+
+        public String extractValue(T item) {
+            return valueExtractor.apply(item);
+        }
     }
 }
