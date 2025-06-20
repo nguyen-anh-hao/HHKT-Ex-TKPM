@@ -85,7 +85,7 @@ const StudentModal = ({ visible, onCancel, onSubmit, student, isResetModal, setI
         return options?.map((option) => {
             const rule = (statusRules as Rule[])?.find((rule: Rule) => rule.currentStatusName === oldStatus && rule.allowedTransitionName === option.label);
             return (
-                <Option key={option.key} value={option.key} disabled={!rule && option.label !== oldStatus}>
+                <Option key={option.key} value={option.key} disabled={!rule && option.label !== oldStatus && isEdit}>
                     {option.label}
                 </Option>
             );
