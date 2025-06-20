@@ -8,8 +8,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.example.backend.domain.ClassRegistration;
 import org.example.backend.domain.Course;
 import org.example.backend.domain.Lecturer;
@@ -19,6 +18,9 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Schema(description = "Request body to create a new class")
 public class ClassRequest {
 

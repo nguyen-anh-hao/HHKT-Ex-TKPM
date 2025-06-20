@@ -90,7 +90,9 @@ public class EmailDomainControllerTest {
         mockMvc.perform(put("/api/email-domains/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"domain\": \"example.com\"}"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.message").value("Success"))
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.domain").value("example.com"));
     }
