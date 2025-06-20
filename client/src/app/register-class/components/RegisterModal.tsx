@@ -33,6 +33,7 @@ const RegisterModal = ({
     const [isEdit, setIsEdit] = useState(false);
     const [status, setStatus] = useState('REGISTERED');
     const [student, setStudent] = useState('');
+    const [studentId, setStudentId] = useState('');
     const t = useTranslations('register-class');
     const tCommon = useTranslations('common');
 
@@ -40,6 +41,8 @@ const RegisterModal = ({
         if (registrationData) {
             form.setFieldsValue(registrationData);
             setStatus(registrationData.status);
+            setStudentId(registrationData.studentId);
+            setStudent(registrationData.studentName);
             setIsEdit(true);
         } else {
             // form.resetFields();
@@ -47,11 +50,6 @@ const RegisterModal = ({
             setIsEdit(false);
         }
     }, [registrationData, form]);
-
-    useEffect(() => {
-        if (student)
-            form.setFieldsValue({ studentName: student });
-    }, [student, form]);
 
     const handleSubmit = () => {
         form
@@ -61,6 +59,8 @@ const RegisterModal = ({
                 const finalValue = {
                     ...(registrationData || {}),
                     ...value,
+                    studentId: studentId,
+                    studentName: student
                 }
 
                 onSubmit(finalValue);
@@ -88,31 +88,60 @@ const RegisterModal = ({
         >
             <Form form={form} layout="vertical">
                 <Form.Item
-                    label={t('student-id')}
-                    name="studentId"
-                    rules={[{ required: true, message: t('required-student-id') }]}
+                    label={t('student-info')}
+                    required
                 >
-                    <Input
-                        disabled={isEdit}
-                        onChange={async (e) => {
-                            const studentId = e.target.value;
-                            if (studentId) {
-                                try {
-                                    const studentData = await fetchStudentById(studentId);
-                                    setStudent(studentData.fullName);
-                                } catch (error) {
-                                    // console.error('Error fetching student:', error);
+                    <Input.Group compact>
+                        <Form.Item
+                            name="studentId"
+                            noStyle
+                            rules={[
+                                { required: true, message: t('required-student-id') },
+                                {
+                                    validator: async (_, value) => {
+                                        if (!value) return Promise.resolve();
+                                        try {
+                                            const studentData = await fetchStudentById(value);
+                                            if (!studentData || !studentData.fullName) {
+                                                return Promise.reject(new Error(t('student-not-found')));
+                                            }
+                                            return Promise.resolve();
+                                        } catch {
+                                            return Promise.reject(new Error(t('student-not-found')));
+                                        }
+                                    }
                                 }
-                            }
-                        }}
-                    />
-                </Form.Item>
-
-                <Form.Item
-                    label={t('student-name')}
-                    name="studentName"
-                >
-                    <Input disabled />
+                            ]}
+                        >
+                            <Input
+                                style={{ width: '30%' }}
+                                placeholder={t('student-id')}
+                                disabled={isEdit}
+                                onChange={async (e) => {
+                                    const newStudentId = e.target.value;
+                                    setStudentId(newStudentId);
+                                    form.setFieldsValue({ studentId: newStudentId });
+                                    if (newStudentId) {
+                                        try {
+                                            const studentData = await fetchStudentById(newStudentId);
+                                            setStudent(studentData.fullName);
+                                        } catch (error) {
+                                            setStudent('');
+                                        }
+                                    } else {
+                                        setStudent('');
+                                    }
+                                }}
+                                value={studentId}
+                            />
+                        </Form.Item>
+                        <Input
+                            style={{ width: '70%' }}
+                            placeholder={t('student-name')}
+                            value={student ? `${studentId} - ${student}` : ''}
+                            disabled
+                        />
+                    </Input.Group>
                 </Form.Item>
 
                 <Form.Item

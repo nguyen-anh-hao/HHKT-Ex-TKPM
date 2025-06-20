@@ -50,7 +50,9 @@ export const getSemesters = async (page: number = 0, size: number = 10, sort: st
  */
 export const getAllSemesters = async (): Promise<Semester[]> => {
   try {
-    const response = await api.get<ApiSuccessResponse<Semester[]>>('/semesters/all');
+    const response = await api.get<ApiSuccessResponse<Semester[]>>('/semesters', {
+      params: { page: 0, size: 1000, sort: 'academicYear,desc' }
+    });
     return response.data.data || [];
   } catch (error) {
     console.error('Error fetching all semesters:', error);

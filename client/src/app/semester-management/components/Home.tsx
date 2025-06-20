@@ -19,6 +19,7 @@ const Home = () => {
   // Translations
   const t = useTranslations('semester-management');
   const tCommon = useTranslations('common');
+  const tMessage = useTranslations('messages');
 
   // State
   const [searchText, setSearchText] = useState('');
@@ -90,13 +91,19 @@ const Home = () => {
     try {
       if (selectedSemester) {
         await editSemester(selectedSemester.id, values);
+        message.success(tMessage('update-success', { entity: tCommon('semester').toLowerCase() }));
       } else {
         await addSemester(values);
+        message.success(tMessage('create-success', { entity: tCommon('semester').toLowerCase() }));
       }
       setIsModalVisible(false);
       refetch();
-    } catch (error) {
+    } catch (error : any) {
       console.error('Error submitting form:', error);
+      const errorMessage = error.response?.data?.errors
+        ? error.response.data.errors.map((e: any) => e.defaultMessage).join(' ')
+        : error.response?.data?.message || error.message;
+      message.error(`${tMessage('submit-error', { entity: tCommon('semester').toLowerCase() })}: ${errorMessage}`);
     }
   };
 
@@ -178,30 +185,30 @@ const Home = () => {
         }
       },
     },
-    {
-      title: tCommon('actions'),
-      key: 'actions',
-      render: (record: Semester) => (
-        <Space size="middle">
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => showModal(record)}
-          >
-            {tCommon('edit')}
-          </Button>
-          <Popconfirm
-            title={tCommon('confirm-delete')}
-            onConfirm={() => handleDelete(record.id)}
-            okText={tCommon('delete')}
-            cancelText={tCommon('cancel')}
-          >
-            <Button icon={<DeleteOutlined />} danger>
-              {tCommon('delete')}
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
+    // {
+    //   title: tCommon('actions'),
+    //   key: 'actions',
+    //   render: (record: Semester) => (
+    //     <Space size="middle">
+    //       <Button
+    //         icon={<EditOutlined />}
+    //         onClick={() => showModal(record)}
+    //       >
+    //         {tCommon('edit')}
+    //       </Button>
+    //       <Popconfirm
+    //         title={tCommon('confirm-delete')}
+    //         onConfirm={() => handleDelete(record.id)}
+    //         okText={tCommon('delete')}
+    //         cancelText={tCommon('cancel')}
+    //       >
+    //         <Button icon={<DeleteOutlined />} danger>
+    //           {tCommon('delete')}
+    //         </Button>
+    //       </Popconfirm>
+    //     </Space>
+    //   ),
+    // },
   ];
 
   // Show error state

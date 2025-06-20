@@ -5,8 +5,8 @@ export interface SemesterResponse {
   endDate: string;
   academicYear: string;
   lastCancelDate: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
 }
