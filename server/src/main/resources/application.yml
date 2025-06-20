@@ -29,7 +29,17 @@ logging:
 
 
 cors:
-    allowed-origins: "http://localhost:3000"
+    allowed-origins: "*"
     allowed-methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
     allowed-headers: "*"
-    allow-credentials: true
+    allow-credentials: false
+
+# SpringDoc specific settings
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    csrf.enabled: false
+    disable-swagger-default-url: true
+    operationsSorter: method
